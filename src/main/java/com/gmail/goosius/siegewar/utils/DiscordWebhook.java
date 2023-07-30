@@ -1,6 +1,5 @@
 package com.gmail.goosius.siegewar.utils;
 
-import com.gmail.goosius.siegewar.SiegeWar;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.palmergames.bukkit.towny.object.Translatable;
 
@@ -395,6 +394,9 @@ public class DiscordWebhook {
     }
 
     public static void sendWebhookNotification(Color color, String message, boolean active) {
+        if (!active)
+            return;
+
         DiscordWebhook webhook = new DiscordWebhook(SiegeWarSettings.getDiscordWebhookUrl());
 
         String[] lines = message.split("\n");
@@ -410,8 +412,7 @@ public class DiscordWebhook {
         try {
             webhook.execute();
         } catch (java.io.IOException e) {
-            if (active)
-                SiegeWar.getSiegeWar().getLogger().severe(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
         }
     }
 }
