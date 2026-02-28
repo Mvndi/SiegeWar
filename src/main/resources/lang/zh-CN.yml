@@ -123,7 +123,7 @@ msg_err_nation_not_registered: '&c国家%s未被注册。'
 msg_err_cannot_remove_enemy: '&c你不能移除敌国，如果在你目前在一场正在进行的围攻中与他们交战！'
 #Added in 0.09
 nation_help_siegewar_12: '酬劳你的士兵。给定的金额将按等级分配。'
-msg_siege_war_military_salary_available: "一份价值%s的军薪现在可用。输入\"/sw country claimrefund\"以领取。"
+msg_siege_war_military_salary_available: "一份价值%s的军薪现在可用。输入\"/sw collect\"以领取。"
 msg_siege_war_military_salary_collected: "你已经领取了%s的军薪。"
 msg_err_siege_war_no_soldiers_to_pay: "没有士兵需要支付报酬。"
 msg_err_siege_war_not_enough_nation_funds_to_pay: "国家没有足够的资金来支付这笔款项。"
@@ -367,7 +367,7 @@ msg_occupation_taxes_collected_totaling: "&b你的国家征收了共计%s的占�
 #####################################################################
 #Nation Refund
 nation_help_refund: "领取任何有效的国家待付款项。"
-msg_siege_war_nation_refund_available: "一份价值%s的国家退款现在可用。输入\"/sw country claimrefund\"以领取"
+msg_siege_war_nation_refund_available: "一份价值%s的国家退款现在可用。输入\"/sw nation claimrefund\"以领取"
 msg_siege_war_nation_refund_claimed: "你已经领取国家退款%s。"
 msg_err_siege_war_nation_refund_unavailable: "没有可用的国家退款可供领取。"
 #Invasion
@@ -493,7 +493,7 @@ msg_err_cannot_spawn_battle_session_not_active: "&c你不能传送到围攻，�
 msg_err_cannot_spawn_not_participant: "&c你不能传送到围攻区，因为你不是围攻的正式参与者。"
 msg_err_cannot_spawn_no_battle_commander: "&c你不能传送到围攻，因为你的队伍没有战斗指挥官。"
 msg_err_cannot_spawn_battle_commander_offline: "&c你不能传送到围攻，因为你的队伍的战斗指挥官不在线。"
-msg_err_cannot_spawn_battle_commander_dead: "&c你不能传送到围攻，因为你的队伍的战斗指挥官已死亡。"
+msg_err_cannot_spawn_battle_commander_dead: "&c你不能传送到围攻，因为你所属队伍的战斗指挥官已死亡。"
 msg_err_cannot_spawn_battle_commander_not_in_siegezone: "&c你不能传送到围攻，因为你的队伍的战斗指挥官未处于围攻区内。"
 msg_err_cannot_spawn_not_in_homeblock: "&c你必须在你的城镇中心区块中才能传送至围攻。"
 msg_err_cannot_spawn_outpost_during_battle_session: "&c你不能在你的国家正在战斗回合内参与进攻围攻时传送至前哨。"
@@ -558,3 +558,5 @@ msg_err_capital_towns_cannot_cancel_non_peaceful_switch: "&c国家首都不能�
 status_town_hover_title_occupied: "%s[%s被占领%s]"
 status_town_occupied_home_nation: "&2母国: &a%s"
 msg_err_cannot_merge_towns_without_same_occupier: '&c被占领的城镇不能被合并，除非这两个城镇具有同样的占领国。'
+sw_command_help_list_peaceful_towns: '列出现存所有和平城镇。'
+sw_peaceful_towns_title: '和平城镇'
