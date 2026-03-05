@@ -29,6 +29,7 @@ import com.gmail.goosius.siegewar.command.SiegeWarNationSetOccupationTaxAddonCom
 import com.gmail.goosius.siegewar.hud.SiegeHUDManager;
 import com.gmail.goosius.siegewar.integration.PAPIPlaceholderExpansion;
 import com.gmail.goosius.siegewar.integration.dynmap.DynmapIntegration;
+import com.gmail.goosius.siegewar.listeners.MvndiPillageListener;
 import com.gmail.goosius.siegewar.listeners.SiegeWarActionListener;
 import com.gmail.goosius.siegewar.listeners.SiegeWarBukkitEventListener;
 import com.gmail.goosius.siegewar.listeners.SiegeWarNationEventListener;
@@ -185,6 +186,7 @@ public class SiegeWar extends JavaPlugin {
 			pm.registerEvents(new SiegeWarStatusScreenListener(), this);
 			pm.registerEvents(new SiegeWarSelfListener(), this);
 			pm.registerEvents(new SiegeWarLoreListener(), this);
+			pm.registerEvents(new MvndiPillageListener(), this);
 			if (getServer().getPluginManager().isPluginEnabled("TownyChat")) {
 				info("SiegeWar found TownyChat plugin, enabling TownyChat integration.");
 				pm.registerEvents(new SiegeWarTownyChatEventListener(), this);
