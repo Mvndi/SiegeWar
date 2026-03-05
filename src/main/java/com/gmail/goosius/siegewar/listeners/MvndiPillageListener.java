@@ -3,6 +3,7 @@ package com.gmail.goosius.siegewar.listeners;
 import com.gmail.goosius.siegewar.SiegeWar;
 import com.gmail.goosius.siegewar.events.SiegeEndEvent;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,6 +15,7 @@ import com.palmergames.bukkit.towny.event.actions.TownySwitchEvent;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class MvndiPillageListener implements Listener {
     private Map<Town, Long> pillagingTowns;
@@ -67,6 +69,7 @@ public class MvndiPillageListener implements Listener {
     private void startPillaging(Town town) {
         SiegeWar.info("Starting pillaging for " + town.getName());
         pillagingTowns.put(town, System.currentTimeMillis());
+        Bukkit.getAsyncScheduler().runDelayed(SiegeWar.getSiegeWar(), t -> endPillaging(town), SiegeWarSettings.getSiegeDurationPillage(), TimeUnit.MINUTES);
     }
 
     private void endPillaging(Town town) {
