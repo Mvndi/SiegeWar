@@ -106,6 +106,10 @@ public class SiegeWarSettings {
 		return Settings.getInt(ConfigNodes.SIEGE_DURATION_BATTLE_SESSIONS);
 	}
 
+	public static int getSiegeDurationPillage() {
+		return Settings.getInt(ConfigNodes.SIEGE_DURATION_PILLAGE);
+	}
+
 	public static boolean areBattlePointsWinnerTakesAll() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_POINTS_BALANCING_END_OF_BATTLE_POINTS_DISTRIBUTION_WINNER_TAKES_ALL);
 	}
