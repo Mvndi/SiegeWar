@@ -379,6 +379,9 @@ msg_peaceful_town_subverted: "&b%sが平和裏に転覆し、%sによって占�
 msg_err_cannot_subvert_town_already_occupied: "&cこの町を転覆する必要はありません。なぜなら既にあなたの国が所有・占拠しているからです。"
 #Revolting
 msg_revolt_siege_started: '&b%sの町の住民は%sの占拠国に対して立ち上がり、自分たちの運命を選ぶ自由を宣言しました。反乱の包囲が始まりました！'
+#Pillage
+msg_siege_war_pillage_started: '&bPILLAGE has begun in %s!'
+msg_siege_war_pillage_ended: '&bPILLAGE has ended in %s!'
 #war sickness
 msg_you_will_get_sickness: '&cWARNING: You are in the wilderness of a Siege Zone, but you are not an official participant in the siege. Please enter a non-besieged town or leave the Siege Zone, otherwise you will get War Sickness in %s seconds.'
 msg_you_received_war_sickness: '&cWARNING: You are in the wilderness of a Siege Zone, but you are not an official participant in the siege. To remove the War Sickness, enter a non-besieged town or leave the Siege Zone.'

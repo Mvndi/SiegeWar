@@ -379,6 +379,9 @@ msg_peaceful_town_subverted: "&b%s已经被%s和平颠覆并占领。"
 msg_err_cannot_subvert_town_already_occupied: "&c无需颠覆这个城镇，因为你的国家已经占领并拥有了它。"
 #Revolting
 msg_revolt_siege_started: '&b来自%s的城镇公民挺身而出，反对占领国%s，并宣布自己可以自由地选择原本属于他们自己的命运。一场起义围攻已经开始！'
+#Pillage
+msg_siege_war_pillage_started: '&bPILLAGE has begun in %s!'
+msg_siege_war_pillage_ended: '&bPILLAGE has ended in %s!'
 #war sickness
 msg_you_will_get_sickness: '&c警告: 你已进入围攻区的野外，但你不是围攻的正式参与者。请进入一个未被围攻的城镇或离开围攻区，否则你将在%s秒内患上战争病。'
 msg_you_received_war_sickness: '&c警告: 你已进入围攻区的野外，但你不是围攻的正式参与者。请进入一个未被围攻的城镇或离开围攻区以消除战争病。'

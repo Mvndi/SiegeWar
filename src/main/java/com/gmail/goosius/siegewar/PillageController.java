@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import com.palmergames.bukkit.towny.object.Translatable;
 
 public class PillageController {
     private Map<Town, Long> pillagingTowns;
@@ -24,6 +25,7 @@ public class PillageController {
 
 
     public void startPillaging(Town town, int time) {
+        Messaging.sendGlobalMessage(Translatable.of("msg_siege_war_pillage_started", town.getName()));
         SiegeWar.info("Starting pillaging for " + town.getName());
         pillagingTowns.put(town, System.currentTimeMillis());
         Bukkit.getAsyncScheduler().runDelayed(SiegeWar.getSiegeWar(), t -> endPillaging(town), time, TimeUnit.MINUTES);
@@ -34,7 +36,8 @@ public class PillageController {
     }
 
     public void endPillaging(Town town) {
-        SiegeWar.info("Stopping pillaging for " + town.getName());
+        Messaging.sendGlobalMessage(Translatable.of("msg_siege_war_pillage_ended", town.getName()));
+        SiegeWar.info("Ending pillaging for " + town.getName());
         pillagingTowns.remove(town);
     }
 
