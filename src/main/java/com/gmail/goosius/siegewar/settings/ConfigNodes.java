@@ -325,6 +325,12 @@ public enum ConfigNodes {
 			"",
 			"# The duration of a pillage, in minutes.",
 			"# The default value is 10."),
+	SIEGE_BUILD_AND_DESTROY_PILLAGE_COOLDOWN(
+			"war.siege.times.build_and_destroy_pillage_cooldown",
+			"10",
+			"",
+			"# The duration of the buildand destroy action in pillage town, in seconds.",
+			"# The default value is 10."),
 	SIEGE_IMMUNITY_TIME_NEW_TOWN_HOURS(
 			"war.siege.times.siege_immunity_time_new_town_hours",
 			"168",

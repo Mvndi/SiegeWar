@@ -3,18 +3,16 @@ package com.gmail.goosius.siegewar;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class PillageController {
     private Map<Town, Long> pillagingTowns;
-    private ConcurrentHashMap<UUID, Long> buildDestoryCooldownMap;
     private static PillageController instance;
-    private void PillageController() {
+    private PillageController() {
         pillagingTowns = new ConcurrentHashMap<>();
-        buildDestoryCooldownMap = new ConcurrentHashMap<>();
     }
 
     public static PillageController getInstance() {
@@ -40,7 +38,7 @@ public class PillageController {
         pillagingTowns.remove(town);
     }
 
-    public boolean canPillage(Town town) {
+    public boolean canPillage(Town town, Player player) {
         int siegeDurationPillage = SiegeWarSettings.getSiegeDurationPillage();
         // No pillage
         if(siegeDurationPillage <= 0) {
@@ -56,7 +54,7 @@ public class PillageController {
         long siegeDurationPillageMs = 60L * 1000L * siegeDurationPillage;
 
         // Pillage ended since last check
-        if(siegeEndedTime + siegeDurationPillageMs < System.currentTimeMillis()) {
+        if (siegeEndedTime + siegeDurationPillageMs < System.currentTimeMillis()) {
             endPillaging(town);
             return false;
         }
