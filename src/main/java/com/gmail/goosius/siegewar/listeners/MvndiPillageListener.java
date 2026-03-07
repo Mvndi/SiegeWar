@@ -21,6 +21,8 @@ import com.palmergames.bukkit.towny.event.actions.TownyDestroyEvent;
 import com.palmergames.bukkit.towny.event.actions.TownyItemuseEvent;
 import com.palmergames.bukkit.towny.event.actions.TownySwitchEvent;
 import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.TownBlock;
+
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -67,7 +69,10 @@ public class MvndiPillageListener implements Listener {
 		if (!TownyAPI.getInstance().isTownyWorld(block.getWorld()))
 			return;
 
-        Town town = TownyAPI.getInstance().getTownOrNull(TownyAPI.getInstance().getTownBlock(block.getLocation()));
+        TownBlock tb = TownyAPI.getInstance().getTownBlock(block.getLocation());
+        if (tb == null)
+            return;
+        Town town = TownyAPI.getInstance().getTownOrNull(tb);
         if (town == null)
             return;
 
@@ -77,6 +82,8 @@ public class MvndiPillageListener implements Listener {
 
 
     private void onTownyEvent(TownyActionEvent event, boolean isCooldownEvent) {
+        if (event.getTownBlock() == null)
+            return;
         try {
             onCancellableEvent(event, event.getTownBlock().getTown(), event.getPlayer(), isCooldownEvent);
         } catch (Exception e) {
