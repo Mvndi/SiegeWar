@@ -324,6 +324,18 @@ public enum ConfigNodes {
 			"# TIP 1: The higher this value, the more your server will experience aggression and toxicity.",
 			"# TIP 2: The higher this value, the more your geopolitics will be dominated by ultra-hardcore gamers, who will find it easier to defeat players with normal/healthy hours-online-per-week.",
 			"# The default value is 7."),
+	SIEGE_DURATION_PILLAGE(
+			"war.siege.times.duration_pillage",
+			"10",
+			"",
+			"# The duration of a pillage, in minutes.",
+			"# The default value is 10."),
+	SIEGE_BUILD_AND_DESTROY_PILLAGE_COOLDOWN(
+			"war.siege.times.build_and_destroy_pillage_cooldown",
+			"60",
+			"",
+			"# The duration of the build and destroy action in pillage town, in seconds.",
+			"# The default value is 60."),
 	SIEGE_IMMUNITY_TIME_NEW_TOWN_HOURS(
 			"war.siege.times.siege_immunity_time_new_town_hours",
 			"168",

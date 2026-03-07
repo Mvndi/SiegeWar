@@ -1,6 +1,7 @@
 package com.gmail.goosius.siegewar.command;
 
 import com.gmail.goosius.siegewar.Messaging;
+import com.gmail.goosius.siegewar.PillageController;
 import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.TownOccupationController;
 import com.gmail.goosius.siegewar.enums.SiegeRemoveReason;
@@ -10,6 +11,7 @@ import com.gmail.goosius.siegewar.metadata.TownMetaDataController;
 import com.gmail.goosius.siegewar.objects.BattleSession;
 import com.gmail.goosius.siegewar.objects.Siege;
 import com.gmail.goosius.siegewar.settings.Settings;
+import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.gmail.goosius.siegewar.utils.SiegeWarBattleSessionUtil;
 import com.gmail.goosius.siegewar.utils.SiegeWarTownPeacefulnessUtil;
 import com.palmergames.bukkit.config.CommentedConfiguration;
@@ -41,7 +43,7 @@ public class SiegeWarAdminCommand implements TabExecutor {
 	private static final List<String> siegewaradminSiegeImmunityTabCompletes = Arrays.asList("town","nation","alltowns");
 	private static final List<String> siegewaradminRevoltImmunityTabCompletes = Arrays.asList("town","nation","alltowns");
 	private static final List<String> siegewaradminSiegeTabCompletes = Arrays.asList("setbalance","end","setplundered","setinvaded","remove");
-	private static final List<String> siegewaradminTownTabCompletes = Arrays.asList("setpeaceful", "setoccupied");
+	private static final List<String> siegewaradminTownTabCompletes = Arrays.asList("setpeaceful", "setoccupied", "setpillage");
 	private static final List<String> siegewaradminNationTabCompletes = Arrays.asList("setplundergained","setplunderlost","settownsgained","settownslost");
 	private static final List<String> siegewaradminBattleSessionTabCompletes = Arrays.asList("end","start");
 
@@ -318,6 +320,7 @@ public class SiegeWarAdminCommand implements TabExecutor {
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "siege [town_name] remove", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "town [town_name] setpeaceful [true/false]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "town [town_name] setoccupied [true/false]", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "town [town_name] setpillage [minutes]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] setplundergained [amount]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] setplunderlost [amount]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] settownsgained [amount]", ""));
@@ -357,6 +360,7 @@ public class SiegeWarAdminCommand implements TabExecutor {
 		TownyMessaging.sendMessage(sender, ChatTools.formatTitle("/swa town"));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "town [town_name] setpeaceful [true/false]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "town [town_name] setoccupied [true/false]", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "town [town_name] setpillage [minutes]", ""));
 	}
 
 	private void showNationHelp(CommandSender sender) {
@@ -660,6 +664,11 @@ public class SiegeWarAdminCommand implements TabExecutor {
 						Messaging.sendMsg(sender, Translatable.of("msg_swa_town_occupation_change_success", town.getName(), occupied));
 						break;
 					}
+				case "setpillage":
+					int time = (args.length < 3) ? SiegeWarSettings.getSiegeDurationPillage() : Integer.parseInt(args[2]);
+					PillageController.getInstance().startPillaging(town, time);
+					Messaging.sendMsg(sender, Translatable.of("msg_swa_town_pillage_change_success", town.getName(), time));
+					break;
 				default:
 					showSiegeHelp(sender);
 			}
