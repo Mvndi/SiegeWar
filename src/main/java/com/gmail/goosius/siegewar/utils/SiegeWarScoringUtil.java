@@ -1,5 +1,6 @@
 package com.gmail.goosius.siegewar.utils;
 
+import com.gmail.goosius.siegewar.PillageController;
 import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.enums.SiegeSide;
 import com.gmail.goosius.siegewar.events.BattleSessionPenaltyPointsEvent;
@@ -55,10 +56,12 @@ public class SiegeWarScoringUtil {
 			battlePoints = SiegeWarSettings.getWarBattlePointsForAttackerDeath();
 			battlePoints = applyBattlePointsPenaltyForBannerControl(true, battlePoints, siege);
 			siege.adjustDefenderBattlePoints(battlePoints);
+			PillageController.getInstance().addDefenderKill(siege.getTown());
 		} else {
 			battlePoints = SiegeWarSettings.getWarBattlePointsForDefenderDeath();
 			battlePoints = applyBattlePointsPenaltyForBannerControl(false, battlePoints, siege);
 			siege.adjustAttackerBattlePoints(battlePoints);
+			PillageController.getInstance().addAttackerKill(siege.getTown());
 		}
 
 		//Save siege to db

@@ -36,7 +36,7 @@ public class MvndiPillageListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onSiegeEnd(SiegeEndEvent event) {
         if ("ATTACKERS".equals(event.getSiegeWinner())) {
-            PillageController.getInstance().startPillaging(event.getSiege().getTown());
+            PillageController.getInstance().startPillaging(event.getSiege());
         } else {
             SiegeWar.info("No pillage for " + event.getSiege().getTown().getName()+ " because siege was won by " + event.getSiegeWinner() + " and not by " + event.getAttackerName());
         }
@@ -95,7 +95,7 @@ public class MvndiPillageListener implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE)
             return;
 
-        if (PillageController.getInstance().canPillage(town, player)) {
+        if (PillageController.getInstance().canPillage(town)) {
 
             if (!isCooldownEvent) {
                 event.setCancelled(false);

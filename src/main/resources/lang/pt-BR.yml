@@ -380,7 +380,8 @@ msg_err_cannot_subvert_town_already_occupied: "&cNão há necessidade de subvert
 #Revolting
 msg_revolt_siege_started: '&bOs habitantes de %s se levantaram contra a nação ocupante de %s, e se declararam livres para escolher seu próprio destino. Um CERCO DE REVOLTA começou!'
 #Pillage
-msg_siege_war_pillage_started: '&bPILLAGE has begun in %s!'
+msg_siege_war_pillage_started: '&bPILLAGE has begun in %s for %d minutes!'
+msg_siege_war_pillage_not_started: '&bThere will be no PILLAGE in %s because attackers have died much more than defenders!'
 msg_siege_war_pillage_ended:  '&bPILLAGE has ended in %s!'
 msg_swa_town_pillage_change_success: "&b%s pillaged successfully changed to %d minutes"
 #war sickness
