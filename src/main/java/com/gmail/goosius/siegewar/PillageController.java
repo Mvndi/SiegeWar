@@ -36,6 +36,12 @@ public class PillageController {
             Bukkit.getAsyncScheduler().runDelayed(SiegeWar.getSiegeWar(), t -> endPillaging(town), time, TimeUnit.MINUTES);
         } else {
             Messaging.sendGlobalMessage(Translatable.of("msg_siege_war_pillage_not_started", town.getName()));
+            if (pillagingTowns.containsKey(town)) { // migth have been ended by admin command.
+                endPillaging(town);
+                SiegeWar.info("Pillage of " + town.getName() + " ended");
+            } else {
+                SiegeWar.info("Pillage of " + town.getName() + " not started");
+            }
         }
     }
 
@@ -70,10 +76,16 @@ public class PillageController {
 
     private int getTimeFromRatio(Siege siege) {
         try {
-            // between 0 & 5 ratio
-            float ratio = Math.min(5F, Math.max(1, (float) attackerKills.getOrDefault(siege.getTown(), 1)) / Math.max(1, (float) (defenderKills.getOrDefault(siege.getTown(), 1))));
+            float ratio = Math.max(1, (float) attackerKills.getOrDefault(siege.getTown(), 1)) / Math.max(1, (float) (defenderKills.getOrDefault(siege.getTown(), 1)));
             SiegeWar.info("Ratio for " + siege.getTown().getName() + " is " + ratio);
-            return Math.round(SiegeWarSettings.getSiegeDurationPillage() * ratio);
+            int time = Math.round(SiegeWarSettings.getSiegeDurationPillage() * ratio);
+            if(time > SiegeWarSettings.getSiegeMaxDurationPillage()) {
+                return SiegeWarSettings.getSiegeMaxDurationPillage();
+            } else if (time < SiegeWarSettings.getSiegeMinDurationPillage()) {
+                return 0;
+            } else {
+                return time;
+            }
         } catch (Exception e) {
             SiegeWar.getSiegeWar().getLogger().warning("Error calculating pillage time from ratio: " + siege.getTown().getName() + " using default value");
             return SiegeWarSettings.getSiegeDurationPillage();
