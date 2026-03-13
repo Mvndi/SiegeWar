@@ -82,7 +82,11 @@ public class PillageController {
             if(time > SiegeWarSettings.getSiegeMaxDurationPillage()) {
                 return SiegeWarSettings.getSiegeMaxDurationPillage();
             } else if (time < SiegeWarSettings.getSiegeMinDurationPillage()) {
-                return 0;
+                if(SiegeWarSettings.getSiegeMinDurationCancelsPillage()) {
+                    return 0;
+                } else {
+                    return SiegeWarSettings.getSiegeMinDurationPillage();
+                }
             } else {
                 return time;
             }

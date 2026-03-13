@@ -114,6 +114,10 @@ public class SiegeWarSettings {
 		return Settings.getInt(ConfigNodes.SIEGE_DURATION_PILLAGE);
 	}
 
+	public static boolean getSiegeMinDurationCancelsPillage() {
+		return Settings.getBoolean(ConfigNodes.SIEGE_MIN_DURATION_CANCELS_PILLAGE);
+	}
+
 	public static int getSiegeMinDurationPillage() {
 		return Settings.getInt(ConfigNodes.SIEGE_MIN_DURATION_PILLAGE);
 	}
