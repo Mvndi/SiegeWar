@@ -114,6 +114,18 @@ public class SiegeWarSettings {
 		return Settings.getInt(ConfigNodes.SIEGE_DURATION_PILLAGE);
 	}
 
+	public static boolean getSiegeMinDurationCancelsPillage() {
+		return Settings.getBoolean(ConfigNodes.SIEGE_MIN_DURATION_CANCELS_PILLAGE);
+	}
+
+	public static int getSiegeMinDurationPillage() {
+		return Settings.getInt(ConfigNodes.SIEGE_MIN_DURATION_PILLAGE);
+	}
+
+	public static int getSiegeMaxDurationPillage() {
+		return Settings.getInt(ConfigNodes.SIEGE_MAX_DURATION_PILLAGE);
+	}
+
 	public static long getBuildAndDestroyPillageCooldownNanoseconds() {
 		return Settings.getInt(ConfigNodes.SIEGE_BUILD_AND_DESTROY_PILLAGE_COOLDOWN) * 1_000_000_000L;
 	}
