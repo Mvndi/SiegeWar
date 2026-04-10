@@ -23,13 +23,15 @@ import org.jetbrains.annotations.Nullable;
 public class SiegeWarSettings {
 	
 	private static List<DayOfWeek> allowedDaysList = null;
-	private static String allowedWeeks = null;
+	private static String allowedWeeksStartSiege = null;
+	private static String allowedWeeksBattleSession = null;
 	private static List<Material> siegeZoneWildernessForbiddenBlockMaterials = null;
 	private static List<Material> siegeZoneWildernessForbiddenBucketMaterials = null;
 	private static List<EntityType> siegeZoneWildernessForbiddenExplodeEntityTypes = null;
 	protected static void resetCachedSettings() {
 		allowedDaysList = null;
-		allowedWeeks = null;
+		allowedWeeksStartSiege = null;
+		allowedWeeksBattleSession = null;
 		siegeZoneWildernessForbiddenBlockMaterials = null;
 		siegeZoneWildernessForbiddenBucketMaterials = null;
 		siegeZoneWildernessForbiddenExplodeEntityTypes = null;
@@ -418,6 +420,10 @@ public class SiegeWarSettings {
 		return Settings.getString(ConfigNodes.SIEGE_START_DAY_LIMITER_ALLOWED_WEEKS);
 	}
 
+	public static String getBattleSessionSchedulerAllowedWeeks() {
+		return Settings.getString(ConfigNodes.BATTLE_SESSION_SCHEDULER_ALLOWED_WEEKS);
+	}
+
 	public static List<DayOfWeek> getSiegeStartDayLimiterAllowedDays() {
 		List<DayOfWeek> allowedDaysList = new ArrayList<>();
 		String[] allowedDaysStringArray = Settings.getString(ConfigNodes.SIEGE_START_DAY_LIMITER_ALLOWED_DAYS).toUpperCase(Locale.ROOT).replaceAll(" ", "").split(",");
@@ -432,7 +438,9 @@ public class SiegeWarSettings {
 	}
 
 	public static boolean doesTodayAllowASiegeToStart() {
-		if(!doesDateAllowSiegeStartsForAllowedWeeks(LocalDate.now()))
+		if(allowedWeeksStartSiege == null)
+			allowedWeeksStartSiege = getSiegeStartDayLimiterAllowedWeeks();
+		if(!doesDateIsAllowedWeeks(LocalDate.now(), allowedWeeksStartSiege))
 			return false;
 
 		//Check day of week
@@ -444,24 +452,21 @@ public class SiegeWarSettings {
 		return true;
 	}
 
-	private static boolean doesDateAllowSiegeStartsForAllowedWeeks(LocalDate date) {
-		if (allowedWeeks == null)
-			allowedWeeks = getSiegeStartDayLimiterAllowedWeeks();
-
+	private static boolean doesDateIsAllowedWeeks(LocalDate date, String allowedWeeks) {
 		int weekOfYear = date.get(WeekFields.ISO.weekOfWeekBasedYear());
-		if (allowedWeeks.equalsIgnoreCase("even-weeks-only"))
+		if(allowedWeeks.equalsIgnoreCase("even-weeks-only"))
 			return weekOfYear % 2 == 0;
-		if (allowedWeeks.equalsIgnoreCase("odd-weeks-only"))
+		if(allowedWeeks.equalsIgnoreCase("odd-weeks-only"))
 			return weekOfYear % 2 == 1;
 
 		return true;
 	}
 
 	private static int getBattleSessionSearchWindowDays() {
-		if (allowedWeeks == null)
-			allowedWeeks = getSiegeStartDayLimiterAllowedWeeks();
+		if (allowedWeeksBattleSession == null)
+			allowedWeeksBattleSession = getBattleSessionSchedulerAllowedWeeks();
 
-		return allowedWeeks.equalsIgnoreCase("even-weeks-only") || allowedWeeks.equalsIgnoreCase("odd-weeks-only") ? 14 : 7;
+		return allowedWeeksBattleSession.equalsIgnoreCase("even-weeks-only") || allowedWeeksBattleSession.equalsIgnoreCase("odd-weeks-only") ? 14 : 7;
 	}
 
 	public static int getSiegeBalanceCapValue() {
@@ -499,7 +504,10 @@ public class SiegeWarSettings {
 	}
 
 	private static List<LocalDateTime> getAllBattleSessionStartTimesForDay(LocalDate day) {
-		if (!doesDateAllowSiegeStartsForAllowedWeeks(day))
+		if(allowedWeeksBattleSession == null)
+			allowedWeeksBattleSession = getBattleSessionSchedulerAllowedWeeks();
+		
+		if(!doesDateIsAllowedWeeks(day, allowedWeeksBattleSession))
 			return new ArrayList<>();
 
 		//Get Start times for the given day
