@@ -29,6 +29,7 @@ public class SiegeWarSettings {
 	private static List<EntityType> siegeZoneWildernessForbiddenExplodeEntityTypes = null;
 	protected static void resetCachedSettings() {
 		allowedDaysList = null;
+		allowedWeeks = null;
 		siegeZoneWildernessForbiddenBlockMaterials = null;
 		siegeZoneWildernessForbiddenBucketMaterials = null;
 		siegeZoneWildernessForbiddenExplodeEntityTypes = null;
@@ -431,13 +432,7 @@ public class SiegeWarSettings {
 	}
 
 	public static boolean doesTodayAllowASiegeToStart() {
-		//Check week of year
-		if(allowedWeeks == null)
-			allowedWeeks = getSiegeStartDayLimiterAllowedWeeks();
-		int weekOfYear = LocalDate.now().get(WeekFields.ISO.weekOfWeekBasedYear());
-		if(allowedWeeks.equalsIgnoreCase("even-weeks-only") && weekOfYear %2 != 0)
-			return false;
-		if(allowedWeeks.equalsIgnoreCase("odd-weeks-only") && weekOfYear %2 != 1)
+		if(!doesDateAllowSiegeStartsForAllowedWeeks(LocalDate.now()))
 			return false;
 
 		//Check day of week
@@ -447,6 +442,26 @@ public class SiegeWarSettings {
 			return false;
 
 		return true;
+	}
+
+	private static boolean doesDateAllowSiegeStartsForAllowedWeeks(LocalDate date) {
+		if (allowedWeeks == null)
+			allowedWeeks = getSiegeStartDayLimiterAllowedWeeks();
+
+		int weekOfYear = date.get(WeekFields.ISO.weekOfWeekBasedYear());
+		if (allowedWeeks.equalsIgnoreCase("even-weeks-only"))
+			return weekOfYear % 2 == 0;
+		if (allowedWeeks.equalsIgnoreCase("odd-weeks-only"))
+			return weekOfYear % 2 == 1;
+
+		return true;
+	}
+
+	private static int getBattleSessionSearchWindowDays() {
+		if (allowedWeeks == null)
+			allowedWeeks = getSiegeStartDayLimiterAllowedWeeks();
+
+		return allowedWeeks.equalsIgnoreCase("even-weeks-only") || allowedWeeks.equalsIgnoreCase("odd-weeks-only") ? 14 : 7;
 	}
 
 	public static int getSiegeBalanceCapValue() {
@@ -472,8 +487,8 @@ public class SiegeWarSettings {
 	@Nullable
 	public static LocalDateTime getNextBattleSessionDaysInAdvance() {
 		LocalDateTime nextSession = null;
-		// Check the next 1-6 days for battle session start times. 
-		for (int i = 1 ; i < 7 ; i++) {
+		// Check the next 1-6 days for battle session start times. Or 1 to 13 days if even-weeks-only or odd-weeks-only.
+		for (int i = 1 ; i < getBattleSessionSearchWindowDays() ; i++) {
 			List<LocalDateTime> allBattleSessionStartTimesForDate = getAllBattleSessionStartTimesForDay(LocalDate.now().plusDays(i));
 			if (allBattleSessionStartTimesForDate.size() != 0) {
 				nextSession = allBattleSessionStartTimesForDate.get(0);
@@ -484,6 +499,9 @@ public class SiegeWarSettings {
 	}
 
 	private static List<LocalDateTime> getAllBattleSessionStartTimesForDay(LocalDate day) {
+		if (!doesDateAllowSiegeStartsForAllowedWeeks(day))
+			return new ArrayList<>();
+
 		//Get Start times for the given day
 		String startTimesAsString = "";
 		switch (day.getDayOfWeek()) {
