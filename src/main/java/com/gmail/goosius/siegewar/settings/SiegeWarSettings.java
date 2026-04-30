@@ -201,9 +201,13 @@ public class SiegeWarSettings {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_MAX_ACTIVE_SIEGE_ATTACKS_PER_NATION_USE_LEVELS);
 	}
 
+	public static int getWarSiegeMaxActiveSiegeAttacksPerNationMaxValue() {
+		return Settings.getInt(ConfigNodes.WAR_SIEGE_MAX_ACTIVE_SIEGE_ATTACKS_PER_NATION_MAX_VALUE);
+	}
+
 	public static boolean doesThisNationHaveTooManyActiveSieges(Nation nation) {
 		int multiplier = getWarSiegeMaxActiveSiegeAttacksPerNationUseLevels() ? nation.getLevelNumber() : 1;
-		int maxAllowedSieges = (multiplier * getWarSiegeMaxActiveSiegeAttacksPerNation());
+		int maxAllowedSieges = Math.min(getWarSiegeMaxActiveSiegeAttacksPerNationMaxValue(), (multiplier * getWarSiegeMaxActiveSiegeAttacksPerNation()));
 		return SiegeController.getNumActiveConquestAttackSieges(nation) >= maxAllowedSieges;
 	}
 
