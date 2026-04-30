@@ -1,5 +1,6 @@
 package com.gmail.goosius.siegewar;
 
+import com.gmail.goosius.siegewar.enums.SiegeStatus;
 import com.gmail.goosius.siegewar.objects.Siege;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.palmergames.bukkit.towny.object.Town;
@@ -30,7 +31,7 @@ public class PillageController {
 
     public void startPillaging(Town town, int time) {
         SiegeWar.info("Starting pillaging of " + town.getName() + " for " + time + " minutes");
-        if(time > 0) {
+        if (time > 0) {
             Messaging.sendGlobalMessage(Translatable.of("msg_siege_war_pillage_started", town.getName(), time));
             pillagingTowns.put(town, System.currentTimeMillis() + (time * 60L * 1000L));
             Bukkit.getAsyncScheduler().runDelayed(SiegeWar.getSiegeWar(), t -> endPillaging(town), time, TimeUnit.MINUTES);
@@ -46,8 +47,12 @@ public class PillageController {
     }
 
     public void startPillaging(Siege siege) {
-        int ratio = getTimeFromRatio(siege);
-        startPillaging(siege.getTown(), ratio);
+        if (siege.getStatus() == SiegeStatus.DEFENDER_SURRENDER && !SiegeWarSettings.getWarSiegeSurrenderPillageEnabled()) {
+            SiegeWar.info("No pillage when defending town has surrendered.");
+        } else {
+            int ratio = getTimeFromRatio(siege);
+            startPillaging(siege.getTown(), ratio);
+        }
     }
 
     public void endPillaging(Town town) {
