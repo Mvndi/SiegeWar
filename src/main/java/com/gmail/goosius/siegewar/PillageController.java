@@ -47,7 +47,7 @@ public class PillageController {
     }
 
     public void startPillaging(Siege siege) {
-        if (siege.getStatus() == SiegeStatus.DEFENDER_SURRENDER && !SiegeWarSettings.getWarSiegeSurrenderPillageEnabled()) {
+        if (siege.getStatus() == SiegeStatus.DEFENDER_SURRENDER && !SiegeWarSettings.getWarSiegeSurrenderPillageEnabled() && !SiegeWarAPI.isBattleSessionActive()) {
             SiegeWar.info("No pillage when defending town has surrendered.");
         } else {
             int ratio = getTimeFromRatio(siege);
