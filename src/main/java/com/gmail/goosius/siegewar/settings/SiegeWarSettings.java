@@ -49,6 +49,10 @@ public class SiegeWarSettings {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_SURRENDER_ENABLED);
 	}
 
+	public static boolean getWarSiegeSurrenderDelayEnabled() {
+		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_SURRENDER_DELAY_ENABLED);
+	}
+
 	public static boolean getWarSiegeInvadeEnabled() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_INVADE_ENABLED);
 	}

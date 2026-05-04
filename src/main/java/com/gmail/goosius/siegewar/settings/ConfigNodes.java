@@ -67,6 +67,11 @@ public enum ConfigNodes {
 			"true",
 			"",
 			"# If true, then defenders can surrender sieges."),
+	WAR_SIEGE_SURRENDER_DELAY_ENABLED(
+			"war.siege.switches.town_surrender_delay_enabled",
+			"true",
+			"",
+			"# If true, then defenders surrendering will wait for the end of the siege battle before surrendering for real."),
 	WAR_SIEGE_INVADE_ENABLED(
 			"war.siege.switches.invade_enabled",
 			"true",
