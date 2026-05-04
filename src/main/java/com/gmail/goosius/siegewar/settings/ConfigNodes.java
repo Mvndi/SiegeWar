@@ -145,6 +145,12 @@ public enum ConfigNodes {
 			"true",
 			"",
 			"# When true, players will have a glowing effect."),
+	WAR_SIEGE_RUINED_TOWN_STAY_OCCUPIED(
+			"war.siege.switches.ruined_town_stay_occupied",
+			"false",
+			"",
+			"# If true, A town that fall under ruins while being occupied will stay occupied.",
+			"# If false, it get unoccupied."),
 
 	WAR_SIEGE_ONLY_ONE_ACTION_ENABLED(
 			"war.siege.switches.only_one_action_enabled",
