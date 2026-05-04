@@ -586,6 +586,10 @@ public class SiegeWarSettings {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_ONLY_ONE_ACTION_ENABLED);
 	}
 
+	public static boolean isRuinedTownStayOccupied() {
+		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_RUINED_TOWN_STAY_OCCUPIED);
+	}
+
 	public static double getWarSiegeNationCostRefundPercentageOnDelete() {
 		return Settings.getDouble(ConfigNodes.WAR_SIEGE_NATION_COST_REFUND_PERCENTAGE_ON_DELETE);
 	}
