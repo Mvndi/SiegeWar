@@ -200,6 +200,7 @@ public class SiegeWarStatusScreenListener implements Listener {
 			 */
 			if(TownyEconomyHandler.isActive()
 					&& TownOccupationController.isTownOccupied(town)
+					&& !town.isRuined()
 					&& SiegeWarSettings.getMaxOccupationTaxPerPlot() > 0) {
 
 				double occupationTax = TownOccupationController.getNationOccupationTax(town);

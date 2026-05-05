@@ -145,20 +145,31 @@ public enum ConfigNodes {
 			"true",
 			"",
 			"# When true, players will have a glowing effect."),
+	WAR_SIEGE_ONLY_ONE_ACTION_ENABLED(
+			"war.siege.switches.only_one_action_enabled",
+			"false",
+			"",
+			"# If true, players can only either invade or plunder a town, not both.",
+			"# If false, players can perform both actions."),
 	WAR_SIEGE_RUINED_TOWN_STAY_OCCUPIED(
 			"war.siege.switches.ruined_town_stay_occupied",
 			"false",
 			"",
 			"# If true, A town that fall under ruins while being occupied will stay occupied.",
 			"# If false, it get unoccupied."),
-
-	WAR_SIEGE_ONLY_ONE_ACTION_ENABLED(
-			"war.siege.switches.only_one_action_enabled",
+	WAR_SIEGE_OCCUPYING_NATION_CAN_REMAYOR_UNRUINED_OCCUPIED_TOWN(
+			"war.siege.switches.occupying_nation_can_remayor_unruined_occupied_town",
 			"false",
 			"",
-			"# If true, players can only either invade or plunder a town, not both.",
-			"# If false, players can perform both actions."
-	),
+			"# If true, Any not ruined occupied town can be remayored by the occupying nation.",
+			"# Any nation member with siegewar.command.siegewar.takefullcontrol permission can run /sw takefullcontrol"),
+	WAR_SIEGE_OCCUPYING_NATION_CAN_REMAYOR_RUINED_OCCUPIED_TOWN(
+			"war.siege.switches.occupying_nation_can_remayor_ruined_occupied_town",
+			"false",
+			"",
+			"# If true, Any ruined occupied town can be remayored by the occupying nation.",
+			"# Only works if war.siege.switches.ruined_town_stay_occupied is true. Else ruined towns won't be occupied.",
+			"# Any nation member with siegewar.command.siegewar.takefullcontrol permission can run /sw takefullcontrol"),
 
 	WAR_SIEGE_MONEY(
 			"war.siege.money",

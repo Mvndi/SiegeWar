@@ -15,6 +15,7 @@ import com.gmail.goosius.siegewar.utils.SiegeWarTownPeacefulnessUtil;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.event.DeleteTownEvent;
+import com.palmergames.bukkit.towny.event.NewDayEvent;
 import com.palmergames.bukkit.towny.event.NewTownEvent;
 import com.palmergames.bukkit.towny.event.TownAddResidentRankEvent;
 import com.palmergames.bukkit.towny.event.TownPreAddResidentEvent;
@@ -22,6 +23,7 @@ import com.palmergames.bukkit.towny.event.TownPreClaimEvent;
 import com.palmergames.bukkit.towny.event.TownSpawnEvent;
 import com.palmergames.bukkit.towny.event.time.dailytaxes.PreTownPaysNationTaxEvent;
 import com.palmergames.bukkit.towny.event.town.TownPreMergeEvent;
+import com.palmergames.bukkit.towny.event.town.TownPreRuinedEvent;
 import com.palmergames.bukkit.towny.event.town.TownPreUnclaimCmdEvent;
 import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
 import com.palmergames.bukkit.towny.event.town.TownPreSetHomeBlockEvent;
@@ -34,6 +36,8 @@ import com.palmergames.bukkit.towny.object.Translation;
 import com.palmergames.bukkit.towny.object.Translator;
 import com.palmergames.bukkit.towny.object.WorldCoord;
 import com.palmergames.util.TimeMgmt;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -47,10 +51,25 @@ public class SiegeWarTownEventListener implements Listener {
 
 	@SuppressWarnings("unused")
 	private final SiegeWar plugin;
+	// Town are getting removed from the nation before being ruined, we need to keep track of the nation to add them back if isRuinedTownStayOccupied
+	private final Map<Town, Nation> preRuinedOccupiedTown;
 	
 	public SiegeWarTownEventListener(SiegeWar instance) {
-
+		preRuinedOccupiedTown = new ConcurrentHashMap<>();
 		plugin = instance;
+	}
+
+	/**
+	 * Save the nation of the town that is about to be ruined
+	 */
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+	public void onTownPreRuinedEvent(TownPreRuinedEvent event) {
+		if (SiegeWarSettings.isRuinedTownStayOccupied() && TownOccupationController.isTownOccupied(event.getTown())) {
+			Nation nation = event.getTown().getNationOrNull();
+			if (nation != null) {
+				preRuinedOccupiedTown.put(event.getTown(), nation);
+			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -58,9 +77,23 @@ public class SiegeWarTownEventListener implements Listener {
 		//Remove siege if town has one
 		if (SiegeController.hasSiege(event.getTown()))
 			SiegeController.removeSiege(SiegeController.getSiege(event.getTown()), SiegeRemoveReason.TOWN_RUIN);
-		//Remove occupier if town has one
-		if (TownOccupationController.isTownOccupied(event.getTown()) && SiegeWarSettings.isRuinedTownStayOccupied())
+		if (SiegeWarSettings.isRuinedTownStayOccupied()) {
+			Nation nation = preRuinedOccupiedTown.get(event.getTown());
+			if (nation != null) {
+				TownOccupationController.setTownOccupation(event.getTown(), nation);
+			}
+			preRuinedOccupiedTown.remove(event.getTown());
+		} else {
+			//Remove occupier if town has one
 			TownOccupationController.removeTownOccupation(event.getTown());
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onNewDay(NewDayEvent event) {
+		if (SiegeWarSettings.isRuinedTownStayOccupied()) {
+			preRuinedOccupiedTown.clear();
+		}
 	}
 	
 	/*

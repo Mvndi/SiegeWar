@@ -622,6 +622,14 @@ public class SiegeWarSettings {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_RUINED_TOWN_STAY_OCCUPIED);
 	}
 
+	public static boolean isOccupyingNationCanRemayorUnruinedOccupiedTown() {
+		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_OCCUPYING_NATION_CAN_REMAYOR_UNRUINED_OCCUPIED_TOWN);
+	}
+	
+	public static boolean isOccupyingNationCanRemayorRuinedOccupiedTown() {
+		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_OCCUPYING_NATION_CAN_REMAYOR_RUINED_OCCUPIED_TOWN);
+	}
+
 	public static double getWarSiegeNationCostRefundPercentageOnDelete() {
 		return Settings.getDouble(ConfigNodes.WAR_SIEGE_NATION_COST_REFUND_PERCENTAGE_ON_DELETE);
 	}

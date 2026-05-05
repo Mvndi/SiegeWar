@@ -39,6 +39,7 @@ public enum SiegeWarPermissionNodes {
 	SIEGEWAR_COMMAND_SIEGEWAR_LIST_PEACEFUL_TOWNS("siegewar.command.siegewar.listpeacefultowns"),
 	SIEGEWAR_COMMAND_SIEGEWAR_PREFERENCE("siegewar.command.siegewar.preference"),
 	SIEGEWAR_COMMAND_SIEGEWAR_NEXTSESSION("siegewar.command.siegewar.nextsession"),
+	SIEGEWAR_COMMAND_SIEGEWAR_TAKE_FULL_CONTROL("siegewar.command.siegewar.takefullcontrol"),
 
 	// ----- Admin Command Nodes -----
 	SIEGEWAR_COMMAND_SIEGEWARADMIN("siegewar.command.siegewaradmin.*"),

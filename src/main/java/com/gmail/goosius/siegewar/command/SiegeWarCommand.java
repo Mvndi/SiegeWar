@@ -3,9 +3,11 @@ package com.gmail.goosius.siegewar.command;
 import com.gmail.goosius.siegewar.Messaging;
 import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.SiegeWar;
+import com.gmail.goosius.siegewar.TownOccupationController;
 import com.gmail.goosius.siegewar.enums.SiegeWarPermissionNodes;
 import com.gmail.goosius.siegewar.metadata.ResidentMetaDataController;
 import com.gmail.goosius.siegewar.objects.BattleSession;
+import com.gmail.goosius.siegewar.objects.Siege;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.gmail.goosius.siegewar.utils.BossBarUtil;
 import com.gmail.goosius.siegewar.utils.CosmeticUtil;
@@ -16,6 +18,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyEconomyHandler;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.confirmations.Confirmation;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
@@ -23,6 +26,7 @@ import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.Translatable;
 import com.palmergames.bukkit.towny.permissions.TownyPerms;
 import com.palmergames.bukkit.towny.utils.NameUtil;
+import com.palmergames.bukkit.towny.utils.TownRuinUtil;
 import com.palmergames.bukkit.util.ChatTools;
 import com.palmergames.util.StringMgmt;
 import com.palmergames.util.TimeMgmt;
@@ -38,7 +42,7 @@ import java.util.*;
 public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 	
 	private static final List<String> siegewarTabCompletes = Arrays.asList("collect", "town", "nation", "hud", 
-			"listpeacefultowns", "preference", "version", "nextsession", "spawn");
+			"listpeacefultowns", "preference", "version", "nextsession", "takefullcontrol", "spawn");
 
 	private static final List<String> siegewarTownTabCompletes = Arrays.asList("togglepeaceful");
 	
@@ -85,6 +89,7 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw nation", "paysoldiers [amount]", Translatable.of("nation_help_siegewar_12").forLocale(sender)));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw town", "togglepeaceful", Translatable.of("town_help_toggle_peaceful").forLocale(sender)));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw nextsession", "", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw takefullcontrol", "", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw version", "", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw preference", "beacons [on/off]", ""));
 	}
@@ -152,6 +157,9 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 		case "nextsession":
 			parseSiegeWarNextSessionCommand(player);
 			break;
+		case "takefullcontrol":
+			parseSiegeWarTakeFullControlCommand(player);
+			break;
 		case "preference":
 			parseSiegewarPreferenceCommand(player, StringMgmt.remFirstArg(args));
 			break;
@@ -177,6 +185,66 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 			Messaging.sendMsg(player, message);
 		}
 		
+	}
+
+	public void parseSiegeWarTakeFullControlCommand(Player player) {
+		if (!player.hasPermission(SiegeWarPermissionNodes.SIEGEWAR_COMMAND_SIEGEWAR_TAKE_FULL_CONTROL.getNode())) {
+			Messaging.sendErrorMsg(player, Translatable.of("msg_err_command_disable"));
+			return;
+		}
+
+		try {
+			TownyAPI tapi = TownyAPI.getInstance();
+
+            Nation playerNation = tapi.getNation(player);
+            Town playerTown = tapi.getTown(player);
+            if (playerTown == null || playerNation == null) {
+				throw new TownyException(Translatable.of("msg_err_must_belong_nation").forLocale(player));
+            }
+
+            Town townHere = tapi.getTown(player.getLocation());
+            if (townHere == null) {
+				throw new TownyException(Translatable.of("msg_err_must_stand_in_town").forLocale(player));
+			}
+				
+			if(townHere.isRuined() && !SiegeWarSettings.isOccupyingNationCanRemayorRuinedOccupiedTown()) {
+				throw new TownyException(Translatable.of("msg_err_must_stand_in_unruined_town").forLocale(player));
+            }
+
+			if(!townHere.isRuined() && !SiegeWarSettings.isOccupyingNationCanRemayorUnruinedOccupiedTown()) {
+				throw new TownyException(Translatable.of("msg_err_must_stand_in_ruined_town").forLocale(player));
+            }
+
+            if (!TownOccupationController.isTownOccupiedByNation(tapi.getNation(player), townHere)) {
+				throw new TownyException(Translatable.of("msg_err_town_must_be_occupied_by_player_nation").forLocale(player));
+            }
+            Resident playerResident = tapi.getResident(player);
+            if (playerResident == null) {
+				SiegeWar.severe("Player has no resident: " + player.getName());
+                return;
+            }
+
+			Confirmation.runOnAccept(() -> {
+				try {
+					TownOccupationController.removeTownOccupation(townHere);
+					playerResident.removeTown();
+					playerResident.setTown(townHere);
+					TownRuinUtil.reclaimTown(playerResident, townHere);
+					townHere.setNation(playerNation);
+				} catch (Exception e) {
+					SiegeWar.severe("Error reclaiming town: " + e.getMessage());
+					// try to put the town back under occupation
+					try {
+						TownOccupationController.setTownOccupation(townHere, playerNation);
+					} catch (Exception ex) {
+						SiegeWar.severe("Error setting town occupation after an exception in reclaimOccupied: " + ex.getMessage());
+					}
+				}
+			}).sendTo(player);
+
+		} catch (TownyException e) {
+			Messaging.sendErrorMsg(player, e.getMessage(player));
+		}
 	}
 
 	private void parseSiegeWarCollectCommand(Player player) {
