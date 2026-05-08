@@ -562,3 +562,10 @@ status_town_occupied_home_nation: "&2Home Nation: &a%s"
 msg_err_cannot_merge_towns_without_same_occupier: '&cCannot merge an occupied town, unless both towns have the same occupier.'
 sw_command_help_list_peaceful_towns: 'List towns which are currently peaceful.'
 sw_peaceful_towns_title: 'Peaceful Towns'
+
+# mvndi
+msg_err_must_belong_nation: 'Vous devez avoir une nation'
+msg_err_must_stand_in_town: 'Vous devez être dans une ville'
+msg_err_must_stand_in_unruined_town: "Vous devez être dans une ville qui n'est pas en ruine"
+msg_err_must_stand_in_ruined_town: 'Vous devez être dans une ville en ruine'
+msg_err_town_must_be_occupied_by_player_nation: 'La ville dans laquelle vous vous trouvez doit appartenir à votre nation.'
