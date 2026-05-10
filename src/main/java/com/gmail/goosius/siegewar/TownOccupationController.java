@@ -136,7 +136,7 @@ public class TownOccupationController {
 	private static void collectNationOccupationTax(Nation nation, double taxPerPlot) {
 		double taxesPaid = 0;
 		for (Town town : new ArrayList<>(nation.getTowns()))
-			if (TownOccupationController.isTownOccupied(town))
+			if (TownOccupationController.isTownOccupied(town) && !town.isRuined())
 				taxesPaid += collectNationOccupationTax(nation, taxPerPlot, town);
 
 		if(taxesPaid > 0)
