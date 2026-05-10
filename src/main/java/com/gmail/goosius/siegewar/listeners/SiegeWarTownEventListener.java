@@ -15,7 +15,7 @@ import com.gmail.goosius.siegewar.utils.SiegeWarTownPeacefulnessUtil;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.event.DeleteTownEvent;
-import com.palmergames.bukkit.towny.event.NewDayEvent;
+import com.palmergames.bukkit.towny.event.PreNewDayEvent;
 import com.palmergames.bukkit.towny.event.NewTownEvent;
 import com.palmergames.bukkit.towny.event.TownAddResidentRankEvent;
 import com.palmergames.bukkit.towny.event.TownPreAddResidentEvent;
@@ -90,7 +90,7 @@ public class SiegeWarTownEventListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onNewDay(NewDayEvent event) {
+	public void onNewDay(PreNewDayEvent event) {
 		if (SiegeWarSettings.isRuinedTownStayOccupied()) {
 			preRuinedOccupiedTown.clear();
 		}
