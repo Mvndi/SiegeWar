@@ -10,13 +10,16 @@ import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.TownySettings;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.event.DeleteTownEvent.Cause;
+import com.palmergames.bukkit.towny.event.town.TownPreRuinedEvent;
 import com.palmergames.bukkit.towny.exceptions.AlreadyRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.Translatable;
 import com.palmergames.bukkit.towny.utils.MoneyUtil;
-
+import com.palmergames.bukkit.towny.utils.TownRuinUtil;
+import com.palmergames.bukkit.util.BukkitTools;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -161,8 +164,12 @@ public class TownOccupationController {
 				// The Town cannot afford to pay the nation occupation tax.
 				Messaging.sendGlobalMessage(Translatable.of("msg_occupation_tax_cannot_be_paid", town.getName()));
 				if (TownySettings.doesNationTaxDeleteConqueredTownsWhichCannotPay()) {
-					removeTownOccupation(town);
-					TownyUniverse.getInstance().getDataSource().removeTown(town, Cause.BANKRUPTCY);
+					TownPreRuinedEvent tpre = new TownPreRuinedEvent(town, Cause.BANKRUPTCY, Bukkit.getConsoleSender());
+					if (!BukkitTools.isEventCancelled(tpre)) {
+						TownRuinUtil.putTownIntoRuinedState(town);
+					}
+					// removeTownOccupation(town);
+					// TownyUniverse.getInstance().getDataSource().removeTown(town, Cause.BANKRUPTCY);
 				}
 				return 0;
 			}
@@ -180,8 +187,12 @@ public class TownOccupationController {
 			return tax;
 		} else {
 			Messaging.sendGlobalMessage(Translatable.of("msg_occupation_tax_cannot_be_paid", town.getName()));
-			removeTownOccupation(town);
-			TownyUniverse.getInstance().getDataSource().removeTown(town, Cause.BANKRUPTCY);
+			TownPreRuinedEvent tpre = new TownPreRuinedEvent(town, Cause.BANKRUPTCY, Bukkit.getConsoleSender());
+			if (!BukkitTools.isEventCancelled(tpre)) {
+				TownRuinUtil.putTownIntoRuinedState(town);
+			}
+			// removeTownOccupation(town);
+			// TownyUniverse.getInstance().getDataSource().removeTown(town, Cause.BANKRUPTCY);
 			return 0;
 		}
 	}
