@@ -12,8 +12,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.gmail.goosius.siegewar.SiegeController;
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownySettings;
 import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.Translatable;
 import com.palmergames.util.TimeMgmt;
 import org.bukkit.Material;
 
@@ -21,7 +24,7 @@ import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
 
 public class SiegeWarSettings {
-	
+
 	private static List<DayOfWeek> allowedDaysList = null;
 	private static String allowedWeeksStartSiege = null;
 	private static String allowedWeeksBattleSession = null;
@@ -52,7 +55,7 @@ public class SiegeWarSettings {
 	public static boolean getWarSiegeSurrenderPillageEnabled() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_SURRENDER_PILLAGE_ENABLED);
 	}
-	
+
 	public static boolean getWarSiegeSurrenderDelayEnabled() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_SURRENDER_DELAY_ENABLED);
 	}
@@ -61,7 +64,7 @@ public class SiegeWarSettings {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_INVADE_ENABLED);
 	}
 
-		public static boolean getWarSiegeInvadeCapitalEnabled() {
+	public static boolean getWarSiegeInvadeCapitalEnabled() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_INVADE_CAPITAL_ENABLED);
 	}
 
@@ -160,7 +163,7 @@ public class SiegeWarSettings {
 	public static int getWarBattlePointsForDefenderDeath() {
 		return Settings.getInt(ConfigNodes.WAR_SIEGE_POINTS_BALANCING_BASE_POINTS_BANNER_CONTROL_DEATHS_DEFENDER);
 	}
-	
+
 	public static int getWarSiegeZoneRadiusBlocks() {
 		return Settings.getInt(ConfigNodes.WAR_SIEGE_ZONE_RADIUS_BLOCKS);
 	}
@@ -214,7 +217,7 @@ public class SiegeWarSettings {
 	public static boolean getWarCommonPeacefulTownsEnabled() {
 		return Settings.getBoolean(ConfigNodes.PEACEFUL_TOWNS_ENABLED);
 	}
-	
+
 	public static boolean getNewTownPeacefulness() {
 		return Settings.getBoolean(ConfigNodes.PEACEFUL_TOWNS_NEW_TOWN_PEACEFULNESS);
 	}
@@ -301,7 +304,7 @@ public class SiegeWarSettings {
 		}
 		return siegeZoneWildernessForbiddenExplodeEntityTypes;
 	}
-	
+
 
 	public static boolean isPeacefulTownsSubvertEnabled() {
 		return Settings.getBoolean(ConfigNodes.PEACEFUL_TOWNS_SUBVERT_ENABLED);
@@ -415,19 +418,19 @@ public class SiegeWarSettings {
 	public static boolean areSiegeCampsEnabled() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_SIEGECAMPS_ENABLED);
 	}
-	
+
 	public static long getFailedSiegeCampCooldown() {
 		return Settings.getSeconds(ConfigNodes.WAR_SIEGE_SIEGECAMPS_COOLDOWN);
 	}
-	
+
 	public static int getSiegeCampPointsForSuccess() {
 		return Settings.getInt(ConfigNodes.WAR_SIEGE_SIEGECAMPS_POINTS);
 	}
-	
+
 	public static int getSiegeCampPointsPerMinute() {
 		return Settings.getInt(ConfigNodes.WAR_SIEGE_SIEGECAMPS_POINTS_PER_MINUTE);
 	}
-	
+
 	public static int getSiegeCampDurationInMinutes() {
 		return Settings.getInt(ConfigNodes.WAR_SIEGE_SIEGECAMPS_DURATION_IN_MINUTES);
 	}
@@ -444,11 +447,11 @@ public class SiegeWarSettings {
 		List<DayOfWeek> allowedDaysList = new ArrayList<>();
 		String[] allowedDaysStringArray = Settings.getString(ConfigNodes.SIEGE_START_DAY_LIMITER_ALLOWED_DAYS).toUpperCase(Locale.ROOT).replaceAll(" ", "").split(",");
 
-			DayOfWeek allowedDay;
-			for(String allowedDayString: allowedDaysStringArray) {
-				allowedDay = DayOfWeek.valueOf(allowedDayString);
-				allowedDaysList.add(allowedDay);
-			}
+		DayOfWeek allowedDay;
+		for(String allowedDayString: allowedDaysStringArray) {
+			allowedDay = DayOfWeek.valueOf(allowedDayString);
+			allowedDaysList.add(allowedDay);
+		}
 
 		return  allowedDaysList;
 	}
@@ -466,6 +469,50 @@ public class SiegeWarSettings {
 			return false;
 
 		return true;
+	}
+
+	public static boolean isAlternateCapitalSiegesByWeekEnabled() {
+		return Settings.getBoolean(ConfigNodes.SIEGE_START_DAY_LIMITER_ALTERNATE_CAPITAL_SIEGES_BY_WEEK);
+	}
+
+	/**
+	 * Returns a specific error message if the capital alternation rule blocks this town,
+	 * or null if the town is allowed (or if capital alteration stuff is disabled)
+	 */
+	public static Translatable getCapitalSiegeRestrictionMessage(Town targetTown) {
+		if (!isAlternateCapitalSiegesByWeekEnabled()) {
+			return null;
+		}
+
+		boolean isCapital = false;
+		if (targetTown.hasNation()) {
+			Nation nation = TownyAPI.getInstance().getTownNationOrNull(targetTown);
+			if (nation != null && nation.getCapital().equals(targetTown)) {
+				isCapital = true;
+			}
+		}
+
+		int weekOfYear = LocalDate.now().get(WeekFields.ISO.weekOfWeekBasedYear());
+		boolean isOddWeek = weekOfYear % 2 == 1;
+
+		if (isOddWeek == isCapital) {
+			return null; // allowed this week
+		}
+
+		return isOddWeek
+				? Translatable.of("msg_err_only_capitals_can_be_sieged_this_week")
+				: Translatable.of("msg_err_only_non_capitals_can_be_sieged_this_week");
+	}
+
+	/**
+	 * Determines if the given town can be sieged today, respecting both the general day/week limiter
+	 * and the new alternate-capital-sieges-by-week setting.
+	 */
+	public static boolean canTownBeSiegedToday(Town targetTown) {
+		if (!doesTodayAllowASiegeToStart()) {
+			return false;
+		}
+		return getCapitalSiegeRestrictionMessage(targetTown) == null;
 	}
 
 	private static boolean doesDateIsAllowedWeeks(LocalDate date, String allowedWeeks) {
@@ -522,7 +569,7 @@ public class SiegeWarSettings {
 	private static List<LocalDateTime> getAllBattleSessionStartTimesForDay(LocalDate day) {
 		if(allowedWeeksBattleSession == null)
 			allowedWeeksBattleSession = getBattleSessionSchedulerAllowedWeeks();
-		
+
 		if(!doesDateIsAllowedWeeks(day, allowedWeeksBattleSession))
 			return new ArrayList<>();
 
@@ -553,9 +600,9 @@ public class SiegeWarSettings {
 		}
 
 		//Transform the config file strings into a list of LocalDateTime objects
-		List<LocalDateTime> startTimesAsList = new ArrayList<>();	
-		if(startTimesAsString.length() > 0) {		
-			String[] startTimeAsHourMinutePair;		
+		List<LocalDateTime> startTimesAsList = new ArrayList<>();
+		if(startTimesAsString.length() > 0) {
+			String[] startTimeAsHourMinutePair;
 			LocalDateTime startTime;
 			for(String startTimeAsString: startTimesAsString.split(",")) {
 				if (startTimeAsString.contains(":")) {
@@ -564,7 +611,7 @@ public class SiegeWarSettings {
 				} else {
 					startTime = LocalDateTime.of(day, LocalTime.of(Integer.parseInt(startTimeAsString), 0));
 				}
-				startTimesAsList.add(startTime);	
+				startTimesAsList.add(startTime);
 			}
 		}
 		return startTimesAsList;
@@ -625,7 +672,7 @@ public class SiegeWarSettings {
 	public static boolean isOccupyingNationCanRemayorUnruinedOccupiedTown() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_OCCUPYING_NATION_CAN_REMAYOR_UNRUINED_OCCUPIED_TOWN);
 	}
-	
+
 	public static boolean isOccupyingNationCanRemayorRuinedOccupiedTown() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_OCCUPYING_NATION_CAN_REMAYOR_RUINED_OCCUPIED_TOWN);
 	}
@@ -726,14 +773,14 @@ public class SiegeWarSettings {
 	}
 	public static double getBadConfigWarningsIdealWarchestPercentage() {
 		return Settings.getDouble(ConfigNodes.BAD_CONFIG_WARNINGS_IDEAL_WARCHEST_PERCENTAGE);
-	}	
+	}
 	public static double getBadConfigWarningsIdealUpfrontCostPercentage() {
 		return Settings.getDouble(ConfigNodes.BAD_CONFIG_WARNINGS_IDEAL_UPFRONTCOST_PERCENTAGE);
-	}	
+	}
 	public static double getBadConfigWarningsIdealOccupationTaxPercentage() {
 		return Settings.getDouble(ConfigNodes.BAD_CONFIG_WARNINGS_IDEAL_OCCUPATIONTAX_PERCENTAGE);
 	}
-	
+
 	public static boolean isBattleCommandersEnabled() {
 		return Settings.getBoolean(ConfigNodes.BATTLE_COMMANDERS_ENABLED);
 	}

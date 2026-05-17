@@ -292,6 +292,8 @@ msg_err_siege_war_collect_unavailable: "Non c'è nulla per te da raccogliere."
 msg.battle.session.cleanup.starting: "La precedente Sessione di Battaglia non è stata completata. Iniziando Pulizia Sessione di Battaglia. Ogni battaglia sara terminata con un pareggio, con sia i Punti Battaglia della offensiva e dei difensori applicati al saldo dell'assedio."
 msg.battle.session.cleanup.complete: "Pulizia Sessione di Battaglia completata. %d sono state terminate."
 msg_err_cannot_start_sieges_today: "&cIl tuo server ha limitato i giorni-della-settimana in cui gli assedi possono iniziare. Gli assedi non possono essere iniziati oggi."
+msg_err_only_capitals_can_be_sieged_this_week: "&cOnly towns that are nation capitals can be sieged this week."
+msg_err_only_non_capitals_can_be_sieged_this_week: "&cOnly towns that are &4NOT &cnation capitals can be sieged this week."
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cGuerraAssedio non supporta la neutralità della nazione.'
 msg.townyperms.installation.complete: "File di permessi Città regolato secondo le impostazioni SW raccomandate."

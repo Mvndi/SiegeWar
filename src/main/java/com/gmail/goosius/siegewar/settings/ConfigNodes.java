@@ -221,7 +221,7 @@ public enum ConfigNodes {
 			"7",
 			"",
 			"# When plunder_paid_over_time is true, how many days will the plunder debt be paid over?"),
-	
+
 	WAR_SIEGE_CAPITAL_SIEGE_COST_INCREASE_PERCENTAGE(
 			"war.siege.money.capital_siege_cost_increase_percentage",
 			"0",
@@ -239,7 +239,7 @@ public enum ConfigNodes {
 			"# The value is appropriate in servers where town wealth does not correspond linearly to number of plots.",
 			"# Example: On server x, small towns tend to have 10 plots + 100 gold, and large towns tend to have 100 plots + 999,999 gold.",
 			"#          Clearly on this server, wealth is heavily concentrated in larger towns. Thus this value should be high ",
-	        "# ",
+			"# ",
 			"# Example of how this value would affect attack cost (@20/plot), if the value was set to 50 : ",
 			"# ",
 			"# Level 1 (1 resident), 5 plots. Cost = (20 * 5) + 0% = 100",
@@ -269,7 +269,7 @@ public enum ConfigNodes {
 			"# The cost that a town must pay to remain peaceful. Disabled when set to 0.0.",
 			"# This cost is paid after a town pays their upkeep and has their days-to-peaceful-change counted.",
 			"# If a town cannot pay the peaceful cost after they have their peaceful setting changed back to false."),
-	
+
 	WAR_SIEGE_QUANTITIES(
 			"war.siege.quantities",
 			"",
@@ -282,42 +282,42 @@ public enum ConfigNodes {
 			"############################################################",
 			""),
 	WAR_SIEGE_MAX_ACTIVE_SIEGE_ATTACKS_PER_NATION(
-		"war.siege.quantities.max_active_siege_attacks_per_nation",
-		"3",
-		"",
+			"war.siege.quantities.max_active_siege_attacks_per_nation",
+			"3",
+			"",
 			"# The value specifies the maximum number of active conquest-attack sieges allowed per nation." +
-			"# A low setting will generally reduce the aggression level on the server.",
+					"# A low setting will generally reduce the aggression level on the server.",
 			"# A low setting will also rebalance the system in favour of smaller nations.",
-		 	"# This is because it will prevent larger nations from conducting as many sieges as their resources would otherwise allow."),
+			"# This is because it will prevent larger nations from conducting as many sieges as their resources would otherwise allow."),
 	WAR_SIEGE_MAX_ACTIVE_SIEGE_ATTACKS_PER_NATION_USE_LEVELS(
-		"war.siege.quantities.max_active_siege_attacks_per_nation_use_levels",
-		"false",
-		"",
+			"war.siege.quantities.max_active_siege_attacks_per_nation_use_levels",
+			"false",
+			"",
 			"# When true, the above `max_active_siege_attacks_per_nation` is multiplied by the nations NationLevel number to calculate the maximum number of sieges for a nation.",
-			"# For example: if `max_active_siege_attacks_per_nation` is 3 and the nation's NationLevel is 2 then the nation in question can have up to 6 sieges."),			
+			"# For example: if `max_active_siege_attacks_per_nation` is 3 and the nation's NationLevel is 2 then the nation in question can have up to 6 sieges."),
 	WAR_SIEGE_MAX_ACTIVE_SIEGE_ATTACKS_PER_NATION_MAX_VALUE(
-		"war.siege.quantities.max_active_siege_attacks_per_nation_max_value",
-		"3",
-		"",
+			"war.siege.quantities.max_active_siege_attacks_per_nation_max_value",
+			"3",
+			"",
 			"# When using max_active_siege_attacks_per_nation_use_levels, this value cap the maximum number of sieges per nation."),
 	WAR_SIEGE_SIEGECAMPS(
-            "war.siege.siege_assemblies",
-            "",
-            "",
-            "",
-            "############################################################",
-            "# +------------------------------------------------------+ #",
-            "# |                    Siege-Assemblies                  | #",
-            "# + Siege-Assemblies precede Sieges, when a banner is    | #",
-            "# + first placed. By default a 10 minute session in which| #",
-            "# + the attacking town must score a given number of      | #",
-            "# + points in order to begin a siege. This feature is    | #",
-            "# + meant to mitigate towns creating mock-sieges, and    | #",
-            "# + using the resulting immunity to avoid sieges by real | #",
-            "# + enemies                                              | #",
-            "# +------------------------------------------------------+ #",
-            "############################################################",
-            ""),
+			"war.siege.siege_assemblies",
+			"",
+			"",
+			"",
+			"############################################################",
+			"# +------------------------------------------------------+ #",
+			"# |                    Siege-Assemblies                  | #",
+			"# + Siege-Assemblies precede Sieges, when a banner is    | #",
+			"# + first placed. By default a 10 minute session in which| #",
+			"# + the attacking town must score a given number of      | #",
+			"# + points in order to begin a siege. This feature is    | #",
+			"# + meant to mitigate towns creating mock-sieges, and    | #",
+			"# + using the resulting immunity to avoid sieges by real | #",
+			"# + enemies                                              | #",
+			"# +------------------------------------------------------+ #",
+			"############################################################",
+			""),
 	WAR_SIEGE_SIEGECAMPS_ENABLED(
 			"war.siege.siege_assemblies.assemblies_enabled",
 			"false",
@@ -375,7 +375,7 @@ public enum ConfigNodes {
 			"",
 			"# If this is true and a pillage time after ratio is less than the min duration,",
 			"# then the pillage will be cancelled, if this is false the pillage time will be raised to min_duration.",
-			"# The default value is true."),			
+			"# The default value is true."),
 	SIEGE_MIN_DURATION_PILLAGE(
 			"war.siege.times.min_duration_pillage",
 			"5",
@@ -494,7 +494,7 @@ public enum ConfigNodes {
 			"# |                    Base Points                         #",
 			"# +------------------------------------------------------+ #",
 			""),
-    WAR_SIEGE_POINTS_BALANCING_BASE_POINTS_BANNER_CONTROL(
+	WAR_SIEGE_POINTS_BALANCING_BASE_POINTS_BANNER_CONTROL(
 			"war.siege.points_balancing.base_points.banner_control",
 			"",
 			"",
@@ -510,7 +510,7 @@ public enum ConfigNodes {
 			"10",
 			"",
 			"# This value determines the number of battle points awarded every SiegeWar-tick (20 seconds) to a defender with banner-control."),
-    WAR_SIEGE_POINTS_BALANCING_BASE_POINTS_DEATHS(
+	WAR_SIEGE_POINTS_BALANCING_BASE_POINTS_DEATHS(
 			"war.siege.points_balancing.base_points.deaths",
 			"",
 			"",
@@ -544,8 +544,8 @@ public enum ConfigNodes {
 			"# If enabled, and a team reverses banner control during a battle,",
 			"# the base generation rate of timed points is then multiplied by the configured value below (e.g. x3).",
 			"# Subsequent reversals increase the rate further by that amount.",
-            "# TIP: This feature grants small skilled armies a tactic to win battles against larger unskilled armies,",
-            "# Tactic: Wait for the large army to cap the banner, then ambush/counterattack them, grabbing the reversal bonus, and holding the area to net an enhanced cap-point score."),
+			"# TIP: This feature grants small skilled armies a tactic to win battles against larger unskilled armies,",
+			"# Tactic: Wait for the large army to cap the banner, then ambush/counterattack them, grabbing the reversal bonus, and holding the area to net an enhanced cap-point score."),
 	WAR_SIEGE_POINTS_BALANCING_BANNER_CONTROL_REVERSAL_BONUS_MULTIPLIER_VALUE(
 			"war.siege.points_balancing.banner_control_reversal_bonus.multiplier_value",
 			"3",
@@ -564,13 +564,13 @@ public enum ConfigNodes {
 			"# |               Counter-Attack Booster                 | #",
 			"# +------------------------------------------------------+ #",
 			""),
-    WAR_SIEGE_POINTS_BALANCING_COUNTERATTACK_BOOSTER_ENABLED(
+	WAR_SIEGE_POINTS_BALANCING_COUNTERATTACK_BOOSTER_ENABLED(
 			"war.siege.points_balancing.counterattack_booster.enabled",
 			"false",
 			"",
 			"# If this setting is true, then if a player from the banner controlling side dies,",
 			"# the death points are increased by a certain percentage.",
-            "# TIP: This feature delivers extra balance to battles in which one side is outnumbered by the other."),
+			"# TIP: This feature delivers extra balance to battles in which one side is outnumbered by the other."),
 	WAR_SIEGE_POINTS_BALANCING_COUNTERATTACK_BOOSTER_EXTRA_DEATH_POINTS_PER_PLAYER_PERCENTAGE(
 			"war.siege.points_balancing.counterattack_booster.extra_death_points_per_player_percentage",
 			"10.0",
@@ -595,7 +595,7 @@ public enum ConfigNodes {
 			"# Set to -1 to disable the cap.",
 			"# The value applies to both positive and negative balances e.g. 20000 means a lower limit of -20000 and an upper limit of 20000.",
 			"# TIP: Set this value HIGH to give advantage to big nations, and LOW to give advantage to small nations."),
-    WAR_SIEGE_POINTS_BALANCING_END_OF_BATTLE_POINTS_DISTRIBUTION(
+	WAR_SIEGE_POINTS_BALANCING_END_OF_BATTLE_POINTS_DISTRIBUTION(
 			"war.siege.points_balancing.end_of_battle_points_distribution",
 			"",
 			"",
@@ -667,7 +667,7 @@ public enum ConfigNodes {
 			"# EFFECTS:",
 			"# - Town is immune to siege attack (but not to SiegeZone-forced-PVP from nearby sieges).",
 			"# - Residents cannot get nation military ranks.",
-            "# - Town is vulnerable to getting instantly subverted (captured and occupied).",
+			"# - Town is vulnerable to getting instantly subverted (captured and occupied).",
 			"#   (see user guide for full details)",
 			"#"),
 	PEACEFUL_TOWNS_NEW_TOWN_PEACEFULNESS(
@@ -828,7 +828,7 @@ public enum ConfigNodes {
 			"# The banner xyz text is an alternative to beacon markers for siege banners (but they can also be used together).",
 			"# If enabled, besieged towns will show the XYZ of the siege banner on their town screens."),
 	BANNER_CONTROL(
-		"banner_control",
+			"banner_control",
 			"",
 			"",
 			"",
@@ -848,7 +848,7 @@ public enum ConfigNodes {
 			"# This setting determines the color of the boss bar message,",
 			"# which players see while they are capturing the banner."),
 	SIEGE_START_DAY_LIMITER(
-		"siege_start_day_limiter",
+			"siege_start_day_limiter",
 			"",
 			"",
 			"",
@@ -875,6 +875,11 @@ public enum ConfigNodes {
 			"",
 			"# This setting allows siege starts to be limited by week.",
 			"# Permitted values: weekly, odd-weeks-only, even-weeks-only"),
+	SIEGE_START_DAY_LIMITER_ALTERNATE_CAPITAL_SIEGES_BY_WEEK(
+			"siege_start_day_limiter.alternate_capital_sieges_by_week",
+			"false",
+			"",
+			"# If true, on odd weeks only nation capitals can be sieged, and on even weeks only non nation capital towns can be sieged."),
 	BATTLE_SESSION_SCHEDULER(
 			"battle_session_scheduler",
 			"",
@@ -886,7 +891,7 @@ public enum ConfigNodes {
 			"# +------------------------------------------------------+ #",
 			"############################################################",
 			""),
-    BATTLE_SESSION_SCHEDULER_START_TIMES(
+	BATTLE_SESSION_SCHEDULER_START_TIMES(
 			"battle_session_scheduler.start_times",
 			"",
 			"",
@@ -1100,12 +1105,12 @@ public enum ConfigNodes {
 			"# +------------------------------------------------------+ #",
 			"############################################################",
 			""),
-    TIMED_VICTORY_TYPES_CRUSHING_VICTORY_THRESHOLD(
-            "timed_victory_types.crushing_victory_threshold",
-            "15000",
-            "",
-            "# If the siege ends in a timed win, with siege points over this threshold (positive or negative),",
-            "# then a crushing victory is declared."),
+	TIMED_VICTORY_TYPES_CRUSHING_VICTORY_THRESHOLD(
+			"timed_victory_types.crushing_victory_threshold",
+			"15000",
+			"",
+			"# If the siege ends in a timed win, with siege points over this threshold (positive or negative),",
+			"# then a crushing victory is declared."),
 	TIMED_VICTORY_TYPES_DECISIVE_VICTORY_THRESHOLD(
 			"timed_victory_types.decisive_victory_threshold",
 			"5000",
@@ -1222,7 +1227,7 @@ public enum ConfigNodes {
 			"# This setting determines the tolerance of the bad-config-warnings.",
 			"# Example: If the 'ideal plunder rate' is set to 15%....then if the actual plunder config works out at below 10% or over 20%, a warning will be given."),
 	BAD_CONFIG_WARNINGS_IDEAL_PLUNDER_PERCENTAGE(
-		"bad_config_warnings.ideal_plunder_percentage",
+			"bad_config_warnings.ideal_plunder_percentage",
 			"15.0",
 			"",
 			"# This value determines the ideal configured plunder value.",
@@ -1268,9 +1273,7 @@ public enum ConfigNodes {
 			"",
 			"# If this value is true, then the Battle Commander feature is enabled.",
 			"# When a battle sessions starts, then for each siege, one player from each side may be designated as the Battle Commander.",
-			"# To qualify as a battle commander, a player must be an official participant with general or king rank, and be online and in the Siege-Zone.",
-			"# If one side has a battle commander, then any member can run /sw spawn <town> to spawn on the commander."),
-
+			"# To qualify as a battle commander, a player must be an official participant with general or king rank, and be online and in the Siege-Zone."),
 	BATTLE_COMMANDERS_BLOCK_ASSIGNMENT_DURING_BATTLE_SESSIONS(
 			"battle_commanders.block_rank_assignment_during_active_battlesessions",
 			"false",

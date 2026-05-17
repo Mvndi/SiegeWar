@@ -292,6 +292,8 @@ msg_err_siege_war_collect_unavailable: "No hay nada que recolectar."
 msg.battle.session.cleanup.starting: "La Sesión de Batalla anterior no se completó. Iniciando Limpieza de Sesión de Batalla. Cada batalla se resolverá como un empate y se aplicarán los puntos de batalla tanto del atacante como del defensor al saldo del asedio."
 msg.battle.session.cleanup.complete: "Limpieza de la sesión de batalla completada. %d batallas fueron resueltas."
 msg_err_cannot_start_sieges_today: "&cTu servidor ha limitado los días de la semana cuando se pueden iniciar asedios. Los asedios no se pueden iniciar hoy."
+msg_err_only_capitals_can_be_sieged_this_week: "&cOnly towns that are nation capitals can be sieged this week."
+msg_err_only_non_capitals_can_be_sieged_this_week: "&cOnly towns that are &4NOT &cnation capitals can be sieged this week."
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegeWar no tiene soporte para la neutralidad de nación.'
 msg.townyperms.installation.complete: "Archivo de permisos de Towny ajustado para la configuración recomendada de SW."

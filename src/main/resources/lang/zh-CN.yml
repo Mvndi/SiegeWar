@@ -292,6 +292,8 @@ msg_err_siege_war_collect_unavailable: "没有任何东西可供您收集。"
 msg.battle.session.cleanup.starting: "上一场战斗回合未完成，正在启动战斗回合清理。每场战斗都将会被视作平局处理，而进攻方和防守方的战斗点数都会被算入围攻总分数。"
 msg.battle.session.cleanup.complete: "战斗回合清理完成。%d场战斗已被中止。"
 msg_err_cannot_start_sieges_today: "&c你的服务器限制了可发动围攻的每周天数。当前无法发动围攻。"
+msg_err_only_capitals_can_be_sieged_this_week: "&cOnly towns that are nation capitals can be sieged this week."
+msg_err_only_non_capitals_can_be_sieged_this_week: "&cOnly towns that are &4NOT &cnation capitals can be sieged this week."
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegewar不支持国家中立。'
 msg.townyperms.installation.complete: "根据推荐的Siege War设置调整Towny权限文件。"

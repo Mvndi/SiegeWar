@@ -51,7 +51,7 @@ import com.palmergames.bukkit.towny.object.TownBlock;
 import com.palmergames.bukkit.towny.object.Translatable;
 
 /**
- * 
+ *
  * @author LlmDl
  *
  */
@@ -180,10 +180,10 @@ public class SiegeController {
 
 		//Load attacker & defender name
 		if(!siege.getStatus().isActive() && SiegeMetaDataController.getAttackerName(town) == null) {
-			/* 
+			/*
 			 * Migrate old data:
-			 * 1. If the siege is over but there is no attacker & defender name, 
-			 * then the data must be unavailable, 
+			 * 1. If the siege is over but there is no attacker & defender name,
+			 * then the data must be unavailable,
 			 * likely due to a pre-0.10.0 data source.
 			 * 2. Thus, populate the fields now using the names of the current attacker and defender.
 			 */
@@ -217,12 +217,12 @@ public class SiegeController {
 
 	/**
 	 * End the given siege
-	 * 
+	 *
 	 * This method will:
 	 * - End the siege, giving a timed win to whoever the balance currently favours
 	 * - Award the warchest if there is one
-	 * - Generate siege immunity 
-	 * 
+	 * - Generate siege immunity
+	 *
 	 * @param siege the siege to end
 	 */
 	public static void endSiegeWithTimedWin(Siege siege) {
@@ -234,8 +234,8 @@ public class SiegeController {
 
 	/**
 	 * End the given siege with no winner
-	 * This is useful for drastic situations such as "swa siege remove", or town/nation deletion 
-	 * 
+	 * This is useful for drastic situations such as "swa siege remove", or town/nation deletion
+	 *
 	 * @param siege
 	 */
 	private static void endSiegeWithNoWinner(Siege siege) {
@@ -248,7 +248,7 @@ public class SiegeController {
 	/**
 	 * Remove the given siege from the system, and all associate data
 	 * Ensure that the siege is ended before calling this method
-	 * 
+	 *
 	 * @param siege the siege
 	 */
 	public static void removeSiege(Siege siege, SiegeRemoveReason reason) {
@@ -405,8 +405,8 @@ public class SiegeController {
 		Map<Siege, Town> result = new HashMap<>();
 		for(Siege siege : SiegeController.getSieges()) {
 			if(siege.getStatus().isActive()
-				&& siege.getAttacker() == nation) {
-					result.put(siege, siege.getTown());
+					&& siege.getAttacker() == nation) {
+				result.put(siege, siege.getTown());
 			}
 		}
 		return result;
@@ -434,7 +434,7 @@ public class SiegeController {
 					}
 				} else {
 					if(siege.getTown().hasNation()
-						&& TownyAPI.getInstance().getTownNationOrNull(siege.getTown()) == nation) {
+							&& TownyAPI.getInstance().getTownNationOrNull(siege.getTown()) == nation) {
 						//Defender is a town belonging to the given nation
 						result.put(siege, siege.getTown());
 					}
@@ -453,17 +453,20 @@ public class SiegeController {
 	 * @param attacker the attacking government
 	 * @param defender the defending government
 	 * @param townOfSiegeStarter the town of the siege starter
-     * @param siegeStarter the starter of the siege
+	 * @param siegeStarter the starter of the siege
 	 * @param useWarchest true if warchest should be used
 	 */
 	public static void startSiege(Block bannerBlock,
-								   SiegeType siegeType,
-								   Town targetTown,
-								   Government attacker,
-								   Government defender,
-								   Town townOfSiegeStarter,
-                                   Player siegeStarter,
-								   boolean useWarchest) {
+	                              SiegeType siegeType,
+	                              Town targetTown,
+	                              Government attacker,
+	                              Government defender,
+	                              Town townOfSiegeStarter,
+	                              Player siegeStarter,
+	                              boolean useWarchest) {
+		if (!SiegeWarSettings.canTownBeSiegedToday(targetTown)) {
+			throw new RuntimeException("Siege start not allowed this week due to capital alternation setting."); // Fallback; in practice this path is rarely used directly
+		}
 		//Create Siege
 		SiegeController.newSiege(targetTown);
 		Siege siege = SiegeController.getSiege(targetTown);
@@ -514,7 +517,7 @@ public class SiegeController {
 					TownyMessaging.sendPrefixedTownMessage((Town)defender, moneyMessage);
 				}
 			}
-	 	} else {
+		} else {
 			siege.setWarChestAmount(0);
 		}
 
@@ -553,14 +556,14 @@ public class SiegeController {
 
 		}
 	}
-	
+
 	/**
 	 * List of {@link SiegeCamp}s, objects which precede a Siege.
 	 */
 	public static List<SiegeCamp> getSiegeCamps() {
 		return Collections.unmodifiableList(siegeCamps);
 	}
-	
+
 	/**
 	 * Add a {@link SiegeCamp} to the SiegeCamp list.
 	 * @param camp {@link SiegeCamp} to add.
@@ -568,7 +571,7 @@ public class SiegeController {
 	public static void addSiegeCamp(SiegeCamp camp) {
 		siegeCamps.add(camp);
 	}
-	
+
 	/**
 	 * Remove a {@link SiegeCamp} from the SiegeCamp list.
 	 * @param camp {@link SiegeCamp} to remove.
@@ -576,13 +579,13 @@ public class SiegeController {
 	public static void removeSiegeCamp(SiegeCamp camp) {
 		siegeCamps.remove(camp);
 	}
-	
+
 	/**
 	 * Called internally from the StartTYPESiege classes, to begin a Siege,
 	 * potentially starting with the SiegeCamp minigame.
-	 * 
+	 *
 	 * Note: SiegeCamps are called SiegeAssemblies in the config and ingame lingo.
-	 * 
+	 *
 	 * @param player             Player starting the siege using a Banner.
 	 * @param bannerBlock        Block which is the Banner.
 	 * @param siegeType          SiegeType that the Siege will be.
@@ -596,30 +599,35 @@ public class SiegeController {
 	 *                        SiegeCamp is unable to start.
 	 */
 	public static void startSiegeCampProcess (Player player,
-											  Block bannerBlock,
-											  SiegeType siegeType,
-											  Town targetTown,
-											  Government attacker,
-											  Government defender,
-											  Town townOfSiegeStarter,
-											  TownBlock townBlock) throws TownyException {
+	                                          Block bannerBlock,
+	                                          SiegeType siegeType,
+	                                          Town targetTown,
+	                                          Government attacker,
+	                                          Government defender,
+	                                          Town townOfSiegeStarter,
+	                                          TownBlock townBlock) throws TownyException {
+		Translatable restrictionMsg = SiegeWarSettings.getCapitalSiegeRestrictionMessage(targetTown);
+		if (restrictionMsg != null) {
+			throw new TownyException(restrictionMsg);
+		}
+
 		SiegeCamp camp = new SiegeCamp(player, bannerBlock, siegeType, targetTown, attacker, defender, townOfSiegeStarter, townBlock);
-		
+
 		PreSiegeCampEvent event = new PreSiegeCampEvent(camp);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled())
 			throw new TownyException(event.getCancellationMsg());
-		
+
 		if (SiegeWarSettings.areSiegeCampsEnabled()) {
 			if (hasSiegeCamp(targetTown))
 				throw new TownyException(Translatable.of("msg_err_town_already_has_a_siege_assembly"));
-			// Launch a SiegeCamp, a (by default) 10 minute minigame. If successful the Siege will be initiated in ernest. 
+			// Launch a SiegeCamp, a (by default) 10 minute minigame. If successful the Siege will be initiated in ernest.
 			SiegeController.beginSiegeCamp(camp);
-		} else 
+		} else
 			// SiegeCamps are disabled, just do the Siege.
 			camp.startSiege();
 	}
-	
+
 	private static boolean hasSiegeCamp(Town targetTown) {
 		for (SiegeCamp camp : getSiegeCamps())
 			if (camp.getTargetTown().equals(targetTown))
@@ -636,9 +644,9 @@ public class SiegeController {
 		// Another SiegeCamp is already present.
 		if (SiegeWarDistanceUtil.campTooClose(camp.getBannerBlock().getLocation()))
 			throw new TownyException(Translatable.of("msg_err_siegecamp_too_close_to_another_siegecamp"));
-		
-		// Town initiating the SiegeCamp has a failed SiegeCamp on this 
-		// town and not enough time has passed. 
+
+		// Town initiating the SiegeCamp has a failed SiegeCamp on this
+		// town and not enough time has passed.
 		if (SiegeCampUtil.hasFailedCamp(camp.getTargetTown(), camp.getTownOfSiegeStarter()))
 			throw new TownyException(Translatable.of("msg_err_too_soon_since_your_last_siegecamp"));
 
