@@ -544,7 +544,8 @@ public class SiegeWarSettings {
 					: Translatable.of("msg_err_only_non_capitals_can_be_sieged_this_week");
 		}
 
-		if (isCapital && attacker instanceof Nation attackerNation && defenderNation != null && !defenderNation.equals(attackerNation)) {
+		if (isCapital && attacker instanceof Nation attackerNation && defenderNation != null && !defenderNation.equals(attackerNation)
+				&& defenderNation.getNumTowns() > 1) {
 			int required = getRequiredTownWinsForCapitalSiege(defenderNation.getLevelNumber());
 			int actual = NationMetaDataController.getTownWeekSiegeWins(attackerNation, defenderNation);
 			if (actual < required) {
