@@ -464,7 +464,7 @@ public class SiegeController {
 	                              Town townOfSiegeStarter,
 	                              Player siegeStarter,
 	                              boolean useWarchest) {
-		if (!SiegeWarSettings.canTownBeSiegedToday(targetTown)) {
+		if (!SiegeWarSettings.canTownBeSiegedToday(targetTown, attacker)) {
 			throw new RuntimeException("Siege start not allowed this week due to capital alternation setting."); // Fallback; in practice this path is rarely used directly
 		}
 		//Create Siege
@@ -606,7 +606,7 @@ public class SiegeController {
 	                                          Government defender,
 	                                          Town townOfSiegeStarter,
 	                                          TownBlock townBlock) throws TownyException {
-		Translatable restrictionMsg = SiegeWarSettings.getCapitalSiegeRestrictionMessage(targetTown);
+		Translatable restrictionMsg = SiegeWarSettings.getCapitalSiegeRestrictionMessage(targetTown, attacker);
 		if (restrictionMsg != null) {
 			throw new TownyException(restrictionMsg);
 		}

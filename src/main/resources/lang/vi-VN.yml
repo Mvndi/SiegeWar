@@ -294,6 +294,7 @@ msg.battle.session.cleanup.complete: "Hoàn tất dọn dẹp phiên chiến đ�
 msg_err_cannot_start_sieges_today: "&cMáy chủ của bạn đã giới hạn số ngày trong tuần có thể bắt đầu công thành. Cuộc bao vây không thể được bắt đầu ngày hôm nay."
 msg_err_only_capitals_can_be_sieged_this_week: "&cOnly towns that are nation capitals can be sieged this week."
 msg_err_only_non_capitals_can_be_sieged_this_week: "&cOnly towns that are &4NOT &cnation capitals can be sieged this week."
+msg_err_not_enough_town_wins_to_siege_capital: "&cYour nation needs %s town siege win(s) against this nation this week before you can siege their capital. (Current: %s)"
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegeWar không ủng hộ tính trung lập của quốc gia.'
 msg.townyperms.installation.complete: "Tệp perm Towny được điều chỉnh cho thiết lập SW được đề xuất."

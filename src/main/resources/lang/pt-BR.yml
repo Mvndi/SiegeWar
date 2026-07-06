@@ -294,6 +294,7 @@ msg.battle.session.cleanup.complete: "Limpeza da Sessão de Batalha concluída. 
 msg_err_cannot_start_sieges_today: "&cO servidor limitou os dias da semana em que cerco pode ser iniciado. Cerco não pode ser iniciado hoje."
 msg_err_only_capitals_can_be_sieged_this_week: "&cOnly towns that are nation capitals can be sieged this week."
 msg_err_only_non_capitals_can_be_sieged_this_week: "&cOnly towns that are &4NOT &cnation capitals can be sieged this week."
+msg_err_not_enough_town_wins_to_siege_capital: "&cYour nation needs %s town siege win(s) against this nation this week before you can siege their capital. (Current: %s)"
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cO Cerco de Guerra não suporta a neutralidade de nações.'
 msg.townyperms.installation.complete: "Arquivo de permissões do Towny ajustado para configuração recomendada do Cerco de Guerra."

@@ -294,6 +294,7 @@ msg.battle.session.cleanup.complete: "バトルセッションのクリーンア
 msg_err_cannot_start_sieges_today: "&cサーバーは週の曜日で包囲を開始できる日を制限しています。今日は包囲を開始できません。"
 msg_err_only_capitals_can_be_sieged_this_week: "&cOnly towns that are nation capitals can be sieged this week."
 msg_err_only_non_capitals_can_be_sieged_this_week: "&cOnly towns that are &4NOT &cnation capitals can be sieged this week."
+msg_err_not_enough_town_wins_to_siege_capital: "&cYour nation needs %s town siege win(s) against this nation this week before you can siege their capital. (Current: %s)"
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegeWarは国の中立性をサポートしていません。'
 msg.townyperms.installation.complete: "お勧めのSiegeWarセットアップに合わせてTownyの権限ファイルが調整されました。"
