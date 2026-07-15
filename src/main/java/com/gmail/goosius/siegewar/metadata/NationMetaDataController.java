@@ -166,6 +166,10 @@ public class NationMetaDataController {
         return getTownWeekSiegeWinsMap(attackerNation).getOrDefault(defenderNation.getUUID(), 0);
     }
 
+    public static Map<UUID, Integer> getAllTownWeekSiegeWins(Nation attackerNation) {
+        return getTownWeekSiegeWinsMap(attackerNation);
+    }
+
     public static void incrementTownWeekSiegeWins(Nation attackerNation, Nation defenderNation) {
         Map<UUID, Integer> wins = getTownWeekSiegeWinsMap(attackerNation);
         UUID defenderUUID = defenderNation.getUUID();

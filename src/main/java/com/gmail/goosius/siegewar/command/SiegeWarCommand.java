@@ -5,6 +5,7 @@ import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.SiegeWar;
 import com.gmail.goosius.siegewar.TownOccupationController;
 import com.gmail.goosius.siegewar.enums.SiegeWarPermissionNodes;
+import com.gmail.goosius.siegewar.metadata.NationMetaDataController;
 import com.gmail.goosius.siegewar.metadata.ResidentMetaDataController;
 import com.gmail.goosius.siegewar.objects.BattleSession;
 import com.gmail.goosius.siegewar.objects.Siege;
@@ -41,8 +42,8 @@ import java.util.*;
 
 public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 	
-	private static final List<String> siegewarTabCompletes = Arrays.asList("collect", "town", "nation", "hud", 
-			"listpeacefultowns", "preference", "version", "nextsession", "takefullcontrol", "spawn");
+	private static final List<String> siegewarTabCompletes = Arrays.asList("collect", "town", "nation", "hud",
+			"listpeacefultowns", "preference", "version", "nextsession", "takefullcontrol", "spawn", "capitalinfo");
 
 	private static final List<String> siegewarTownTabCompletes = Arrays.asList("togglepeaceful");
 	
@@ -65,6 +66,10 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 			case "spawn":
 				if (args.length == 2)
 					return NameUtil.filterByStart(new ArrayList<>(SiegeController.getNamesOfActivelySiegedTowns()), args[1]);
+				break;
+			case "capitalinfo":
+				if (args.length == 2)
+					return NameUtil.filterByStart(NameUtil.getNames(TownyAPI.getInstance().getNations()), args[1]);
 				break;
 			case "preference":
 				if (args.length == 2)
@@ -89,6 +94,7 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw nation", "paysoldiers [amount]", Translatable.of("nation_help_siegewar_12").forLocale(sender)));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw town", "togglepeaceful", Translatable.of("town_help_toggle_peaceful").forLocale(sender)));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw nextsession", "", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw capitalinfo", "[nation]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw takefullcontrol", "", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw version", "", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw preference", "beacons [on/off]", ""));
@@ -157,6 +163,9 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 		case "nextsession":
 			parseSiegeWarNextSessionCommand(player);
 			break;
+		case "capitalinfo":
+			parseSiegeWarCapitalInfoCommand(player, StringMgmt.remFirstArg(args));
+			break;
 		case "takefullcontrol":
 			parseSiegeWarTakeFullControlCommand(player);
 			break;
@@ -185,6 +194,64 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 			Messaging.sendMsg(player, message);
 		}
 		
+	}
+
+	private void parseSiegeWarCapitalInfoCommand(Player player, String[] args) {
+		TownyMessaging.sendMessage(player, ChatTools.formatTitle(Translatable.of("sw_capital_info_title").forLocale(player)));
+
+		if (!SiegeWarSettings.isAlternateCapitalSiegesByWeekEnabled()) {
+			Messaging.sendMsg(player, Translatable.of("sw_capital_info_disabled"));
+			return;
+		}
+
+		Messaging.sendMsg(player, SiegeWarSettings.isCapitalWeek()
+				? Translatable.of("sw_capital_info_week_capital")
+				: Translatable.of("sw_capital_info_week_town"));
+
+		Nation playerNation = TownyAPI.getInstance().getNation(player);
+		if (playerNation == null) {
+			Messaging.sendMsg(player, Translatable.of("sw_capital_info_not_in_nation"));
+			return;
+		}
+
+		Messaging.sendMsg(player, Translatable.of("sw_capital_info_your_nation", playerNation.getName(), playerNation.getLevelNumber()));
+
+		if (args.length > 0) {
+			Nation target = TownyAPI.getInstance().getNation(args[0]);
+			if (target == null) {
+				Messaging.sendMsg(player, Translatable.of("sw_capital_info_nation_not_found", args[0]));
+				return;
+			}
+			sendCapitalWinEntry(player, playerNation, target);
+			return;
+		}
+
+		Map<UUID, Integer> allWins = NationMetaDataController.getAllTownWeekSiegeWins(playerNation);
+		Messaging.sendMsg(player, Translatable.of("sw_capital_info_wins_header"));
+		if (allWins.isEmpty()) {
+			Messaging.sendMsg(player, Translatable.of("sw_capital_info_wins_none"));
+			return;
+		}
+		for (UUID defenderUUID : allWins.keySet()) {
+			Nation defenderNation = TownyAPI.getInstance().getNation(defenderUUID);
+			if (defenderNation != null)
+				sendCapitalWinEntry(player, playerNation, defenderNation);
+		}
+	}
+
+	private void sendCapitalWinEntry(Player player, Nation attackerNation, Nation defenderNation) {
+		if (defenderNation.getNumTowns() <= 1) {
+			Messaging.sendMsg(player, Translatable.of("sw_capital_info_target_direct", defenderNation.getName()));
+			return;
+		}
+
+		int required = SiegeWarSettings.getRequiredTownWinsForCapitalSiege(defenderNation.getLevelNumber());
+		int have = NationMetaDataController.getTownWeekSiegeWins(attackerNation, defenderNation);
+
+		if (have >= required)
+			Messaging.sendMsg(player, Translatable.of("sw_capital_info_win_entry_unlocked", defenderNation.getName(), have, required));
+		else
+			Messaging.sendMsg(player, Translatable.of("sw_capital_info_win_entry_locked", defenderNation.getName(), have, required, required - have));
 	}
 
 	public void parseSiegeWarTakeFullControlCommand(Player player) {
