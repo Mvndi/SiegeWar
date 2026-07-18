@@ -877,7 +877,7 @@ public enum ConfigNodes {
 			"# Permitted values: weekly, odd-weeks-only, even-weeks-only"),
 	SIEGE_START_DAY_LIMITER_ALTERNATE_CAPITAL_SIEGES_BY_WEEK(
 			"siege_start_day_limiter.alternate_capital_sieges_by_week",
-			"false",
+			"true",
 			"",
 			"# If true, on odd weeks only nation capitals can be sieged, and on even weeks only non nation capital towns can be sieged."),
 	BATTLE_SESSION_SCHEDULER(
