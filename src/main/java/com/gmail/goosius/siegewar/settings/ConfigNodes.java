@@ -875,11 +875,15 @@ public enum ConfigNodes {
 			"",
 			"# This setting allows siege starts to be limited by week.",
 			"# Permitted values: weekly, odd-weeks-only, even-weeks-only"),
-	SIEGE_START_DAY_LIMITER_ALTERNATE_CAPITAL_SIEGES_BY_WEEK(
-			"siege_start_day_limiter.alternate_capital_sieges_by_week",
+	SIEGE_START_DAY_LIMITER_CAPITAL_SIEGE_WIN_REQUIREMENT(
+			"siege_start_day_limiter.capital_siege_requires_previous_week_wins",
 			"true",
 			"",
-			"# If true, on odd weeks only nation capitals can be sieged, and on even weeks only non nation capital towns can be sieged."),
+			"# If true, a nation may only siege an enemy capital if it already won enough non-capital",
+			"# siege wins against that nation during the immediately preceding week (as defined by",
+			"# allowed_siege_start_weeks above; a full week if that's set to weekly, otherwise the",
+			"# previous eligible week).",
+			"# If false, capitals can always be sieged, subject only to allowed_siege_start_weeks/days above."),
 	BATTLE_SESSION_SCHEDULER(
 			"battle_session_scheduler",
 			"",

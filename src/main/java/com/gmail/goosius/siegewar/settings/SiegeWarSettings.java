@@ -438,10 +438,6 @@ public class SiegeWarSettings {
 		return Settings.getInt(ConfigNodes.WAR_SIEGE_SIEGECAMPS_DURATION_IN_MINUTES);
 	}
 
-	public static String getSiegeStartDayLimiterAllowedWeeks() {
-		return Settings.getString(ConfigNodes.SIEGE_START_DAY_LIMITER_ALLOWED_WEEKS);
-	}
-
 	public static String getBattleSessionSchedulerAllowedWeeks() {
 		return Settings.getString(ConfigNodes.BATTLE_SESSION_SCHEDULER_ALLOWED_WEEKS);
 	}
@@ -459,10 +455,12 @@ public class SiegeWarSettings {
 		return  allowedDaysList;
 	}
 
+	public static String getSiegeStartDayLimiterAllowedWeeks() {
+		return Settings.getString(ConfigNodes.SIEGE_START_DAY_LIMITER_ALLOWED_WEEKS);
+	}
+
 	public static boolean doesTodayAllowASiegeToStart() {
-		if(allowedWeeksStartSiege == null)
-			allowedWeeksStartSiege = getSiegeStartDayLimiterAllowedWeeks();
-		if(!doesDateIsAllowedWeeks(LocalDate.now(), allowedWeeksStartSiege))
+		if(!isSiegeWeek(LocalDate.now()))
 			return false;
 
 		//Check day of week
@@ -474,33 +472,46 @@ public class SiegeWarSettings {
 		return true;
 	}
 
-	public static boolean isAlternateCapitalSiegesByWeekEnabled() {
-		return Settings.getBoolean(ConfigNodes.SIEGE_START_DAY_LIMITER_ALTERNATE_CAPITAL_SIEGES_BY_WEEK);
+	public static boolean isCapitalSiegeWinRequirementEnabled() {
+		return Settings.getBoolean(ConfigNodes.SIEGE_START_DAY_LIMITER_CAPITAL_SIEGE_WIN_REQUIREMENT);
 	}
 
-	//Monday starting ISO week 2026-W01. Even week-offsets from this date are capital weeks.
-	private static final LocalDate WEEK_PARITY_EPOCH = LocalDate.of(2025, 12, 29);
+	private static final LocalDate SIEGE_WEEK_EPOCH = LocalDate.of(2025, 12, 29);
 
 	private static int getWeekIdentifier(LocalDate date) {
-		return (int) ChronoUnit.WEEKS.between(WEEK_PARITY_EPOCH, date.with(DayOfWeek.MONDAY));
+		return (int) ChronoUnit.WEEKS.between(SIEGE_WEEK_EPOCH, date.with(DayOfWeek.MONDAY));
 	}
 
-	public static boolean isCapitalWeek() {
-		return getWeekIdentifier(LocalDate.now()) % 2 == 0;
+	public static int getSiegeWeekSpacing() {
+		if (allowedWeeksStartSiege == null)
+			allowedWeeksStartSiege = getSiegeStartDayLimiterAllowedWeeks();
+		return allowedWeeksStartSiege.equalsIgnoreCase("weekly") ? 1 : 2;
 	}
 
-	public static boolean isTownWeek() {
-		return !isCapitalWeek();
+	public static boolean isSiegeWeek(LocalDate date) {
+		if (allowedWeeksStartSiege == null)
+			allowedWeeksStartSiege = getSiegeStartDayLimiterAllowedWeeks();
+
+		if (allowedWeeksStartSiege.equalsIgnoreCase("weekly"))
+			return true;
+
+		boolean isEvenWeekIdentifier = getWeekIdentifier(date) % 2 == 0;
+		return allowedWeeksStartSiege.equalsIgnoreCase("even-weeks-only") != isEvenWeekIdentifier;
 	}
 
-	/**
-	 * Identifier of the town week whose siege-win counts are still relevant right now.
-	 * During a town week that's the current week; during a capital week it's the
-	 * previous week.
-	 */
-	public static int getMostRecentTownWeekIdentifier() {
-		int currentWeek = getWeekIdentifier(LocalDate.now());
-		return isTownWeek() ? currentWeek : currentWeek - 1;
+	public static boolean isSiegeWeek() {
+		return isSiegeWeek(LocalDate.now());
+	}
+
+	public static int getMostRecentSiegeWeekIdentifier(LocalDate date) {
+		int week = getWeekIdentifier(date);
+		return isSiegeWeek(date) ? week : week - 1;
+	}
+
+	public static int getPreviousSiegeWeekIdentifier(LocalDate date) {
+		int week = getWeekIdentifier(date);
+		int nextOrCurrentSiegeWeek = isSiegeWeek(date) ? week : week + 1;
+		return nextOrCurrentSiegeWeek - getSiegeWeekSpacing();
 	}
 
 	/**
@@ -518,12 +529,14 @@ public class SiegeWarSettings {
 		return 3; // level 7 and above
 	}
 
-	/**
-	 * Returns a specific error message if the capital alternation rule blocks this town,
-	 * or null if the town is allowed (or if capital alteration stuff is disabled)
-	 */
+	public static int getRequiredTownWinsForCapitalSiege(Nation defenderNation) {
+		return Math.min(
+				getRequiredTownWinsForCapitalSiege(defenderNation.getLevelNumber()),
+				defenderNation.getNumTowns() - 1);
+	}
+
 	public static Translatable getCapitalSiegeRestrictionMessage(Town targetTown, Government attacker) {
-		if (!isAlternateCapitalSiegesByWeekEnabled()) {
+		if (!isCapitalSiegeWinRequirementEnabled()) {
 			return null;
 		}
 
@@ -540,16 +553,8 @@ public class SiegeWarSettings {
 			return null;
 		}
 
-		boolean capitalWeek = isCapitalWeek();
-
-		if (capitalWeek != isCapital) {
-			return capitalWeek
-					? Translatable.of("msg_err_only_capitals_can_be_sieged_this_week")
-					: Translatable.of("msg_err_only_non_capitals_can_be_sieged_this_week");
-		}
-
 		if (isCapital && attacker instanceof Nation attackerNation && !defenderNation.equals(attackerNation)) {
-			int required = getRequiredTownWinsForCapitalSiege(defenderNation.getLevelNumber());
+			int required = getRequiredTownWinsForCapitalSiege(defenderNation);
 			int actual = NationMetaDataController.getTownWeekSiegeWins(attackerNation, defenderNation);
 			if (actual < required) {
 				return Translatable.of("msg_err_not_enough_town_wins_to_siege_capital", required, actual);
@@ -559,10 +564,6 @@ public class SiegeWarSettings {
 		return null; // allowed this week
 	}
 
-	/**
-	 * Determines if the given town can be sieged today, respecting both the general day/week limiter
-	 * and the new alternate-capital-sieges-by-week setting.
-	 */
 	public static boolean canTownBeSiegedToday(Town targetTown, Government attacker) {
 		if (!doesTodayAllowASiegeToStart()) {
 			return false;

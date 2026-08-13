@@ -292,8 +292,6 @@ msg_err_siege_war_collect_unavailable: "Вам нечего собирать."
 msg.battle.session.cleanup.starting: "Предыдущая боевая сессия не завершена. Запуск очистки боевой сессии. Каждая битва будет завершена вничью, при этом боевые очки как атакующего, так и защитника будут применены к балансу осады."
 msg.battle.session.cleanup.complete: "Очистка боевой сессии завершена. Закончено %d сражений."
 msg_err_cannot_start_sieges_today: "&cВаш сервер ограничил дни недели, когда можно начинать осады. Осады не могут быть начаты сегодня."
-msg_err_only_capitals_can_be_sieged_this_week: "&cOnly towns that are nation capitals can be sieged this week."
-msg_err_only_non_capitals_can_be_sieged_this_week: "&cOnly towns that are &4NOT &cnation capitals can be sieged this week."
 msg_err_not_enough_town_wins_to_siege_capital: "&cYour nation needs %s town siege win(s) against this nation this week before you can siege their capital. (Current: %s)"
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegeWar не поддерживает нейтралитет нации.'

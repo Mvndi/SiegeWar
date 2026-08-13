@@ -58,8 +58,8 @@ permissions:
         description: User is able to use /sw nextsession.
         default: true
 
-    siegewar.command.siegewar.capitalinfo:
-        description: User is able to use /sw capitalinfo.
+    siegewar.command.siegewar.siegeinfo:
+        description: User is able to use /sw siegeinfo.
         default: true
 
     siegewar.command.siegewar.hud.*:
