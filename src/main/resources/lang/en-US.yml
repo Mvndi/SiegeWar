@@ -606,6 +606,7 @@ msg_err_cannot_invade_town_already_occupied: '&cThere is no need to capture this
 msg_war_siege_cannot_add_military_rank_to_occupied_resident: '&cUnable to add military rank to resident, because they belong to an Occupied town.'
 msg_err_cannot_set_occupation_without_nation: '&cTown %s has no nation. You must set the nation first before you can set the town to Occupied.'
 msg_err_cannot_invade_not_enough_permissions: "&cYou do not have enough permissions to capture the town."
+msg_err_besieged_towns_cannot_leave_their_nations: "&cBesieged towns cannot leave or be kicked from their nations while the siege is active."
 msg_err_occupied_towns_cannot_leave_their_nations: "&cOccupied towns cannot leave their nations in the usual way. To leave the nation, start a revolt siege."
 
 #Siegezone proximity warning
