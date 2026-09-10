@@ -531,7 +531,7 @@ public class SiegeWarSettings {
 
 	public static int getRequiredTownWinsForCapitalSiege(Nation defenderNation) {
 		return Math.min(
-				getRequiredTownWinsForCapitalSiege(defenderNation.getLevelNumber()),
+				getRequiredTownWinsForCapitalSiege(defenderNation.getLevelNumber() + 1),
 				defenderNation.getNumTowns() - 1);
 	}
 

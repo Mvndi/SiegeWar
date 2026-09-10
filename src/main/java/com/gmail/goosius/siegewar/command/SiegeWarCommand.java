@@ -214,7 +214,7 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 			return;
 		}
 
-		Messaging.sendMsg(player, Translatable.of("sw_siege_info_your_nation", playerNation.getName(), playerNation.getLevelNumber()));
+		Messaging.sendMsg(player, Translatable.of("sw_siege_info_your_nation", playerNation.getName(), playerNation.getLevelNumber() + 1));
 
 		if (args.length > 0) {
 			Nation target = TownyAPI.getInstance().getNation(args[0]);
