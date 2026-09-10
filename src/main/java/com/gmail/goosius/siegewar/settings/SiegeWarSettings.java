@@ -14,6 +14,7 @@ import java.time.LocalTime;
 
 import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.metadata.NationMetaDataController;
+import com.gmail.goosius.siegewar.utils.SiegeWarImmunityUtil;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownySettings;
 import com.palmergames.bukkit.towny.object.Government;
@@ -519,7 +520,7 @@ public class SiegeWarSettings {
 	 * defending nation before it may siege that nation's capital, based on the
 	 * defending nation's Towny nation level.
 	 */
-	public static int getRequiredTownWinsForCapitalSiege(int defenderNationLevel) {
+	public static int getRequiredTownWinsForCapitalSiegeFromNationLevel(int defenderNationLevel) {
 		if (defenderNationLevel <= 3)
 			return 0;
 		if (defenderNationLevel <= 5)
@@ -530,9 +531,9 @@ public class SiegeWarSettings {
 	}
 
 	public static int getRequiredTownWinsForCapitalSiege(Nation defenderNation) {
-		return Math.min(
-				getRequiredTownWinsForCapitalSiege(defenderNation.getLevelNumber() + 1),
-				defenderNation.getNumTowns() - 1);
+		return (int) Math.min(
+				getRequiredTownWinsForCapitalSiegeFromNationLevel(defenderNation.getLevelNumber() + 1),
+				defenderNation.getTowns().stream().filter(t -> !SiegeWarImmunityUtil.isTownSiegeImmune(t)).count() - 1);
 	}
 
 	public static Translatable getCapitalSiegeRestrictionMessage(Town targetTown, Government attacker) {
