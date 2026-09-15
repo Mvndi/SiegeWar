@@ -292,8 +292,6 @@ msg_err_siege_war_collect_unavailable: "Không có gì để bạn thu thập."
 msg.battle.session.cleanup.starting: "Phiên chiến đấu trước đó chưa hoàn thành. Bắt đầu dọn dẹp phiên chiến đấu. Mỗi trận chiến sẽ được giải quyết như một trận hòa, với điểm chiến đấu của cả kẻ tấn công và người phòng thủ bằng nhau."
 msg.battle.session.cleanup.complete: "Hoàn tất dọn dẹp phiên chiến đấu. %d trận chiến đã được giải quyết."
 msg_err_cannot_start_sieges_today: "&cMáy chủ của bạn đã giới hạn số ngày trong tuần có thể bắt đầu công thành. Cuộc bao vây không thể được bắt đầu ngày hôm nay."
-msg_err_only_capitals_can_be_sieged_this_week: "&cOnly towns that are nation capitals can be sieged this week."
-msg_err_only_non_capitals_can_be_sieged_this_week: "&cOnly towns that are &4NOT &cnation capitals can be sieged this week."
 msg_err_not_enough_town_wins_to_siege_capital: "&cYour nation needs %s town siege win(s) against this nation this week before you can siege their capital. (Current: %s)"
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegeWar không ủng hộ tính trung lập của quốc gia.'

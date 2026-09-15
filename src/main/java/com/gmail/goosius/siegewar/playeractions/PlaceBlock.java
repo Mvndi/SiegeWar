@@ -34,7 +34,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class is fired from the SiegeWarActionListener's TownyBuildEvent listener.
@@ -163,6 +165,7 @@ public class PlaceBlock {
 		}
 
 		List<TownBlock> adjacentCardinalTownBlocks = SiegeWarBlockUtil.getCardinalAdjacentTownBlocks(block);
+		Set<Town> adjacentTowns = adjacentCardinalTownBlocks.stream().map(TownBlock::getTownOrNull).filter(Objects::nonNull).collect(Collectors.toSet());
 
 		/*
 		 * Ensure there is just one cardinal town block
@@ -180,7 +183,7 @@ public class PlaceBlock {
 		 *  ----------
 		 */
 		//This
-		if (adjacentCardinalTownBlocks.size() > 1)
+		if (adjacentTowns.size() > 1)
 			throw new TownyException(translator.of("msg_err_siege_war_too_many_adjacent_towns"));
 
 		if (isWhiteBanner(block)) {

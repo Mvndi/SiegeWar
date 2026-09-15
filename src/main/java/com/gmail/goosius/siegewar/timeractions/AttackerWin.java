@@ -30,7 +30,7 @@ public class AttackerWin {
 	}
 
 	private static void recordTownWeekSiegeWin(Siege siege) {
-		if (!SiegeWarSettings.isAlternateCapitalSiegesByWeekEnabled())
+		if (!SiegeWarSettings.isCapitalSiegeWinRequirementEnabled())
 			return;
 
 		Town town = siege.getTown();
