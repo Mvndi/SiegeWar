@@ -15,6 +15,7 @@ import com.gmail.goosius.siegewar.utils.SiegeWarTownPeacefulnessUtil;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.event.DeleteTownEvent;
+import com.palmergames.bukkit.towny.event.PreDeleteTownEvent;
 import com.palmergames.bukkit.towny.event.PreNewDayEvent;
 import com.palmergames.bukkit.towny.event.NewTownEvent;
 import com.palmergames.bukkit.towny.event.TownAddResidentRankEvent;
@@ -64,12 +65,33 @@ public class SiegeWarTownEventListener implements Listener {
 	 */
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onTownPreRuinedEvent(TownPreRuinedEvent event) {
+		if (isFinancialCollapseDuringRevolt(event.getTown(), event.getCause())) {
+			event.setCancelled(true);
+			return;
+		}
+
 		if (SiegeWarSettings.isRuinedTownStayOccupied() && TownOccupationController.isTownOccupied(event.getTown())) {
 			Nation nation = event.getTown().getNationOrNull();
 			if (nation != null) {
 				preRuinedOccupiedTown.put(event.getTown(), nation);
 			}
 		}
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+	public void onTownPreDeletedEvent(PreDeleteTownEvent event) {
+		// Towny falls through to deletion when its pre-ruin event is cancelled.
+		if (isFinancialCollapseDuringRevolt(event.getTown(), event.getCause()))
+			event.setCancelled(true);
+	}
+
+	private boolean isFinancialCollapseDuringRevolt(Town town, DeleteTownEvent.Cause cause) {
+		if (!SiegeWarSettings.getWarSiegeEnabled() || !cause.isUpkeep())
+			return false;
+
+		// Financial collapse must not remove the nation or end an unresolved revolt
+		Siege siege = SiegeController.getSiege(town);
+		return siege != null && siege.isRevoltSiege() && siege.getStatus().isActive();
 	}
 
 	@EventHandler(ignoreCancelled = true)
