@@ -1,6 +1,7 @@
 package com.gmail.goosius.siegewar.metadata;
 
 import com.gmail.goosius.siegewar.SiegeWar;
+import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.metadata.CustomDataField;
 import com.palmergames.bukkit.towny.object.metadata.DecimalDataField;
@@ -8,6 +9,11 @@ import com.palmergames.bukkit.towny.object.metadata.IntegerDataField;
 import com.palmergames.bukkit.towny.object.metadata.LongDataField;
 import com.palmergames.bukkit.towny.object.metadata.StringDataField;
 import com.palmergames.bukkit.towny.utils.MetaDataUtil;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class NationMetaDataController {
     @SuppressWarnings("unused")
@@ -28,6 +34,12 @@ public class NationMetaDataController {
     private static final IntegerDataField demoralizationDaysLeft = new IntegerDataField("siegeWar_demoralizationDaysLeft");
 
     private static final IntegerDataField demoralizationAmount = new IntegerDataField("siegeWar_demoralizationAmount");
+
+    private static final IntegerDataField townWeekSiegeWinsWeekIdentifier = new IntegerDataField("siegeWar_townWeekSiegeWinsWeekIdentifier", -1);
+    private static final StringDataField townWeekSiegeWinsByDefender = new StringDataField("siegeWar_townWeekSiegeWinsByDefender", "");
+
+    private static final IntegerDataField previousSiegeWeekWinsWeekIdentifier = new IntegerDataField("siegeWar_previousSiegeWeekWinsWeekIdentifier", -1);
+    private static final StringDataField previousSiegeWeekWinsByDefender = new StringDataField("siegeWar_previousSiegeWeekWinsByDefender", "");
 
     public NationMetaDataController(SiegeWar plugin) {
         this.plugin = plugin;
@@ -152,5 +164,92 @@ public class NationMetaDataController {
         if (nation.hasMeta(idf.getKey())) {
             nation.removeMetaData(idf, true);
         }
+    }
+
+    public static int getTownWeekSiegeWins(Nation attackerNation, Nation defenderNation) {
+        return getRelevantSiegeWeekWinsMap(attackerNation).getOrDefault(defenderNation.getUUID(), 0);
+    }
+
+    public static Map<UUID, Integer> getAllTownWeekSiegeWins(Nation attackerNation) {
+        return getRelevantSiegeWeekWinsMap(attackerNation);
+    }
+
+    public static int getCurrentSiegeWeekWins(Nation attackerNation, Nation defenderNation) {
+        return getCurrentSiegeWeekWinsMap(attackerNation).getOrDefault(defenderNation.getUUID(), 0);
+    }
+
+    public static Map<UUID, Integer> getAllCurrentSiegeWeekWins(Nation attackerNation) {
+        return getCurrentSiegeWeekWinsMap(attackerNation);
+    }
+
+    private static Map<UUID, Integer> getCurrentSiegeWeekWinsMap(Nation attackerNation) {
+        int currentId = SiegeWarSettings.getMostRecentSiegeWeekIdentifier(LocalDate.now());
+        if (MetaDataUtil.hasMeta(attackerNation, townWeekSiegeWinsWeekIdentifier)
+                && MetaDataUtil.getInt(attackerNation, townWeekSiegeWinsWeekIdentifier) == currentId) {
+            return deserializeTownWeekSiegeWins(getSdf(attackerNation, townWeekSiegeWinsByDefender.getKey()));
+        }
+        return new HashMap<>();
+    }
+
+    public static void incrementTownWeekSiegeWins(Nation attackerNation, Nation defenderNation) {
+        int currentId = SiegeWarSettings.getMostRecentSiegeWeekIdentifier(LocalDate.now());
+
+        int storedCurrentId = MetaDataUtil.hasMeta(attackerNation, townWeekSiegeWinsWeekIdentifier)
+                ? MetaDataUtil.getInt(attackerNation, townWeekSiegeWinsWeekIdentifier)
+                : -1;
+        Map<UUID, Integer> storedCurrentMap = deserializeTownWeekSiegeWins(getSdf(attackerNation, townWeekSiegeWinsByDefender.getKey()));
+
+        if (storedCurrentId == currentId - SiegeWarSettings.getSiegeWeekSpacing()) {
+            MetaDataUtil.setInt(attackerNation, previousSiegeWeekWinsWeekIdentifier, storedCurrentId, true);
+            MetaDataUtil.setString(attackerNation, previousSiegeWeekWinsByDefender, serializeTownWeekSiegeWins(storedCurrentMap), true);
+        }
+
+        Map<UUID, Integer> wins = (storedCurrentId == currentId) ? storedCurrentMap : new HashMap<>();
+        UUID defenderUUID = defenderNation.getUUID();
+        wins.put(defenderUUID, wins.getOrDefault(defenderUUID, 0) + 1);
+
+        MetaDataUtil.setString(attackerNation, townWeekSiegeWinsByDefender, serializeTownWeekSiegeWins(wins), true);
+        MetaDataUtil.setInt(attackerNation, townWeekSiegeWinsWeekIdentifier, currentId, true);
+    }
+
+    private static Map<UUID, Integer> getRelevantSiegeWeekWinsMap(Nation attackerNation) {
+        int expected = SiegeWarSettings.getPreviousSiegeWeekIdentifier(LocalDate.now());
+
+        if (MetaDataUtil.hasMeta(attackerNation, townWeekSiegeWinsWeekIdentifier)
+                && MetaDataUtil.getInt(attackerNation, townWeekSiegeWinsWeekIdentifier) == expected) {
+            return deserializeTownWeekSiegeWins(getSdf(attackerNation, townWeekSiegeWinsByDefender.getKey()));
+        }
+        if (MetaDataUtil.hasMeta(attackerNation, previousSiegeWeekWinsWeekIdentifier)
+                && MetaDataUtil.getInt(attackerNation, previousSiegeWeekWinsWeekIdentifier) == expected) {
+            return deserializeTownWeekSiegeWins(getSdf(attackerNation, previousSiegeWeekWinsByDefender.getKey()));
+        }
+        return new HashMap<>();
+    }
+
+    private static String serializeTownWeekSiegeWins(Map<UUID, Integer> wins) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<UUID, Integer> entry : wins.entrySet()) {
+            if (sb.length() > 0)
+                sb.append(',');
+            sb.append(entry.getKey()).append('=').append(entry.getValue());
+        }
+        return sb.toString();
+    }
+
+    private static Map<UUID, Integer> deserializeTownWeekSiegeWins(String raw) {
+        Map<UUID, Integer> wins = new HashMap<>();
+        if (raw == null || raw.isEmpty())
+            return wins;
+
+        for (String entry : raw.split(",")) {
+            String[] parts = entry.split("=");
+            if (parts.length != 2)
+                continue;
+            try {
+                wins.put(UUID.fromString(parts[0]), Integer.parseInt(parts[1]));
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+        return wins;
     }
 }

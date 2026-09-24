@@ -365,6 +365,20 @@ msg_err_siege_war_collect_unavailable: "There is nothing for you to collect."
 msg.battle.session.cleanup.starting: "The previous Battle Session did not complete. Initiating Battle Session Cleanup. Each battle will be resolved as a draw, with both attacker and defender battle points being applied to the siege balance."
 msg.battle.session.cleanup.complete: "Battle Session Cleanup complete. %d battles were resolved."
 msg_err_cannot_start_sieges_today: "&cYour server has limited the days when sieges can be started. Sieges cannot be started today."
+msg_err_not_enough_town_wins_to_siege_capital: "&cYour nation needs %s siege win(s) against this nation from the previous siege week before you can siege their capital. (Current: %s)"
+sw_siege_info_title: "Siege Info"
+sw_siege_info_disabled: "&cThe siege weeks system is currently disabled on this server."
+sw_siege_info_week_is_siege_week: "&7Week: &6Siege Week &7(all towns, including capitals, can be sieged)"
+sw_siege_info_week_not_siege_week: "&7Week: &6Not a Siege Week &7(sieges cannot be started)"
+sw_siege_info_not_in_nation: "&cYou must belong to a nation to view your siege info."
+sw_siege_info_your_nation: "&7Nation: &f%s &7(Lvl %s)"
+sw_siege_info_wins_header: "&7Capital unlocks (based on wins from the previous siege week):"
+sw_siege_info_wins_none: "&8 - No town wins recorded in the previous siege week."
+sw_siege_info_win_entry_unlocked: "&a ✔ %s &8(%s/%s) &2unlocked"
+sw_siege_info_win_entry_locked: "&c ✘ %s &8(%s/%s) &7need &c%s &7more"
+sw_siege_info_current_progress: "&8    +%s new win(s) banked this siege week &7(counts toward next siege week's unlock)"
+sw_siege_info_target_direct: "&a ✔ %s &7- capital open (single-town nation)"
+sw_siege_info_nation_not_found: "&cCould not find a nation by the name '%s'."
 
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegeWar does not support nation neutrality.'
@@ -490,6 +504,13 @@ msg_err_cannot_subvert_town_already_occupied: "&cThere is no need to subvert thi
 
 msg_revolt_siege_started: '&bThe townspeople of %s have risen up against the occupying nation of %s, and declared themselves free to choose their own destiny. A REVOLT SIEGE has begun!'
 
+#Pillage
+
+msg_siege_war_pillage_started: '&bPILLAGE has begun in %s for %d minutes!'
+msg_siege_war_pillage_not_started: '&bThere will be no PILLAGE in %s because attackers have died much more than defenders!'
+msg_siege_war_pillage_ended:  '&bPILLAGE has ended in %s!'
+msg_swa_town_pillage_change_success: "&b%s pillaged successfully changed to %d minutes"
+
 #war sickness
 
 msg_you_will_get_sickness: '&cWARNING: You are in the wilderness of a Siege Zone, but you are not an official participant in the siege. Please enter a non-besieged town or leave the Siege Zone, otherwise you will get War Sickness in %s seconds.'
@@ -585,6 +606,7 @@ msg_err_cannot_invade_town_already_occupied: '&cThere is no need to capture this
 msg_war_siege_cannot_add_military_rank_to_occupied_resident: '&cUnable to add military rank to resident, because they belong to an Occupied town.'
 msg_err_cannot_set_occupation_without_nation: '&cTown %s has no nation. You must set the nation first before you can set the town to Occupied.'
 msg_err_cannot_invade_not_enough_permissions: "&cYou do not have enough permissions to capture the town."
+msg_err_besieged_towns_cannot_leave_their_nations: "&cBesieged towns cannot leave or be kicked from their nations while the siege is active."
 msg_err_occupied_towns_cannot_leave_their_nations: "&cOccupied towns cannot leave their nations in the usual way. To leave the nation, start a revolt siege."
 
 #Siegezone proximity warning
@@ -732,3 +754,9 @@ sw_peaceful_towns_title: 'Peaceful Towns'
 
 # Added in 3.6.3
 sw_started_siege: 'Started Sieges:'
+# mvndi
+msg_err_must_belong_nation: 'You must be in a nation'
+msg_err_must_stand_in_town: 'You must stand in a town'
+msg_err_must_stand_in_unruined_town: 'You must stand in an unruined town'
+msg_err_must_stand_in_ruined_town: 'You must stand in a ruined town'
+msg_err_town_must_be_occupied_by_player_nation: 'The town you are standing in must be occupied by your nation.'

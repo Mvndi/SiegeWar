@@ -292,6 +292,7 @@ msg_err_siege_war_collect_unavailable: "受け取るものがありません。"
 msg.battle.session.cleanup.starting: "前回のバトルセッションが完了しませんでした。バトルセッションのクリーンアップを開始します。各バトルは引き分けとして解決され、攻撃者と防御者のバトルポイントが包囲のバランスに適用されます。"
 msg.battle.session.cleanup.complete: "バトルセッションのクリーンアップが完了しました。%d つのバトルが解決されました。"
 msg_err_cannot_start_sieges_today: "&cサーバーは週の曜日で包囲を開始できる日を制限しています。今日は包囲を開始できません。"
+msg_err_not_enough_town_wins_to_siege_capital: "&cYour nation needs %s town siege win(s) against this nation this week before you can siege their capital. (Current: %s)"
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegeWarは国の中立性をサポートしていません。'
 msg.townyperms.installation.complete: "お勧めのSiegeWarセットアップに合わせてTownyの権限ファイルが調整されました。"
@@ -379,6 +380,11 @@ msg_peaceful_town_subverted: "&b%sが平和裏に転覆し、%sによって占�
 msg_err_cannot_subvert_town_already_occupied: "&cこの町を転覆する必要はありません。なぜなら既にあなたの国が所有・占拠しているからです。"
 #Revolting
 msg_revolt_siege_started: '&b%sの町の住民は%sの占拠国に対して立ち上がり、自分たちの運命を選ぶ自由を宣言しました。反乱の包囲が始まりました！'
+#Pillage
+msg_siege_war_pillage_started: '&bPILLAGE has begun in %s for %d minutes!'
+msg_siege_war_pillage_not_started: '&bThere will be no PILLAGE in %s because attackers have died much more than defenders!'
+msg_siege_war_pillage_ended:  '&bPILLAGE has ended in %s!'
+msg_swa_town_pillage_change_success: "&b%s pillaged successfully changed to %d minutes"
 #war sickness
 msg_you_will_get_sickness: '&cWARNING: You are in the wilderness of a Siege Zone, but you are not an official participant in the siege. Please enter a non-besieged town or leave the Siege Zone, otherwise you will get War Sickness in %s seconds.'
 msg_you_received_war_sickness: '&cWARNING: You are in the wilderness of a Siege Zone, but you are not an official participant in the siege. To remove the War Sickness, enter a non-besieged town or leave the Siege Zone.'
@@ -557,3 +563,10 @@ status_town_occupied_home_nation: "&2Home Nation: &a%s"
 msg_err_cannot_merge_towns_without_same_occupier: '&cCannot merge an occupied town, unless both towns have the same occupier.'
 sw_command_help_list_peaceful_towns: 'List towns which are currently peaceful.'
 sw_peaceful_towns_title: 'Peaceful Towns'
+
+# mvndi
+msg_err_must_belong_nation: 'You must be in a nation'
+msg_err_must_stand_in_town: 'You must stand in a town'
+msg_err_must_stand_in_unruined_town: 'You must stand in an unruined town'
+msg_err_must_stand_in_ruined_town: 'You must stand in a ruined town'
+msg_err_town_must_be_occupied_by_player_nation: 'The town you are standing in must be occupied by your nation.'

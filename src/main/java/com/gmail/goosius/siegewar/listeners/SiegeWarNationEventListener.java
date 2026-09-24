@@ -13,6 +13,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.NationPreRemoveEnemyEvent;
 import com.palmergames.bukkit.towny.event.DeleteNationEvent;
 import com.palmergames.bukkit.towny.event.nation.NationPreTownLeaveEvent;
+import com.palmergames.bukkit.towny.event.nation.NationPreTownKickEvent;
 import com.palmergames.bukkit.towny.event.nation.NationRankAddEvent;
 import com.palmergames.bukkit.towny.event.nation.NationKingChangeEvent;
 import com.palmergames.bukkit.towny.event.nation.toggle.NationToggleNeutralEvent;
@@ -203,10 +204,30 @@ public class SiegeWarNationEventListener implements Listener {
 		if(!SiegeWarSettings.getWarSiegeEnabled())
 			return;
 
+		if (SiegeController.hasActiveSiege(event.getTown())) {
+			event.setCancelled(true);
+			event.setCancelMessage(Translation.of("msg_err_besieged_towns_cannot_leave_their_nations"));
+			return;
+		}
+
 		if(TownOccupationController.isTownOccupied(event.getTown())) {
 			event.setCancelled(true);
 			event.setCancelMessage(Translation.of("msg_err_occupied_towns_cannot_leave_their_nations"));
 		}
+	}
+
+	/**
+	 * A nation cannot evade an active siege by kicking the besieged town.
+	 *
+	 * @param event the nation town pre kick event
+	 */
+	@EventHandler(ignoreCancelled = true)
+	public void onNationAttemptsToKickTown(NationPreTownKickEvent event) {
+		if (!SiegeWarSettings.getWarSiegeEnabled() || !SiegeController.hasActiveSiege(event.getTown()))
+			return;
+
+		event.setCancelled(true);
+		event.setCancelMessage(Translation.of("msg_err_besieged_towns_cannot_leave_their_nations"));
 	}
 
 }

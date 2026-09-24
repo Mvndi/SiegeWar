@@ -59,6 +59,8 @@ public class Siege {
 	private Map<Player, BannerControlSession> bannerControlSessions;
 	private int attackerBattlePoints;
 	private int defenderBattlePoints;
+	private int attackerKills;
+	private int defenderKills;
 	private int numberOfBannerControlReversals;
 	private Resident attackingCommander;
 	private Resident defendingCommander;
@@ -81,6 +83,8 @@ public class Siege {
 		bannerControlSessions = new HashMap<>();
 		attackerBattlePoints = 0;
 		defenderBattlePoints = 0;
+		attackerKills = 0;
+		defenderKills = 0;
 		numberOfBannerControlReversals = 0;
 		attackingCommander = null;
 		defendingCommander = null;
@@ -317,10 +321,12 @@ public class Siege {
 	
 	public void adjustAttackerBattlePoints(int battleScore) {
 		attackerBattlePoints += battleScore;
+		attackerKills++;
 	}
 
 	public void adjustDefenderBattlePoints(int battleScore) {
 		defenderBattlePoints += battleScore;
+		defenderKills++;
 	}
 
 	public String getFormattedBattleTimeRemaining() {
@@ -437,5 +443,6 @@ public class Siege {
 
 	public void setEndMessage(String message) {
 		this.endMessage = message;
+		endMessage += "Attacker kill count: " + attackerKills + " Defender kill count: " + defenderKills;
 	}
 }

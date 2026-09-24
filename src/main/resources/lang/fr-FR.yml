@@ -292,6 +292,7 @@ msg_err_siege_war_collect_unavailable: "There is nothing for you to collect."
 msg.battle.session.cleanup.starting: "The previous Battle Session did not complete. Initiating Battle Session Cleanup. Each battle will be resolved as a draw, with both attacker and defender battle points being applied to the siege balance."
 msg.battle.session.cleanup.complete: "Battle Session Cleanup complete. %d battles were resolved."
 msg_err_cannot_start_sieges_today: "&cYour server has limited the days-of-the-week when sieges can be started. Sieges cannot be started today."
+msg_err_not_enough_town_wins_to_siege_capital: "&cYour nation needs %s town siege win(s) against this nation this week before you can siege their capital. (Current: %s)"
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegeWar does not support nation neutrality.'
 msg.townyperms.installation.complete: "Towny perms file adjusted for recommended SW setup."
@@ -379,6 +380,11 @@ msg_peaceful_town_subverted: "&b%s has been peacefully subverted and captured by
 msg_err_cannot_subvert_town_already_occupied: "&cThere is no need to subvert this town, because your nation already owns and occupies it."
 #Revolting
 msg_revolt_siege_started: '&bThe townspeople of %s have risen up against the occupying nation of %s, and declared themselves free to choose their own destiny. A REVOLT SIEGE has begun!'
+#Pillage
+msg_siege_war_pillage_started: '&bLe PILLAGE a commencé à %s pour %d minutes !'
+msg_siege_war_pillage_not_started: "&bIl n'y aura pas de PILLAGE à %s parce que les attaquants sont beaucoup plus morts que les défenseurs !"
+msg_siege_war_pillage_ended: "&bLe PILLAGE s'est terminé à %s !"
+msg_swa_town_pillage_change_success: "&b%s pillaged successfully changed to %d minutes"
 #war sickness
 msg_you_will_get_sickness: '&cWARNING: You are in the wilderness of a Siege Zone, but you are not an official participant in the siege. Please enter a non-besieged town or leave the Siege Zone, otherwise you will get War Sickness in %s seconds.'
 msg_you_received_war_sickness: '&cWARNING: You are in the wilderness of a Siege Zone, but you are not an official participant in the siege. To remove the War Sickness, enter a non-besieged town or leave the Siege Zone.'
@@ -560,3 +566,9 @@ sw_peaceful_towns_title: 'Peaceful Towns'
 
 # Added in 3.6.3
 sw_started_siege: 'Sièges commencés :'
+# mvndi
+msg_err_must_belong_nation: 'Vous devez avoir une nation'
+msg_err_must_stand_in_town: 'Vous devez être dans une ville'
+msg_err_must_stand_in_unruined_town: "Vous devez être dans une ville qui n'est pas en ruine"
+msg_err_must_stand_in_ruined_town: 'Vous devez être dans une ville en ruine'
+msg_err_town_must_be_occupied_by_player_nation: 'La ville dans laquelle vous vous trouvez doit appartenir à votre nation.'

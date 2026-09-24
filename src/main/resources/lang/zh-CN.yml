@@ -292,6 +292,7 @@ msg_err_siege_war_collect_unavailable: "没有任何东西可供您收集。"
 msg.battle.session.cleanup.starting: "上一场战斗回合未完成，正在启动战斗回合清理。每场战斗都将会被视作平局处理，而进攻方和防守方的战斗点数都会被算入围攻总分数。"
 msg.battle.session.cleanup.complete: "战斗回合清理完成。%d场战斗已被中止。"
 msg_err_cannot_start_sieges_today: "&c你的服务器限制了可发动围攻的每周天数。当前无法发动围攻。"
+msg_err_not_enough_town_wins_to_siege_capital: "&cYour nation needs %s town siege win(s) against this nation this week before you can siege their capital. (Current: %s)"
 #Added in 0.36
 msg_err_nation_neutrality_not_supported: '&cSiegewar不支持国家中立。'
 msg.townyperms.installation.complete: "根据推荐的Siege War设置调整Towny权限文件。"
@@ -379,6 +380,11 @@ msg_peaceful_town_subverted: "&b%s已经被%s和平颠覆并占领。"
 msg_err_cannot_subvert_town_already_occupied: "&c无需颠覆这个城镇，因为你的国家已经占领并拥有了它。"
 #Revolting
 msg_revolt_siege_started: '&b来自%s的城镇公民挺身而出，反对占领国%s，并宣布自己可以自由地选择原本属于他们自己的命运。一场起义围攻已经开始！'
+#Pillage
+msg_siege_war_pillage_started: '&bPILLAGE has begun in %s for %d minutes!'
+msg_siege_war_pillage_not_started: '&bThere will be no PILLAGE in %s because attackers have died much more than defenders!'
+msg_siege_war_pillage_ended:  '&bPILLAGE has ended in %s!'
+msg_swa_town_pillage_change_success: "&b%s pillaged successfully changed to %d minutes"
 #war sickness
 msg_you_will_get_sickness: '&c警告: 你已进入围攻区的野外，但你不是围攻的正式参与者。请进入一个未被围攻的城镇或离开围攻区，否则你将在%s秒内患上战争病。'
 msg_you_received_war_sickness: '&c警告: 你已进入围攻区的野外，但你不是围攻的正式参与者。请进入一个未被围攻的城镇或离开围攻区以消除战争病。'
@@ -557,3 +563,10 @@ status_town_occupied_home_nation: "&2母国: &a%s"
 msg_err_cannot_merge_towns_without_same_occupier: '&c被占领的城镇不能被合并，除非这两个城镇具有同样的占领国。'
 sw_command_help_list_peaceful_towns: '列出现存所有和平城镇。'
 sw_peaceful_towns_title: '和平城镇'
+
+# mvndi
+msg_err_must_belong_nation: 'You must be in a nation'
+msg_err_must_stand_in_town: 'You must stand in a town'
+msg_err_must_stand_in_unruined_town: 'You must stand in an unruined town'
+msg_err_must_stand_in_ruined_town: 'You must stand in a ruined town'
+msg_err_town_must_be_occupied_by_player_nation: 'The town you are standing in must be occupied by your nation.'
