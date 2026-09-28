@@ -2,7 +2,6 @@ package com.gmail.goosius.siegewar.settings;
 
 import java.awt.Color;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -496,8 +495,7 @@ public class SiegeWarSettings {
 		if (allowedWeeksStartSiege.equalsIgnoreCase("weekly"))
 			return true;
 
-		boolean isEvenWeekIdentifier = getWeekIdentifier(date) % 2 == 0;
-		return allowedWeeksStartSiege.equalsIgnoreCase("even-weeks-only") != isEvenWeekIdentifier;
+		return doesDateIsAllowedWeeks(date, allowedWeeksStartSiege);
 	}
 
 	public static boolean isSiegeWeek() {
@@ -531,9 +529,9 @@ public class SiegeWarSettings {
 	}
 
 	public static int getRequiredTownWinsForCapitalSiege(Nation defenderNation) {
-		return (int) Math.min(
+		return (int) Math.max(0, Math.min(
 				getRequiredTownWinsForCapitalSiegeFromNationLevel(defenderNation.getLevelNumber() + 1),
-				defenderNation.getTowns().stream().filter(t -> !SiegeWarImmunityUtil.isTownSiegeImmune(t)).count() - 1);
+				defenderNation.getTowns().stream().filter(t -> !SiegeWarImmunityUtil.isTownSiegeImmune(t)).count() - 1));
 	}
 
 	public static Translatable getCapitalSiegeRestrictionMessage(Town targetTown, Government attacker) {
@@ -572,12 +570,18 @@ public class SiegeWarSettings {
 		return getCapitalSiegeRestrictionMessage(targetTown, attacker) == null;
 	}
 
+	/**
+	 * Uses the week count since SIEGE_WEEK_EPOCH rather than the ISO week of year,
+	 * so odd/even weeks keep alternating across years with 53 ISO weeks
+	 * and siege weeks always line up with battle session weeks.
+	 * Epoch week 0 is ISO week 1 of 2026, so an odd identifier is an "even week".
+	 */
 	private static boolean doesDateIsAllowedWeeks(LocalDate date, String allowedWeeks) {
-		int weekOfYear = date.get(WeekFields.ISO.weekOfWeekBasedYear());
+		boolean isEvenWeek = getWeekIdentifier(date) % 2 == 1;
 		if(allowedWeeks.equalsIgnoreCase("even-weeks-only"))
-			return weekOfYear % 2 == 0;
+			return isEvenWeek;
 		if(allowedWeeks.equalsIgnoreCase("odd-weeks-only"))
-			return weekOfYear % 2 == 1;
+			return !isEvenWeek;
 
 		return true;
 	}

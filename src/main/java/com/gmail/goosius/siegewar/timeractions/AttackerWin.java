@@ -9,6 +9,8 @@ import com.gmail.goosius.siegewar.utils.SiegeWarSiegeCompletionUtil;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 
+import java.time.LocalDate;
+
 /**
  * This class is responsible for processing all types of attacker wins
  *
@@ -41,6 +43,10 @@ public class AttackerWin {
 		if (!(siege.getAttacker() instanceof Nation attackerNation) || defenderNation.equals(attackerNation))
 			return;
 
-		NationMetaDataController.incrementTownWeekSiegeWins(attackerNation, defenderNation);
+		//Count the win towards the week the siege started in, not the week it ended in
+		int siegeWeekId = siege.getSiegeWeekIdentifier() != -1
+				? siege.getSiegeWeekIdentifier()
+				: SiegeWarSettings.getMostRecentSiegeWeekIdentifier(LocalDate.now());
+		NationMetaDataController.incrementTownWeekSiegeWins(attackerNation, defenderNation, siegeWeekId);
 	}
 }

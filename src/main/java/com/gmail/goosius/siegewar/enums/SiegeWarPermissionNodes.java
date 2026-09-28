@@ -31,6 +31,7 @@ public enum SiegeWarPermissionNodes {
 	SIEGEWAR_COMMAND_SIEGEWAR("siegewar.command.siegewar.*"),
 	SIEGEWAR_COMMAND_SIEGEWAR_TOWN("siegewar.command.siegewar.town.*"),
 		SIEGEWAR_COMMAND_SIEGEWAR_TOWN_TOGGLEPEACEFUL("siegewar.command.siegewar.town.togglepeaceful"),
+		SIEGEWAR_COMMAND_SIEGEWAR_TOWN_REVOLTASSIST("siegewar.command.siegewar.town.revoltassist"),
 	SIEGEWAR_COMMAND_SIEGEWAR_NATION("siegewar.command.siegewar.nation.*"),
 		SIEGEWAR_COMMAND_SIEGEWAR_NATION_PAYSOLDIERS("siegewar.command.siegewar.nation.paysoldiers"),
 	SIEGEWAR_COMMAND_SIEGEWAR_COLLECT("siegewar.command.siegewar.collect"),

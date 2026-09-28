@@ -31,7 +31,8 @@ public enum SiegeSide {
 
 		// Look for defender
 		Town besiegedTown = siege.getTown();
-		if (isTownGuard(player, besiegedTown) || isNationSoldierOrAlliedSoldier(player, town, besiegedTown))
+		if (isTownGuard(player, besiegedTown) || isNationSoldierOrAlliedSoldier(player, town, besiegedTown)
+				|| siege.isRevoltAssistNation(town.getNationOrNull()))
 			return SiegeSide.DEFENDERS;
 
 		// Look for attacker

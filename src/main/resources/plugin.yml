@@ -79,6 +79,7 @@ permissions:
         default: false
         children:
             siegewar.command.siegewar.town.togglepeaceful: true
+            siegewar.command.siegewar.town.revoltassist: true
     
     siegewar.command.siegewar.nation.*:
         description: User is able to do all /siegewar nation commands.

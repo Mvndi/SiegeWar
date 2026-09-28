@@ -1,5 +1,6 @@
 package com.gmail.goosius.siegewar;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -100,6 +101,11 @@ public class SiegeController {
 		SiegeMetaDataController.setTownPlundered(town, siege.getTownPlundered());
 		SiegeMetaDataController.setTownInvaded(town, siege.getTownInvaded());
 		SiegeMetaDataController.setNumBattleSessionsCompleted(town, siege.getNumBattleSessionsCompleted());
+		SiegeMetaDataController.setSiegeWeekIdentifier(town, siege.getSiegeWeekIdentifier());
+		if(siege.getRevoltAssistNation() != null)
+			SiegeMetaDataController.setRevoltAssistNationUUID(town, siege.getRevoltAssistNation().getUUID().toString());
+		else if(SiegeMetaDataController.getRevoltAssistNationUUID(town) != null)
+			SiegeMetaDataController.setRevoltAssistNationUUID(town, "");
 		town.save();
 	}
 
@@ -177,6 +183,11 @@ public class SiegeController {
 
 		//Load siege progress
 		siege.setNumBattleSessionsCompleted(SiegeMetaDataController.getNumBattleSessionsCompleted(town));
+		siege.setSiegeWeekIdentifier(SiegeMetaDataController.getSiegeWeekIdentifier(town));
+
+		String revoltAssistNationUUID = SiegeMetaDataController.getRevoltAssistNationUUID(town);
+		if (revoltAssistNationUUID != null && !revoltAssistNationUUID.isEmpty())
+			siege.setRevoltAssistNation(TownyAPI.getInstance().getNation(UUID.fromString(revoltAssistNationUUID)));
 
 		//Load attacker & defender name
 		if(!siege.getStatus().isActive() && SiegeMetaDataController.getAttackerName(town) == null) {
@@ -489,6 +500,7 @@ public class SiegeController {
 		siege.setTownInvaded(false);
 		siege.setNumberOfBannerControlReversals(0);
 		siege.setNumBattleSessionsCompleted(0);
+		siege.setSiegeWeekIdentifier(SiegeWarSettings.getMostRecentSiegeWeekIdentifier(LocalDate.now()));
 		siege.setFlagLocation(bannerBlock.getLocation());
 
 		SiegeController.setSiege(targetTown, true);

@@ -30,7 +30,8 @@ public class SiegeMetaDataController {
 	private static StringDataField siegeDefenderUUID = new StringDataField("siegewar_defenderUUID", "");
 	private static StringDataField siegeAttackerName = new StringDataField("siegewar_attackerName", "");
 	private static StringDataField siegeDefenderName = new StringDataField("siegewar_defenderName", "");
-	
+	private static StringDataField revoltAssistNationUUID = new StringDataField("siegewar_revoltAssistNationUUID", "");
+
 	private static StringDataField siegeFlagLocation = new StringDataField("siegewar_flagLocation", "");
 	private static StringDataField siegeStatus = new StringDataField("siegewar_status", "");
 	private static StringDataField siegeType = new StringDataField("siegewar_type", "");
@@ -43,6 +44,7 @@ public class SiegeMetaDataController {
 	private static BooleanDataField townPlundered = new BooleanDataField("siegewar_townPlundered", false);
 	private static BooleanDataField townInvaded = new BooleanDataField("siegewar_townInvaded", false);
 	private static IntegerDataField numBattleSessionsCompleted = new IntegerDataField("siegewar_numBattleSessionsCompleted", 0);
+	private static IntegerDataField siegeWeekIdentifier = new IntegerDataField("siegewar_siegeWeekIdentifier", -1);
 	
 	public SiegeMetaDataController(SiegeWar plugin) {
 		this.plugin = plugin;
@@ -289,6 +291,37 @@ public class SiegeMetaDataController {
 			town.addMetaData(new IntegerDataField("siegewar_numBattleSessionsCompleted", num));
 	}
 
+	public static int getSiegeWeekIdentifier(Town town) {
+		IntegerDataField idf = (IntegerDataField) siegeWeekIdentifier.clone();
+		if (town.hasMeta(idf.getKey()))
+			return MetaDataUtil.getInt(town, idf);
+		return -1;
+	}
+
+	public static void setSiegeWeekIdentifier(Town town, int id) {
+		IntegerDataField idf = (IntegerDataField) siegeWeekIdentifier.clone();
+		if (town.hasMeta(idf.getKey()))
+			MetaDataUtil.setInt(town, idf, id, true);
+		else
+			town.addMetaData(new IntegerDataField("siegewar_siegeWeekIdentifier", id));
+	}
+
+	@Nullable
+	public static String getRevoltAssistNationUUID(Town town) {
+		StringDataField sdf = (StringDataField) revoltAssistNationUUID.clone();
+		if (town.hasMeta(sdf.getKey()))
+			return MetaDataUtil.getString(town, sdf);
+		return null;
+	}
+
+	public static void setRevoltAssistNationUUID(Town town, String uuid) {
+		StringDataField sdf = (StringDataField) revoltAssistNationUUID.clone();
+		if (town.hasMeta(sdf.getKey()))
+			MetaDataUtil.setString(town, sdf, uuid, true);
+		else
+			town.addMetaData(new StringDataField("siegewar_revoltAssistNationUUID", uuid));
+	}
+
 	public static void removeSiegeMeta (Town town) {
 		StringDataField sdf = (StringDataField) siegeName.clone();
 		if (town.hasMeta(sdf.getKey()))
@@ -307,6 +340,9 @@ public class SiegeMetaDataController {
 		if (town.hasMeta(sdf.getKey()))
 			town.removeMetaData(sdf);
 		sdf = (StringDataField) siegeDefenderName.clone();
+		if (town.hasMeta(sdf.getKey()))
+			town.removeMetaData(sdf);
+		sdf = (StringDataField) revoltAssistNationUUID.clone();
 		if (town.hasMeta(sdf.getKey()))
 			town.removeMetaData(sdf);
 
@@ -348,6 +384,9 @@ public class SiegeMetaDataController {
 			town.removeMetaData(bdf);
 
 		idf = (IntegerDataField) numBattleSessionsCompleted.clone();
+		if (town.hasMeta(idf.getKey()))
+			town.removeMetaData(idf);
+		idf = (IntegerDataField) siegeWeekIdentifier.clone();
 		if (town.hasMeta(idf.getKey()))
 			town.removeMetaData(idf);
 	}

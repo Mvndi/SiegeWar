@@ -31,6 +31,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,9 +43,9 @@ public class SiegeWarAdminCommand implements TabExecutor {
 	private static final List<String> siegewaradminTabCompletes = Arrays.asList("battlesession","install","nation","reload","revoltimmunity","siege","siegeimmunity","town");
 	private static final List<String> siegewaradminSiegeImmunityTabCompletes = Arrays.asList("town","nation","alltowns");
 	private static final List<String> siegewaradminRevoltImmunityTabCompletes = Arrays.asList("town","nation","alltowns");
-	private static final List<String> siegewaradminSiegeTabCompletes = Arrays.asList("setbalance","end","setplundered","setinvaded","remove");
+	private static final List<String> siegewaradminSiegeTabCompletes = Arrays.asList("setbalance","end","setplundered","setinvaded","remove","revoltassist");
 	private static final List<String> siegewaradminTownTabCompletes = Arrays.asList("setpeaceful", "setoccupied", "setpillage");
-	private static final List<String> siegewaradminNationTabCompletes = Arrays.asList("setplundergained","setplunderlost","settownsgained","settownslost");
+	private static final List<String> siegewaradminNationTabCompletes = Arrays.asList("setplundergained","setplunderlost","settownsgained","settownslost","siegeinfo","setsiegewins","setbankedsiegewins","clearsiegewins");
 	private static final List<String> siegewaradminBattleSessionTabCompletes = Arrays.asList("end","start");
 
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -102,6 +103,8 @@ public class SiegeWarAdminCommand implements TabExecutor {
 					return Arrays.asList("true","false");
 				if (args[2].equalsIgnoreCase("setinvaded"))
 					return Arrays.asList("true","false");
+				if (args[2].equalsIgnoreCase("revoltassist"))
+					return NameUtil.filterByStart(SiegeWarCommand.getRevoltAssistTabCompletes(), args[3]);
 			}
 		case "town":
 			if (args.length == 2)
@@ -124,6 +127,9 @@ public class SiegeWarAdminCommand implements TabExecutor {
 			
 			if (args.length == 3)
 				return NameUtil.filterByStart(siegewaradminNationTabCompletes, args[2]);
+
+			if (args.length == 4 && Arrays.asList("siegeinfo","setsiegewins","setbankedsiegewins").contains(args[2].toLowerCase()))
+				return getTownyStartingWith(args[3], "n");
 		case "battlesession":
 			if (args.length == 2)
 				return NameUtil.filterByStart(siegewaradminBattleSessionTabCompletes, args[1]);
@@ -329,6 +335,10 @@ public class SiegeWarAdminCommand implements TabExecutor {
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] setplunderlost [amount]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] settownsgained [amount]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] settownslost [amount]", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] siegeinfo [target_nation]", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [attacker] setsiegewins [defender] [amount]", "Wins from the previous siege week (capital unlocks)"));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [attacker] setbankedsiegewins [defender] [amount]", "Wins banked this siege week"));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [attacker] clearsiegewins", "Wipe all siege week wins"));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "battlesession [start/end]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "siegeduration addhours [1,2,3,4,5...]", "Add a number of hours to every siege."));
 	}
@@ -358,6 +368,7 @@ public class SiegeWarAdminCommand implements TabExecutor {
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "siege [town_name] end", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "siege [town_name] setplundered [true/false]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "siege [town_name] remove", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "siege [town_name] revoltassist ([nation/none])", ""));
 	}
 
 	private void showTownHelp(CommandSender sender) {
@@ -373,6 +384,10 @@ public class SiegeWarAdminCommand implements TabExecutor {
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] setplunderlost [amount]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] settownsgained [amount]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] settownslost [amount]", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [nation_name] siegeinfo [target_nation]", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [attacker] setsiegewins [defender] [amount]", "Wins from the previous siege week (capital unlocks)"));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [attacker] setbankedsiegewins [defender] [amount]", "Wins banked this siege week"));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/swa", "nation [attacker] clearsiegewins", "Wipe all siege week wins"));
 	}
 
 	private void parseSiegeWarReloadCommand(CommandSender sender) {
@@ -623,6 +638,27 @@ public class SiegeWarAdminCommand implements TabExecutor {
 					SiegeController.saveSiege(siege);
 					Messaging.sendMsg(sender, Translatable.of("msg_swa_set_invade_success", Boolean.toString(invaded).toUpperCase(), town.getName()));
 					return;
+				case "revoltassist":
+					if (!siege.isRevoltSiege()) {
+						Messaging.sendErrorMsg(sender, Translatable.of("msg_err_swa_revolt_assist_not_revolt", town.getName()));
+						return;
+					}
+					if (args.length < 3) {
+						Nation current = siege.getRevoltAssistNation();
+						Messaging.sendMsg(sender, Translatable.of("msg_swa_revolt_assist_current", town.getName(), current == null ? "none" : current.getName()));
+						return;
+					}
+					Nation assistNation = null;
+					if (!args[2].equalsIgnoreCase("none")) {
+						assistNation = TownyUniverse.getInstance().getNation(args[2]);
+						if (assistNation == null) {
+							Messaging.sendErrorMsg(sender, Translatable.of("msg_err_nation_not_registered", args[2]));
+							return;
+						}
+					}
+					SiegeWarCommand.setRevoltAssistNation(siege, assistNation);
+					Messaging.sendMsg(sender, Translatable.of("msg_swa_revolt_assist_success", town.getName(), assistNation == null ? "none" : assistNation.getName()));
+					return;
 				case "remove":
 					//Remove siege from system
 					SiegeController.removeSiege(siege, SiegeRemoveReason.ADMIN_COMMAND);
@@ -681,6 +717,69 @@ public class SiegeWarAdminCommand implements TabExecutor {
 	}
 
 	private void parseSiegeWarNationCommand(CommandSender sender, String[] args) {
+		if (args.length >= 2 && args[1].equalsIgnoreCase("siegeinfo")) {
+			//nation {nationname} siegeinfo [target_nation]
+			Nation nation = TownyUniverse.getInstance().getNation(args[0]);
+			if (nation == null) {
+				Messaging.sendErrorMsg(sender, Translatable.of("msg_err_nation_not_registered", args[0]));
+				return;
+			}
+			SiegeWarCommand.sendSiegeInfo(sender, nation, args.length >= 3 ? args[2] : null);
+			return;
+		}
+
+		if (args.length >= 2 && args[1].equalsIgnoreCase("clearsiegewins")) {
+			//nation {nationname} clearsiegewins
+			Nation nation = TownyUniverse.getInstance().getNation(args[0]);
+			if (nation == null) {
+				Messaging.sendErrorMsg(sender, Translatable.of("msg_err_nation_not_registered", args[0]));
+				return;
+			}
+			NationMetaDataController.clearAllSiegeWeekWins(nation);
+			Messaging.sendMsg(sender, Translatable.of("msg_swa_clear_siege_wins_success", nation.getName()));
+			return;
+		}
+
+		if (args.length >= 2 && (args[1].equalsIgnoreCase("setsiegewins") || args[1].equalsIgnoreCase("setbankedsiegewins"))) {
+			//nation {attacker} setsiegewins {defender} {amount}
+			//nation {attacker} setbankedsiegewins {defender} {amount}
+			if (args.length < 4) {
+				showNationHelp(sender);
+				return;
+			}
+			Nation attacker = TownyUniverse.getInstance().getNation(args[0]);
+			if (attacker == null) {
+				Messaging.sendErrorMsg(sender, Translatable.of("msg_err_nation_not_registered", args[0]));
+				return;
+			}
+			Nation defender = TownyUniverse.getInstance().getNation(args[2]);
+			if (defender == null) {
+				Messaging.sendErrorMsg(sender, Translatable.of("msg_err_nation_not_registered", args[2]));
+				return;
+			}
+			int amount;
+			try {
+				amount = Integer.parseInt(args[3]);
+			} catch (NumberFormatException e) {
+				Messaging.sendMsg(sender, Translatable.of("msg_error_must_be_num"));
+				return;
+			}
+
+			LocalDate today = LocalDate.now();
+			if (args[1].equalsIgnoreCase("setsiegewins")) {
+				NationMetaDataController.setSiegeWeekWins(attacker, defender, SiegeWarSettings.getPreviousSiegeWeekIdentifier(today), amount);
+				Messaging.sendMsg(sender, Translatable.of("msg_swa_set_siege_wins_success", attacker.getName(), defender.getName(), amount));
+			} else {
+				if (!SiegeWarSettings.isSiegeWeek()) {
+					Messaging.sendErrorMsg(sender, Translatable.of("msg_err_swa_not_siege_week"));
+					return;
+				}
+				NationMetaDataController.setSiegeWeekWins(attacker, defender, SiegeWarSettings.getMostRecentSiegeWeekIdentifier(today), amount);
+				Messaging.sendMsg(sender, Translatable.of("msg_swa_set_banked_siege_wins_success", attacker.getName(), defender.getName(), amount));
+			}
+			return;
+		}
+
 		if (args.length >= 3) {
 			Nation nation = TownyUniverse.getInstance().getNation(args[0]);
 			if (nation == null) {

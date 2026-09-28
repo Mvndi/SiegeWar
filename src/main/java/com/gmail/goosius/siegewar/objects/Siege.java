@@ -6,6 +6,7 @@ import com.gmail.goosius.siegewar.enums.SiegeType;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Government;
+import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.Translation;
@@ -18,6 +19,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +52,7 @@ public class Siege {
     private boolean townPlundered;
     private boolean townInvaded;
 	private int numBattleSessionsCompleted;   //When this value hits the server specified max, the siege ends
+	private int siegeWeekIdentifier;   //The siege week this siege started in, -1 if unknown
 	private Location siegeBannerLocation;
 	private int siegeBalance;
 	private double warChestAmount;
@@ -65,6 +68,7 @@ public class Siege {
 	private Resident attackingCommander;
 	private Resident defendingCommander;
 	private String endMessage;
+	private volatile Nation revoltAssistNation;
 
 	public Siege(Town town) {
 		this.town = town;
@@ -75,6 +79,7 @@ public class Siege {
         defenderName = "";
         status = null;
 		numBattleSessionsCompleted = 0;
+		siegeWeekIdentifier = -1;
 		siegeBalance = 0;
 		siegeBannerLocation = null;
 		warChestAmount = 0;
@@ -89,6 +94,7 @@ public class Siege {
 		attackingCommander = null;
 		defendingCommander = null;
 		endMessage = "";
+		revoltAssistNation = null;
     }
 
     public Town getTown() {
@@ -133,6 +139,14 @@ public class Siege {
 
 	public void setNumBattleSessionsCompleted(int num) {
 		numBattleSessionsCompleted = num;
+	}
+
+	public int getSiegeWeekIdentifier() {
+		return siegeWeekIdentifier;
+	}
+
+	public void setSiegeWeekIdentifier(int siegeWeekIdentifier) {
+		this.siegeWeekIdentifier = siegeWeekIdentifier;
 	}
 
 	public boolean hasCompletedAllBattleSessions() {
@@ -374,6 +388,19 @@ public class Siege {
 	@Deprecated
 	public boolean isLiberationSiege() {
 		return false;
+	}
+
+	@Nullable
+	public Nation getRevoltAssistNation() {
+		return revoltAssistNation;
+	}
+
+	public void setRevoltAssistNation(@Nullable Nation revoltAssistNation) {
+		this.revoltAssistNation = revoltAssistNation;
+	}
+
+	public boolean isRevoltAssistNation(@Nullable Nation nation) {
+		return nation != null && isRevoltSiege() && nation == revoltAssistNation;
 	}
 
 	public SiegeSide getSiegeWinner() {

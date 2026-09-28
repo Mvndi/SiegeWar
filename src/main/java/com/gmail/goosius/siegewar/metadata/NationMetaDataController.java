@@ -11,6 +11,7 @@ import com.palmergames.bukkit.towny.object.metadata.StringDataField;
 import com.palmergames.bukkit.towny.utils.MetaDataUtil;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -191,25 +192,93 @@ public class NationMetaDataController {
         return new HashMap<>();
     }
 
-    public static void incrementTownWeekSiegeWins(Nation attackerNation, Nation defenderNation) {
-        int currentId = SiegeWarSettings.getMostRecentSiegeWeekIdentifier(LocalDate.now());
-
+    /**
+     * Records a town win for the given siege week (the week the siege started in).
+     * The newest week goes in the current slot, the week before it in the previous slot.
+     */
+    public static void incrementTownWeekSiegeWins(Nation attackerNation, Nation defenderNation, int siegeWeekId) {
         int storedCurrentId = MetaDataUtil.hasMeta(attackerNation, townWeekSiegeWinsWeekIdentifier)
                 ? MetaDataUtil.getInt(attackerNation, townWeekSiegeWinsWeekIdentifier)
                 : -1;
         Map<UUID, Integer> storedCurrentMap = deserializeTownWeekSiegeWins(getSdf(attackerNation, townWeekSiegeWinsByDefender.getKey()));
+        UUID defenderUUID = defenderNation.getUUID();
 
-        if (storedCurrentId == currentId - SiegeWarSettings.getSiegeWeekSpacing()) {
+        if (siegeWeekId < storedCurrentId) {
+            //A siege from an older week ended after a newer week's win was already recorded.
+            if (siegeWeekId != storedCurrentId - SiegeWarSettings.getSiegeWeekSpacing())
+                return; //Too old to ever matter
+            int storedPreviousId = MetaDataUtil.hasMeta(attackerNation, previousSiegeWeekWinsWeekIdentifier)
+                    ? MetaDataUtil.getInt(attackerNation, previousSiegeWeekWinsWeekIdentifier)
+                    : -1;
+            Map<UUID, Integer> previous = (storedPreviousId == siegeWeekId)
+                    ? deserializeTownWeekSiegeWins(getSdf(attackerNation, previousSiegeWeekWinsByDefender.getKey()))
+                    : new HashMap<>();
+            previous.put(defenderUUID, previous.getOrDefault(defenderUUID, 0) + 1);
+            MetaDataUtil.setString(attackerNation, previousSiegeWeekWinsByDefender, serializeTownWeekSiegeWins(previous), true);
+            MetaDataUtil.setInt(attackerNation, previousSiegeWeekWinsWeekIdentifier, siegeWeekId, true);
+            return;
+        }
+
+        if (siegeWeekId > storedCurrentId && storedCurrentId != -1) {
             MetaDataUtil.setInt(attackerNation, previousSiegeWeekWinsWeekIdentifier, storedCurrentId, true);
             MetaDataUtil.setString(attackerNation, previousSiegeWeekWinsByDefender, serializeTownWeekSiegeWins(storedCurrentMap), true);
         }
 
-        Map<UUID, Integer> wins = (storedCurrentId == currentId) ? storedCurrentMap : new HashMap<>();
-        UUID defenderUUID = defenderNation.getUUID();
+        Map<UUID, Integer> wins = (storedCurrentId == siegeWeekId) ? storedCurrentMap : new HashMap<>();
         wins.put(defenderUUID, wins.getOrDefault(defenderUUID, 0) + 1);
 
         MetaDataUtil.setString(attackerNation, townWeekSiegeWinsByDefender, serializeTownWeekSiegeWins(wins), true);
-        MetaDataUtil.setInt(attackerNation, townWeekSiegeWinsWeekIdentifier, currentId, true);
+        MetaDataUtil.setInt(attackerNation, townWeekSiegeWinsWeekIdentifier, siegeWeekId, true);
+    }
+
+    /**
+     * Admin override: sets the wins an attacker has against a defender for the given siege week.
+     * An amount of 0 or less removes the entry.
+     */
+    public static void setSiegeWeekWins(Nation attackerNation, Nation defenderNation, int siegeWeekId, int amount) {
+        int storedCurrentId = MetaDataUtil.hasMeta(attackerNation, townWeekSiegeWinsWeekIdentifier)
+                ? MetaDataUtil.getInt(attackerNation, townWeekSiegeWinsWeekIdentifier)
+                : -1;
+        int storedPreviousId = MetaDataUtil.hasMeta(attackerNation, previousSiegeWeekWinsWeekIdentifier)
+                ? MetaDataUtil.getInt(attackerNation, previousSiegeWeekWinsWeekIdentifier)
+                : -1;
+
+        boolean useCurrentSlot;
+        Map<UUID, Integer> wins;
+        if (siegeWeekId == storedCurrentId) {
+            useCurrentSlot = true;
+            wins = deserializeTownWeekSiegeWins(getSdf(attackerNation, townWeekSiegeWinsByDefender.getKey()));
+        } else if (siegeWeekId == storedPreviousId) {
+            useCurrentSlot = false;
+            wins = deserializeTownWeekSiegeWins(getSdf(attackerNation, previousSiegeWeekWinsByDefender.getKey()));
+        } else if (siegeWeekId > storedCurrentId) {
+            //Newer week, shift the current slot into the previous slot
+            if (storedCurrentId != -1) {
+                MetaDataUtil.setInt(attackerNation, previousSiegeWeekWinsWeekIdentifier, storedCurrentId, true);
+                MetaDataUtil.setString(attackerNation, previousSiegeWeekWinsByDefender, getSdf(attackerNation, townWeekSiegeWinsByDefender.getKey()), true);
+            }
+            useCurrentSlot = true;
+            wins = new HashMap<>();
+        } else {
+            useCurrentSlot = false;
+            wins = new HashMap<>();
+        }
+
+        if (amount > 0)
+            wins.put(defenderNation.getUUID(), amount);
+        else
+            wins.remove(defenderNation.getUUID());
+
+        MetaDataUtil.setString(attackerNation, useCurrentSlot ? townWeekSiegeWinsByDefender : previousSiegeWeekWinsByDefender, serializeTownWeekSiegeWins(wins), true);
+        MetaDataUtil.setInt(attackerNation, useCurrentSlot ? townWeekSiegeWinsWeekIdentifier : previousSiegeWeekWinsWeekIdentifier, siegeWeekId, true);
+    }
+
+    public static void clearAllSiegeWeekWins(Nation attackerNation) {
+        for (CustomDataField<?> field : Arrays.asList(townWeekSiegeWinsWeekIdentifier, townWeekSiegeWinsByDefender,
+                previousSiegeWeekWinsWeekIdentifier, previousSiegeWeekWinsByDefender)) {
+            if (attackerNation.hasMeta(field.getKey()))
+                attackerNation.removeMetaData(field, true);
+        }
     }
 
     private static Map<UUID, Integer> getRelevantSiegeWeekWinsMap(Nation attackerNation) {
