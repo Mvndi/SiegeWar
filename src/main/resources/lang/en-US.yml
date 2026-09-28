@@ -769,6 +769,8 @@ msg_err_cannot_merge_towns_without_same_occupier: '&cCannot merge an occupied to
 sw_command_help_list_peaceful_towns: 'List towns which are currently peaceful.'
 sw_peaceful_towns_title: 'Peaceful Towns'
 
+# Added in 3.6.3
+sw_started_siege: 'Started Sieges:'
 # mvndi
 msg_err_must_belong_nation: 'You must be in a nation'
 msg_err_must_stand_in_town: 'You must stand in a town'

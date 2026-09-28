@@ -78,12 +78,19 @@ public class CosmeticUtil {
 	}
 
 	private static void changeBlocksToGlass(Player player, Location loc) {
-		// Set any non-transparent blocks above the banner to glass.
-		for (int i = loc.getBlockY(); i < loc.getWorld().getMaxHeight(); i++) {
-			Block block = loc.getWorld().getBlockAt(loc.getBlockX(), i, loc.getBlockZ());
-			if (block.getType().isBlock() && block.getType().isOccluding())
-				player.sendBlockChange(block.getLocation(), Bukkit.createBlockData(Material.GLASS));
-		}
+		Bukkit.getRegionScheduler().run(SiegeWar.getSiegeWar(), loc, t -> {
+			try {
+				// Set any non-transparent blocks above the banner to glass.
+				for (int i = loc.getBlockY(); i < loc.getWorld().getMaxHeight(); i++) {
+					Block block = loc.getWorld().getBlockAt(loc.getBlockX(), i, loc.getBlockZ());
+					if (block.getType().isBlock() && block.getType().isOccluding())
+						player.sendBlockChange(block.getLocation(), Bukkit.createBlockData(Material.GLASS));
+				}
+			} catch (Exception e) {
+				SiegeWar.getSiegeWar().getLogger().warning("Failed to change blocks to glass at "+ loc);
+				t.cancel();
+			}
+		});
 	}
 
 	public static void removeFakeBeacon(Player player, Location loc) {

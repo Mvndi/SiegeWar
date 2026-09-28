@@ -256,6 +256,7 @@ public class SiegeWarBannerControlUtil {
 
 						//Inform player
 						Messaging.sendMsg(bannerControlSession.getPlayer(), Translatable.of("msg_siege_war_banner_control_session_success"));
+						SiegeWar.getSiegeWar().getLogger().info(bannerControlSession.getPlayer().getName() + " took control of the banner of " + siege.getTown().getName());
 						//Inform town/nation participants
 						Translatable[] message = new Translatable[2];
 						if(reversal) {
