@@ -232,6 +232,8 @@ public class SiegeWarBattleSessionUtil {
 			if(battleSession.getScheduledStartTime() != null) {
 				if (System.currentTimeMillis() > battleSession.getScheduledStartTime()) {
 					
+					SiegeWarCampRequirementUtil.endSiegesWithoutCamp();
+
 					//Send up the Bukkit event for other plugins to listen for and potentially cancel.
 					BattleSessionPreStartEvent event = new BattleSessionPreStartEvent();
 					Bukkit.getPluginManager().callEvent(event);

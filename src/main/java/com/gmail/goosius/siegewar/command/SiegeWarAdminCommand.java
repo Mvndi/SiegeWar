@@ -13,6 +13,7 @@ import com.gmail.goosius.siegewar.objects.Siege;
 import com.gmail.goosius.siegewar.settings.Settings;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.gmail.goosius.siegewar.utils.SiegeWarBattleSessionUtil;
+import com.gmail.goosius.siegewar.utils.SiegeWarCampRequirementUtil;
 import com.gmail.goosius.siegewar.utils.SiegeWarTownPeacefulnessUtil;
 import com.palmergames.bukkit.config.CommentedConfiguration;
 import com.palmergames.bukkit.towny.TownyMessaging;
@@ -412,6 +413,7 @@ public class SiegeWarAdminCommand implements TabExecutor {
 				Messaging.sendMsg(sender, Translatable.of("msg_err_battle_session_active"));
 				return;
 			}
+			SiegeWarCampRequirementUtil.endSiegesWithoutCamp();
 			SiegeWarBattleSessionUtil.startBattleSession();
 			Messaging.sendMsg(sender, Translatable.of("msg_battle_session_force_start"));
 		} else if (args[0].equalsIgnoreCase("end")) {

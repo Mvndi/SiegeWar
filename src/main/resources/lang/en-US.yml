@@ -265,6 +265,7 @@ status_town_siege_status_attacker_abandon: 'Attacker Abandon'
 status_town_siege_status_pending_attacker_abandon: 'Attacker Abandon Pending'
 status_town_siege_status_defender_surrender: 'Defender Surrender'
 status_town_siege_status_pending_defender_surrender: 'Defender Surrender Pending'
+msg_siege_ended_no_camp: '&bThe siege of %s is over. The attackers had no siege camp to continue the fight.'
 status_town_siege_status_plundered: '&2 > Town Plundered: %s'
 
 # Siege statuses

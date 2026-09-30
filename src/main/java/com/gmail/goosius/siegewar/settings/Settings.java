@@ -48,6 +48,7 @@ public class Settings {
 		
 		// Some list variables do not reload upon loadConfig.
 		SiegeWarSettings.resetCachedSettings();
+		SiegeWarSettings.validateDaysWithoutCamp();
 		
 		try {
 			Plugin plugin = SiegeWar.getSiegeWar(); 

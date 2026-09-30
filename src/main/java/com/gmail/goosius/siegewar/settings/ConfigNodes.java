@@ -367,6 +367,14 @@ public enum ConfigNodes {
 			"# TIP 1: The higher this value, the more your server will experience aggression and toxicity.",
 			"# TIP 2: The higher this value, the more your geopolitics will be dominated by ultra-hardcore gamers, who will find it easier to defeat players with normal/healthy hours-online-per-week.",
 			"# The default value is 7."),
+	SIEGE_DAYS_WITHOUT_CAMP(
+			"war.siege.times.days_without_camp",
+			"saturday",
+			"",
+			"# Days on which a siege can fight without a siege camp (MvndiTowny), comma separated, e.g. saturday,sunday.",
+			"# When a battle session starts on any other day, sieges whose attackers have no standing siege camp end as a defender win.",
+			"# Every day listed here must have battle session start times, otherwise a warning is logged.",
+			"# Leave empty to disable this, so sieges never need a siege camp."),
 	SIEGE_DURATION_PILLAGE(
 			"war.siege.times.duration_pillage",
 			"10",

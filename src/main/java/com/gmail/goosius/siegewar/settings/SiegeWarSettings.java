@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.gmail.goosius.siegewar.SiegeController;
+import com.gmail.goosius.siegewar.SiegeWar;
 import com.gmail.goosius.siegewar.metadata.NationMetaDataController;
 import com.gmail.goosius.siegewar.utils.SiegeWarImmunityUtil;
 import com.palmergames.bukkit.towny.TownyAPI;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class SiegeWarSettings {
 
 	private static List<DayOfWeek> allowedDaysList = null;
+	private static List<DayOfWeek> daysWithoutCampList = null;
 	private static String allowedWeeksStartSiege = null;
 	private static String allowedWeeksBattleSession = null;
 	private static List<Material> siegeZoneWildernessForbiddenBlockMaterials = null;
@@ -37,6 +39,7 @@ public class SiegeWarSettings {
 	private static Map<Integer, Integer> maxActiveSiegeAttacksPerNationPerLevel = null;
 	protected static void resetCachedSettings() {
 		allowedDaysList = null;
+		daysWithoutCampList = null;
 		allowedWeeksStartSiege = null;
 		allowedWeeksBattleSession = null;
 		siegeZoneWildernessForbiddenBlockMaterials = null;
@@ -472,6 +475,31 @@ public class SiegeWarSettings {
 		return Settings.getString(ConfigNodes.SIEGE_START_DAY_LIMITER_ALLOWED_WEEKS);
 	}
 
+	public static List<DayOfWeek> getDaysWithoutCamp() {
+		if (daysWithoutCampList != null)
+			return daysWithoutCampList;
+
+		List<DayOfWeek> days = new ArrayList<>();
+		for (String dayString : Settings.getString(ConfigNodes.SIEGE_DAYS_WITHOUT_CAMP).toUpperCase(Locale.ROOT).replaceAll(" ", "").split(",")) {
+			if (dayString.isEmpty())
+				continue;
+			try {
+				days.add(DayOfWeek.valueOf(dayString));
+			} catch (IllegalArgumentException e) {
+				SiegeWar.severe("Config: war.siege.times.days_without_camp contains '" + dayString + "', which is not a day of the week. Ignoring it.");
+			}
+		}
+		daysWithoutCampList = days;
+		return daysWithoutCampList;
+	}
+
+	public static void validateDaysWithoutCamp() {
+		for (DayOfWeek day : getDaysWithoutCamp()) {
+			if (getBattleSessionStartTimes(day).isEmpty())
+				SiegeWar.severe("Config: war.siege.times.days_without_camp includes " + day + ", but battle_session_scheduler.start_times has no battle sessions on that day.");
+		}
+	}
+
 	public static boolean doesTodayAllowASiegeToStart() {
 		if(!isSiegeWeek(LocalDate.now()))
 			return false;
@@ -648,8 +676,29 @@ public class SiegeWarSettings {
 			return new ArrayList<>();
 
 		//Get Start times for the given day
+		String startTimesAsString = getBattleSessionStartTimes(day.getDayOfWeek());
+
+		//Transform the config file strings into a list of LocalDateTime objects
+		List<LocalDateTime> startTimesAsList = new ArrayList<>();
+		if(startTimesAsString.length() > 0) {
+			String[] startTimeAsHourMinutePair;
+			LocalDateTime startTime;
+			for(String startTimeAsString: startTimesAsString.split(",")) {
+				if (startTimeAsString.contains(":")) {
+					startTimeAsHourMinutePair = startTimeAsString.split(":");
+					startTime = LocalDateTime.of(day, LocalTime.of(Integer.parseInt(startTimeAsHourMinutePair[0]), Integer.parseInt(startTimeAsHourMinutePair[1])));
+				} else {
+					startTime = LocalDateTime.of(day, LocalTime.of(Integer.parseInt(startTimeAsString), 0));
+				}
+				startTimesAsList.add(startTime);
+			}
+		}
+		return startTimesAsList;
+	}
+
+	private static String getBattleSessionStartTimes(DayOfWeek dayOfWeek) {
 		String startTimesAsString = "";
-		switch (day.getDayOfWeek()) {
+		switch (dayOfWeek) {
 			case MONDAY:
 				startTimesAsString = getBattleSessionStartTimesMonday();
 				break;
@@ -672,23 +721,7 @@ public class SiegeWarSettings {
 				startTimesAsString = getBattleSessionStartTimesSunday();
 				break;
 		}
-
-		//Transform the config file strings into a list of LocalDateTime objects
-		List<LocalDateTime> startTimesAsList = new ArrayList<>();
-		if(startTimesAsString.length() > 0) {
-			String[] startTimeAsHourMinutePair;
-			LocalDateTime startTime;
-			for(String startTimeAsString: startTimesAsString.split(",")) {
-				if (startTimeAsString.contains(":")) {
-					startTimeAsHourMinutePair = startTimeAsString.split(":");
-					startTime = LocalDateTime.of(day, LocalTime.of(Integer.parseInt(startTimeAsHourMinutePair[0]), Integer.parseInt(startTimeAsHourMinutePair[1])));
-				} else {
-					startTime = LocalDateTime.of(day, LocalTime.of(Integer.parseInt(startTimeAsString), 0));
-				}
-				startTimesAsList.add(startTime);
-			}
-		}
-		return startTimesAsList;
+		return startTimesAsString;
 	}
 
 	private static String getBattleSessionStartTimesMonday() {
