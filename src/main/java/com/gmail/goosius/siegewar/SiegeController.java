@@ -97,6 +97,8 @@ public class SiegeController {
 		SiegeMetaDataController.setSiegeBalance(town, siege.getSiegeBalance());
 		SiegeMetaDataController.setAttackerBattlePoints(town, siege.getAttackerBattlePoints());
 		SiegeMetaDataController.setDefenderBattlePoints(town, siege.getDefenderBattlePoints());
+		SiegeMetaDataController.setAttackerKills(town, siege.getAttackerKills());
+		SiegeMetaDataController.setDefenderKills(town, siege.getDefenderKills());
 		SiegeMetaDataController.setWarChestAmount(town, siege.getWarChestAmount());
 		SiegeMetaDataController.setTownPlundered(town, siege.getTownPlundered());
 		SiegeMetaDataController.setTownInvaded(town, siege.getTownInvaded());
@@ -219,6 +221,8 @@ public class SiegeController {
 		siege.setSiegeBalance(SiegeMetaDataController.getSiegeBalance(town));
 		siege.setAttackerBattlePoints(SiegeMetaDataController.getAttackerBattlePoints(town));
 		siege.setDefenderBattlePoints(SiegeMetaDataController.getDefenderBattlePoints(town));
+		siege.setAttackerKills(SiegeMetaDataController.getAttackerKills(town));
+		siege.setDefenderKills(SiegeMetaDataController.getDefenderKills(town));
 		siege.setWarChestAmount(SiegeMetaDataController.getWarChestAmount(town));
 		siege.setTownPlundered(SiegeMetaDataController.townPlundered(town));
 		siege.setTownInvaded(SiegeMetaDataController.townInvaded(town));

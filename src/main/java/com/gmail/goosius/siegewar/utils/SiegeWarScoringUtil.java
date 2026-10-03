@@ -65,6 +65,7 @@ public class SiegeWarScoringUtil {
 		}
 
 		//Save siege to db
+		siege.recordKill(residentIsAttacker);
 		SiegeController.saveSiege(siege);
 
 		//Generate message

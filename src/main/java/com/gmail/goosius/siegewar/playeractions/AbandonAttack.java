@@ -71,6 +71,7 @@ public class AbandonAttack {
 			message.append(Translatable.of(key));
 		}
 
+		siege.setEndMessage(message.defaultLocale());
 		return message;
 	}
 }
