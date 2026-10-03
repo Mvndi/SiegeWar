@@ -475,7 +475,19 @@ public class SiegeController {
 	                              Town townOfSiegeStarter,
 	                              Player siegeStarter,
 	                              boolean useWarchest) {
-		if (!SiegeWarSettings.canTownBeSiegedToday(targetTown, attacker)) {
+		startSiege(bannerBlock, siegeType, targetTown, attacker, defender, townOfSiegeStarter, siegeStarter, useWarchest, false);
+	}
+
+	public static void startSiege(Block bannerBlock,
+	                              SiegeType siegeType,
+	                              Town targetTown,
+	                              Government attacker,
+	                              Government defender,
+	                              Town townOfSiegeStarter,
+	                              Player siegeStarter,
+	                              boolean useWarchest,
+	                              boolean adminStart) {
+		if (!adminStart && !SiegeWarSettings.canTownBeSiegedToday(targetTown, attacker)) {
 			throw new RuntimeException("Siege start not allowed this week due to capital alternation setting."); // Fallback; in practice this path is rarely used directly
 		}
 		//Create Siege
@@ -510,7 +522,8 @@ public class SiegeController {
 		Translatable startMessage = getGlobalSiegeStartMessage(siege);
 		Messaging.sendGlobalMessage(startMessage);
 
-		SiegeWarMoneyUtil.payUpfrontSiegeStartCost(siege);
+		if (!adminStart)
+			SiegeWarMoneyUtil.payUpfrontSiegeStartCost(siege);
 
 		//Pay into warchest
 		if (useWarchest) {

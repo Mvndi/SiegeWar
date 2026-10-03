@@ -518,6 +518,11 @@ msg_revolt_assist_cleared: '&bREVOLT SIEGE at %s > No nation is assisting the re
 msg_err_swa_revolt_assist_not_revolt: '&cThe siege at %s is not a revolt siege.'
 msg_swa_revolt_assist_current: '&bThe nation assisting the revolt at %s is: %s'
 msg_swa_revolt_assist_success: '&bSet the nation assisting the revolt at %s to %s.'
+msg_swa_siege_start_success: '&bStarted a %s siege on %s.'
+msg_err_swa_siege_start_player_only: '&cOnly a player can start a siege.'
+msg_err_swa_siege_start_already_sieged: '&c%s already has a siege.'
+msg_err_swa_siege_start_revolt_not_occupied: '&c%s is not occupied, it cannot revolt.'
+msg_err_swa_siege_start_banner_block_not_empty: '&cStand in an empty block, the siege banner is placed there.'
 msg_revolt_assist_chosen: '&bREVOLT SIEGE at %s > The rebels have called on %s to assist their revolt against %s!'
 msg_revolt_siege_started: '&bThe townspeople of %s have risen up against the occupying nation of %s, and declared themselves free to choose their own destiny. A REVOLT SIEGE has begun!'
 
