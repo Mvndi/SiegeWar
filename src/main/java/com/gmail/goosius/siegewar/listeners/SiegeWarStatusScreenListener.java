@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.gmail.goosius.siegewar.playeractions.TakeFullControl;
+import org.bukkit.entity.Player;
 import com.gmail.goosius.siegewar.TownOccupationController;
 import com.gmail.goosius.siegewar.utils.SiegeWarTownPeacefulnessUtil;
 import com.palmergames.bukkit.towny.TownyAPI;
@@ -167,6 +169,13 @@ public class SiegeWarStatusScreenListener implements Listener {
 	 */
 	@EventHandler(ignoreCancelled = true)
 	public void onTownStatusScreen(TownStatusScreenEvent event) {
+		if (event.getCommandSender() instanceof Player player && TakeFullControl.isAvailable(player, event.getTown())) {
+			Translator translator = Translator.locale(player);
+			event.getStatusScreen().addComponentOf("siegeWar_takeFullControl",
+				TownyFormatter.colourHoverKey(translator.of("sw_take_full_control_button")),
+				HoverEvent.showText(TownyComponents.miniMessage(translator.of("sw_take_full_control_hover"))),
+				ClickEvent.runCommand("/sw takefullcontrol " + event.getTown().getName()));
+		}
 		if (SiegeWarSettings.getWarSiegeEnabled()) {
 			final Translator translator = Translator.locale(event.getCommandSender());
 			

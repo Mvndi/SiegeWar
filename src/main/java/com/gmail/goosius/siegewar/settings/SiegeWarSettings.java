@@ -39,6 +39,14 @@ public class SiegeWarSettings {
 		maxActiveSiegeAttacksPerNationPerLevel = null;
 	}
 
+	public static int getTakeFullControlInactiveDays() {
+		return Settings.getInt(ConfigNodes.WAR_TAKE_FULL_CONTROL_INACTIVE_DAYS);
+	}
+
+	public static int getTakeFullControlLoginNoticeDelaySeconds() {
+		return Math.max(1, Settings.getInt(ConfigNodes.WAR_TAKE_FULL_CONTROL_LOGIN_NOTICE_DELAY_SECONDS));
+	}
+
 	public static boolean getWarSiegeEnabled() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_ENABLED);
 	}

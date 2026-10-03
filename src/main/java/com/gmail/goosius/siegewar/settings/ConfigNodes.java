@@ -23,6 +23,14 @@ public enum ConfigNodes {
 			"# +------------------------------------------------------+ #",
 			"############################################################",
 			""),
+	WAR_TAKE_FULL_CONTROL_INACTIVE_DAYS(
+			"war.take_full_control_inactive_days", "60",
+			"# Days a mayor must be offline before their nation leader can appoint a replacement.",
+			"# Set to 0 to disable /sw takefullcontrol."),
+	WAR_TAKE_FULL_CONTROL_LOGIN_NOTICE_DELAY_SECONDS(
+			"war.take_full_control_login_notice_delay_seconds", "5",
+			"# Delay in seconds after login before notifying nation leaders about inactive mayors.",
+			"# Values below 1 are treated as 1 second."),
 	WAR_SIEGE_DYNMAP_ROOT(
 			"war.siege.dynmap","","",""),
 	WAR_SIEGE_DYNMAP_LAYER_NAME(

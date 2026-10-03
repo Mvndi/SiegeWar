@@ -1,5 +1,6 @@
 package com.gmail.goosius.siegewar.command;
 
+import com.gmail.goosius.siegewar.playeractions.TakeFullControl;
 import com.gmail.goosius.siegewar.Messaging;
 import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.SiegeWar;
@@ -38,7 +39,7 @@ import java.util.*;
 public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 	
 	private static final List<String> siegewarTabCompletes = Arrays.asList("collect", "town", "nation", "hud", 
-			"listpeacefultowns", "preference", "version", "nextsession", "spawn");
+			"listpeacefultowns", "preference", "version", "nextsession", "spawn", "takefullcontrol");
 
 	private static final List<String> siegewarTownTabCompletes = Arrays.asList("togglepeaceful");
 	
@@ -49,6 +50,10 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 
 		switch (args[0].toLowerCase()) {
+			case "takefullcontrol":
+				if (args.length > 1)
+					return TakeFullControl.tabComplete(sender, args);
+				break;
 			case "nation":
 				if (args.length == 2)
 					return NameUtil.filterByStart(siegewarNationTabCompletes, args[1]);
@@ -78,6 +83,7 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 
 	private void showSiegeWarHelp(CommandSender sender) {
 		TownyMessaging.sendMessage(sender, ChatTools.formatTitle("/siegewar"));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw takefullcontrol", "<town> [new-mayor]", Translatable.of("sw_take_full_control_help").forLocale(sender)));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw hud", "[town]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw spawn", "[town]", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw collect", "", Translatable.of("nation_help_siegewar_11").forLocale(sender)));
@@ -130,6 +136,9 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 		}
 			
 		switch (args[0]) {
+		case "takefullcontrol":
+			TakeFullControl.request(player, StringMgmt.remFirstArg(args));
+			break;
 		case "collect":
 			parseSiegeWarCollectCommand(player);
 			break;

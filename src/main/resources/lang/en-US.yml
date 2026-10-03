@@ -732,3 +732,16 @@ sw_peaceful_towns_title: 'Peaceful Towns'
 
 # Added in 3.6.3
 sw_started_siege: 'Started Sieges:'
+# Replacing inactive mayors
+sw_take_full_control_help: 'Appoint a replacement for an inactive mayor in your nation.'
+sw_take_full_control_button: '&cTake full control'
+sw_take_full_control_hover: 'Click to choose a replacement mayor for this town.'
+sw_take_full_control_choose: 'Choose a new mayor for %s: type their username in chat, or type cancel to cancel.'
+sw_take_full_control_confirm: 'Replace %s with %s as mayor of %s?'
+sw_take_full_control_unavailable: 'Only the nation leader can replace a mayor in their own nation who has been offline for at least %s days. This feature must be enabled.'
+sw_take_full_control_invalid_candidate: 'The new mayor must be a non-NPC resident of this town, other than its current mayor.'
+sw_take_full_control_success: '%s appointed %s as mayor of %s, replacing its inactive mayor.'
+sw_take_full_control_login: 'You can appoint new mayors in %s town(s) in your nation because their mayors are inactive. Click a town to choose a replacement:'
+sw_take_full_control_login_town: '<green>[Take full control of %s]</green>'
+sw_take_full_control_not_town_resident: 'That player is not part of %s. Take full control cancelled.'
+sw_take_full_control_already_prompted: 'You already have a chat prompt open. Answer it or type cancel first.'

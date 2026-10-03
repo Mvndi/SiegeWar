@@ -34,6 +34,7 @@ import com.gmail.goosius.siegewar.Messaging;
 import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.SiegeWar;
 import com.gmail.goosius.siegewar.objects.Siege;
+import com.gmail.goosius.siegewar.playeractions.TakeFullControl;
 import com.gmail.goosius.siegewar.playeractions.PlayerDeath;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.gmail.goosius.siegewar.utils.SiegeWarBlockUtil;
@@ -210,6 +211,8 @@ public class SiegeWarBukkitEventListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void on(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		SiegeWar.getSiegeWar().getScheduler().runLater(player, () -> TakeFullControl.notifyOnLogin(player), SiegeWarSettings.getTakeFullControlLoginNoticeDelaySeconds() * 20L);
 		if (isSWEnabledAndIsThisAWarAllowedWorld(event.getPlayer().getWorld())) {
 			Siege activeSiegeAtPlayerLocation = SiegeController.getActiveSiegeAtLocation(event.getPlayer().getLocation());
 			if(activeSiegeAtPlayerLocation != null) {
