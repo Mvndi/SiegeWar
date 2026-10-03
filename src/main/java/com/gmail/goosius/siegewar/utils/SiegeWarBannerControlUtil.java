@@ -252,6 +252,8 @@ public class SiegeWarBannerControlUtil {
 						}
 						siege.clearBannerControllingResidents();
 						siege.setBannerControllingSide(bannerControlSession.getSiegeSide());
+						if (bannerControlSession.getSiegeSide() == SiegeSide.ATTACKERS)
+							siege.setAttackerEverHeldBanner(true);
 						siege.addBannerControllingResident(bannerControlSession.getResident());
 
 						//Inform player

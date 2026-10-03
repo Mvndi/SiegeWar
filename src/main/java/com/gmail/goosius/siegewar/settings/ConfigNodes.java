@@ -317,6 +317,14 @@ public enum ConfigNodes {
 			"# If no value is defined for a nation level, it uses the  max_active_siege_attacks_per_nation value.",
 			"# For example to get max_active_siege_attacks_per_nation sieges for each nation level but lvl 5 got 6 and lvl 6 got 10, then the value would be:",
 			"# \"5:6,6:10\""),
+	WAR_SIEGE_BAIT_SIEGE_MAX_ATTACKER_SCORING_SESSIONS(
+			"war.siege.quantities.bait_siege_max_attacker_scoring_sessions",
+			"0",
+			""),
+	WAR_SIEGE_BAIT_SIEGE_MAX_ATTACKER_KILLS(
+			"war.siege.quantities.bait_siege_max_attacker_kills",
+			"0",
+			""),
 	WAR_SIEGE_SIEGECAMPS(
 			"war.siege.siege_assemblies",
 			"",

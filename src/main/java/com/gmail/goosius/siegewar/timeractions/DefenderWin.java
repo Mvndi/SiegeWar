@@ -24,7 +24,8 @@ public class DefenderWin
 	 */
     public static void defenderWin(Siege siege) {
         if (siege.getSiegeWinner() != SiegeSide.DEFENDERS
-                && siege.getSiegeType() == SiegeType.CONQUEST && siege.getAttacker() instanceof Nation nation)
+                && siege.getSiegeType() == SiegeType.CONQUEST && siege.getAttacker() instanceof Nation nation
+                && siege.isBaitSiege())
             NationMetaDataController.recordAttackLoss(nation, LocalDate.now());
     	siege.setSiegeWinner(SiegeSide.DEFENDERS);
 		SiegeWarSiegeCompletionUtil.setCommonSiegeCompletionValues(siege);

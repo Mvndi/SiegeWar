@@ -41,6 +41,8 @@ public class SiegeMetaDataController {
 	private static IntegerDataField defenderBattlePoints = new IntegerDataField("siegewar_defenderBattlePoints", 0);
 	private static IntegerDataField attackerKills = new IntegerDataField("siegewar_attackerKills", 0);
 	private static IntegerDataField defenderKills = new IntegerDataField("siegewar_defenderKills", 0);
+	private static IntegerDataField attackerScoringSessions = new IntegerDataField("siegewar_attackerScoringSessions", 0);
+	private static BooleanDataField attackerEverHeldBanner = new BooleanDataField("siegewar_attackerEverHeldBanner", false);
 	
 	private static DecimalDataField siegeWarChestAmount = new DecimalDataField("siegewar_warChestAmount", 0.0);
 	private static BooleanDataField townPlundered = new BooleanDataField("siegewar_townPlundered", false);
@@ -239,6 +241,28 @@ public class SiegeMetaDataController {
 			town.addMetaData(new IntegerDataField(defenderKills.getKey(), num));
 	}
 
+	public static int getAttackerScoringSessions(Town town) {
+		return town.hasMeta(attackerScoringSessions.getKey()) ? MetaDataUtil.getInt(town, attackerScoringSessions) : 0;
+	}
+
+	public static void setAttackerScoringSessions(Town town, int num) {
+		if (town.hasMeta(attackerScoringSessions.getKey()))
+			MetaDataUtil.setInt(town, attackerScoringSessions, num, true);
+		else
+			town.addMetaData(new IntegerDataField(attackerScoringSessions.getKey(), num));
+	}
+
+	public static boolean getAttackerEverHeldBanner(Town town) {
+		return !town.hasMeta(attackerEverHeldBanner.getKey()) || MetaDataUtil.getBoolean(town, attackerEverHeldBanner);
+	}
+
+	public static void setAttackerEverHeldBanner(Town town, boolean bool) {
+		if (town.hasMeta(attackerEverHeldBanner.getKey()))
+			MetaDataUtil.setBoolean(town, attackerEverHeldBanner, bool, true);
+		else
+			town.addMetaData(new BooleanDataField(attackerEverHeldBanner.getKey(), bool));
+	}
+
 	public static void setAttackerBattlePoints(Town town, int num) {
 		IntegerDataField idf = (IntegerDataField) attackerBattlePoints.clone();
 		if (town.hasMeta(idf.getKey()))
@@ -396,6 +420,10 @@ public class SiegeMetaDataController {
 			town.removeMetaData(attackerKills);
 		if (town.hasMeta(defenderKills.getKey()))
 			town.removeMetaData(defenderKills);
+		if (town.hasMeta(attackerScoringSessions.getKey()))
+			town.removeMetaData(attackerScoringSessions);
+		if (town.hasMeta(attackerEverHeldBanner.getKey()))
+			town.removeMetaData(attackerEverHeldBanner);
 
 		DecimalDataField ddf = (DecimalDataField) siegeWarChestAmount.clone();
 		if (town.hasMeta(ddf.getKey()))

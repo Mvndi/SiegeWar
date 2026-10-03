@@ -220,6 +220,14 @@ public class SiegeWarSettings {
 		return Settings.getInt(ConfigNodes.WAR_SIEGE_MAX_ACTIVE_SIEGE_ATTACKS_PER_NATION);
 	}
 
+	public static int getBaitSiegeMaxAttackerScoringSessions() {
+		return Settings.getInt(ConfigNodes.WAR_SIEGE_BAIT_SIEGE_MAX_ATTACKER_SCORING_SESSIONS);
+	}
+
+	public static int getBaitSiegeMaxAttackerKills() {
+		return Settings.getInt(ConfigNodes.WAR_SIEGE_BAIT_SIEGE_MAX_ATTACKER_KILLS);
+	}
+
 	public static boolean getWarSiegeMaxActiveSiegeAttacksPerNationUseLevels() {
 		return Settings.getBoolean(ConfigNodes.WAR_SIEGE_MAX_ACTIVE_SIEGE_ATTACKS_PER_NATION_USE_LEVELS);
 	}

@@ -64,6 +64,8 @@ public class Siege {
 	private int defenderBattlePoints;
 	private int attackerKills;
 	private int defenderKills;
+	private int attackerScoringSessions;
+	private boolean attackerEverHeldBanner;
 	private int numberOfBannerControlReversals;
 	private Resident attackingCommander;
 	private Resident defendingCommander;
@@ -90,6 +92,8 @@ public class Siege {
 		defenderBattlePoints = 0;
 		attackerKills = 0;
 		defenderKills = 0;
+		attackerScoringSessions = 0;
+		attackerEverHeldBanner = false;
 		numberOfBannerControlReversals = 0;
 		attackingCommander = null;
 		defendingCommander = null;
@@ -355,6 +359,28 @@ public class Siege {
 
 	public synchronized void setDefenderKills(int defenderKills) {
 		this.defenderKills = defenderKills;
+	}
+
+	public int getAttackerScoringSessions() {
+		return attackerScoringSessions;
+	}
+
+	public void setAttackerScoringSessions(int attackerScoringSessions) {
+		this.attackerScoringSessions = attackerScoringSessions;
+	}
+
+	public boolean hasAttackerEverHeldBanner() {
+		return attackerEverHeldBanner;
+	}
+
+	public void setAttackerEverHeldBanner(boolean attackerEverHeldBanner) {
+		this.attackerEverHeldBanner = attackerEverHeldBanner;
+	}
+
+	public synchronized boolean isBaitSiege() {
+		return !attackerEverHeldBanner
+				&& attackerScoringSessions <= SiegeWarSettings.getBaitSiegeMaxAttackerScoringSessions()
+				&& attackerKills <= SiegeWarSettings.getBaitSiegeMaxAttackerKills();
 	}
 
 	public synchronized void recordKill(boolean victimIsAttacker) {
