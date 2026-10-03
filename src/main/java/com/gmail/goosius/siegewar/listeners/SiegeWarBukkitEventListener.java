@@ -212,7 +212,10 @@ public class SiegeWarBukkitEventListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void on(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		SiegeWar.getSiegeWar().getScheduler().runLater(player, () -> TakeFullControl.notifyOnLogin(player), SiegeWarSettings.getTakeFullControlLoginNoticeDelaySeconds() * 20L);
+		SiegeWar.getSiegeWar().getScheduler().runLater(player, () -> {
+			TakeFullControl.notifyOnLogin(player);
+			SiegeWarNotificationUtil.notifyTownFinancesOnLogin(player);
+		}, SiegeWarSettings.getTakeFullControlLoginNoticeDelaySeconds() * 20L);
 		if (isSWEnabledAndIsThisAWarAllowedWorld(event.getPlayer().getWorld())) {
 			Siege activeSiegeAtPlayerLocation = SiegeController.getActiveSiegeAtLocation(event.getPlayer().getLocation());
 			if(activeSiegeAtPlayerLocation != null) {

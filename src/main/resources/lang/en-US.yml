@@ -745,3 +745,7 @@ sw_take_full_control_login: 'You can appoint new mayors in %s town(s) in your na
 sw_take_full_control_login_town: '<green>[Take full control of %s]</green>'
 sw_take_full_control_not_town_resident: 'That player is not part of %s. Take full control cancelled.'
 sw_take_full_control_already_prompted: 'You already have a chat prompt open. Answer it or type cancel first.'
+
+sw_login_town_under_siege: "&cYour town %s is being sieged!"
+sw_login_siege_finances: "&eYour town bank can cover approximately %s days of plunder payments + upkeep/taxes at %s/day, after reserving %s for possible upfront plunder. Based on current costs, without future income. Use /t deposit <amount> to help your town afford more days."
+sw_login_siege_finances_no_daily_cost: "&eYour town currently has no daily plunder payments or upkeep/taxes. Possible upfront plunder: %s. Use /t deposit <amount> to help fund your town."

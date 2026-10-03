@@ -31,6 +31,10 @@ public enum ConfigNodes {
 			"war.take_full_control_login_notice_delay_seconds", "5",
 			"# Delay in seconds after login before notifying nation leaders about inactive mayors.",
 			"# Values below 1 are treated as 1 second."),
+	WAR_SIEGE_LOGIN_WARNING_SOUND(
+			"war.siege.login_warning_sound", "minecraft:entity.villager.no",
+			"# Sound played with the siege/plunder login warning (Minecraft sound resource key).",
+			"# Set to an empty string to disable the sound."),
 	WAR_SIEGE_DYNMAP_ROOT(
 			"war.siege.dynmap","","",""),
 	WAR_SIEGE_DYNMAP_LAYER_NAME(

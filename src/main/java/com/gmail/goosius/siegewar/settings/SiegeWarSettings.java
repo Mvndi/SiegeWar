@@ -39,6 +39,10 @@ public class SiegeWarSettings {
 		maxActiveSiegeAttacksPerNationPerLevel = null;
 	}
 
+	public static String getSiegeLoginWarningSound() {
+		return Settings.getString(ConfigNodes.WAR_SIEGE_LOGIN_WARNING_SOUND).trim();
+	}
+
 	public static int getTakeFullControlInactiveDays() {
 		return Settings.getInt(ConfigNodes.WAR_TAKE_FULL_CONTROL_INACTIVE_DAYS);
 	}

@@ -3,6 +3,12 @@ package com.gmail.goosius.siegewar.utils;
 import com.gmail.goosius.siegewar.Messaging;
 import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.SiegeWar;
+import com.gmail.goosius.siegewar.TownOccupationController;
+import com.gmail.goosius.siegewar.metadata.TownMetaDataController;
+import com.palmergames.bukkit.towny.TownyEconomyHandler;
+import com.palmergames.bukkit.towny.TownySettings;
+import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.object.Resident;
 import com.gmail.goosius.siegewar.objects.Siege;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
 import com.palmergames.bukkit.towny.TownyMessaging;
@@ -21,6 +27,57 @@ import java.util.Map;
 import java.util.Set;
 
 public class SiegeWarNotificationUtil {
+
+	public static void notifyTownFinancesOnLogin(Player player) {
+		if (!player.isOnline() || !SiegeWarSettings.getWarSiegeEnabled() || !TownyEconomyHandler.isActive())
+			return;
+		Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
+		Town town = resident == null ? null : resident.getTownOrNull();
+		if (town == null || town.isRuined())
+			return;
+		boolean activeSiege = SiegeController.hasActiveSiege(town);
+		boolean debt = SiegeWarSettings.isPlunderPaidOutOverDays() && TownMetaDataController.hasPlunderDebt(town);
+		if (!activeSiege && !debt)
+			return;
+		String sound = SiegeWarSettings.getSiegeLoginWarningSound();
+		if (!sound.isEmpty())
+			player.playSound(player.getLocation(), sound, 1.0F, 1.0F);
+		double balance = town.getAccount().getHoldingBalance();
+		double plunder = debt ? TownMetaDataController.getDailyPlunderDebt(town) : 0;
+		double reserve = 0;
+		if (activeSiege && !SiegeController.getSiege(town).isTownPlundered()) {
+			double potentialPlunder = SiegeWarSettings.getWarSiegePlunderAmountPerPlot()
+				* town.getNumTownBlocks() * SiegeWarMoneyUtil.getMoneyMultiplier(town);
+			if (SiegeWarSettings.isPlunderPaidOutOverDays())
+				plunder = (int) potentialPlunder / Math.max(1, SiegeWarSettings.plunderDays());
+			else
+				reserve = potentialPlunder;
+		}
+		double taxes = TownySettings.getTownUpkeepCost(town);
+		Nation nation = town.getNationOrNull();
+		if (TownySettings.isTaxingDaily() && town.hasUpkeep() && nation != null
+			&& (!town.isCapital() || TownySettings.doCapitalsPayNationTax())) {
+			double nationTax = nation.isTaxPercentage()
+				? Math.min(Math.max(0, balance) * nation.getTaxes() / 100, nation.getMaxPercentTaxAmount())
+				: nation.getTaxes();
+			if (town.isConquered() && nation.getTaxes() != 0)
+				nationTax += nation.getConqueredTax();
+			taxes += Math.max(0, nationTax);
+		}
+		if (SiegeWarSettings.getMaxOccupationTaxPerPlot() > 0)
+			taxes += Math.max(0, TownOccupationController.getNationOccupationTax(town));
+		if (activeSiege)
+			Messaging.sendErrorMsg(player, Translatable.of("sw_login_town_under_siege", town.getName()));
+		double dailyCost = Math.max(0, taxes) + Math.max(0, plunder);
+		if (dailyCost > 0) {
+			long days = (long) Math.floor(Math.max(0, balance - reserve) / dailyCost);
+			Messaging.sendMsg(player, Translatable.of("sw_login_siege_finances", days,
+				TownyEconomyHandler.getFormattedBalance(dailyCost), TownyEconomyHandler.getFormattedBalance(reserve)));
+		} else {
+			Messaging.sendMsg(player, Translatable.of("sw_login_siege_finances_no_daily_cost",
+				TownyEconomyHandler.getFormattedBalance(reserve)));
+		}
+	}
 
 	/**
 	 * This is a record of which players have received proximity siege zone warnings
