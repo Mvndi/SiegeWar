@@ -31,12 +31,16 @@ public enum SiegeSide {
 
 		// Look for defender
 		Town besiegedTown = siege.getTown();
-		if (isTownGuard(player, besiegedTown) || isNationSoldierOrAlliedSoldier(player, town, besiegedTown))
+		if (isTownGuard(player, besiegedTown))
 			return SiegeSide.DEFENDERS;
 
 		// Look for attacker
 		if (isNationSoldierOrAlliedSoldier(player, town, siege.getAttacker()))
 			return SiegeSide.ATTACKERS;
+
+		// Occupation moves the besieged town into the attacking nation. Its allies remain attackers.
+		if (isNationSoldierOrAlliedSoldier(player, town, besiegedTown))
+			return SiegeSide.DEFENDERS;
 
 		return SiegeSide.NOBODY;
 	}
