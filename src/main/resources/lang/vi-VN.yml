@@ -140,10 +140,10 @@ status_town_siege_status_warchest: '&2 > Rương chiến tranh: &a%s'
 status_town_siege_battle: '&2Trận chiến:'
 status_town_siege_battle_time_remaining: '&2 > Thời gian còn lại: &a%s'
 msg_war_siege_battle_session_started: "&bMột Phiên Chiến đấu mới đã bắt đầu. Tất cả các biện pháp bảo vệ PVP bên trong Khu vực bị bao vây đều bị tắt trong suốt thời gian diễn ra Phiên chiến đấu."
-msg_war_siege_battle_session_ended_with_battles: "&bPhiên Chiến đấu hiện tại đã kết thúc. Bảo vệ PVP thông thường đã được khôi phục. Các đội sau đây đã giành chiến thắng trong trận chiến của họ:"
-msg_war_siege_battle_session_ended_without_battles: "&bPhiên Chiến đấu hiện tại đã kết thúc. Bảo vệ PVP thông thường đã được khôi phục. Không có trận chiến nào."
-msg_war_siege_battle_session_ended_attacker_result: "&b * Kẻ tấn công @ %s (%s)"
-msg_war_siege_battle_session_ended_defender_result: "&b * Bên phòng thủ @ %s (%s)"
+msg_war_siege_battle_session_ended_with_battles: "&bPhiên Chiến đấu hiện tại đã kết thúc. Bảo vệ PVP thông thường đã được khôi phục. Bên phòng thủ thắng cuộc vây hãm nếu biểu ngữ chưa bị chiếm. Điểm phiên:"
+msg_war_siege_battle_session_ended_without_battles: "&bPhiên Chiến đấu hiện tại đã kết thúc. Bảo vệ PVP thông thường đã được khôi phục. Bên phòng thủ thắng cuộc vây hãm nếu biểu ngữ chưa bị chiếm. Không có trận chiến nào."
+msg_war_siege_battle_session_ended_attacker_result: "&b * Điểm tấn công @ %s (%s)"
+msg_war_siege_battle_session_ended_defender_result: "&b * Điểm phòng thủ @ %s (%s)"
 msg_war_siege_battle_session_ended_draw_result: "&b * Draw @ %s (0)"
 msg_war_siege_battle_session_break_cannot_get_banner_control: "&cKhông thể giành được quyền kiểm soát biểu ngữ cho đến khi Phiên chiến đấu tiếp theo bắt đầu. Phiên Chiến đấu tiếp theo sẽ bắt đầu sau %s."
 #Hud

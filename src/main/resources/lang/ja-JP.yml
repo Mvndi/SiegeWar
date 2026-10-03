@@ -140,10 +140,10 @@ status_town_siege_status_warchest: '&2 > War Chest: &a%s'
 status_town_siege_battle: '&2Battle:'
 status_town_siege_battle_time_remaining: '&2 > Time Remaining: &a%s'
 msg_war_siege_battle_session_started: "&b新しいバトルセッションが開始されました。バトルセッションの期間中、包囲地域内のすべてのPVP保護が一時停止されます。"
-msg_war_siege_battle_session_ended_with_battles: "&b現在の戦闘セッションは終了しました。通常のPVP保護が復元されました。以下のチームが戦闘に勝利しました:"
-msg_war_siege_battle_session_ended_without_battles: "&b現在の戦闘セッションは終了しました。通常のPVP保護が復元されました。戦闘は行われませんでした。"
-msg_war_siege_battle_session_ended_attacker_result: "&b * Attackers @ %s (%s)"
-msg_war_siege_battle_session_ended_defender_result: "&b * Defenders @ %s (%s)"
+msg_war_siege_battle_session_ended_with_battles: "&b現在の戦闘セッションは終了しました。通常のPVP保護が復元されました。旗が奪取されていない場合、防衛側が攻城戦に勝利します。セッションポイント:"
+msg_war_siege_battle_session_ended_without_battles: "&b現在の戦闘セッションは終了しました。通常のPVP保護が復元されました。旗が奪取されていない場合、防衛側が攻城戦に勝利します。戦闘は行われませんでした。"
+msg_war_siege_battle_session_ended_attacker_result: "&b * 攻撃側ポイント @ %s (%s)"
+msg_war_siege_battle_session_ended_defender_result: "&b * 防衛側ポイント @ %s (%s)"
 msg_war_siege_battle_session_ended_draw_result: "&b * Draw @ %s (0)"
 msg_war_siege_battle_session_break_cannot_get_banner_control: "&c次の戦闘セッションが始まるまで、Banner制御は得られません。次の戦闘セッションは%sで始まります。"
 #Hud
