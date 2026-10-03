@@ -1,8 +1,10 @@
 package com.gmail.goosius.siegewar.utils;
 
 import com.gmail.goosius.siegewar.SiegeController;
+import com.gmail.goosius.siegewar.Messaging;
 import com.gmail.goosius.siegewar.events.SiegeEndEvent;
 import com.gmail.goosius.siegewar.objects.Siege;
+import com.palmergames.bukkit.towny.object.Translatable;
 import org.bukkit.Bukkit;
 
 /**
@@ -39,6 +41,7 @@ public class SiegeWarSiegeCompletionUtil {
 		SiegeController.saveSiege(siege);
 
 		//Fire SiegeEnded event
+		Messaging.sendGlobalMessage(Translatable.literal(siege.getKillSummary()));
 		Bukkit.getPluginManager().callEvent(new SiegeEndEvent(siege));
 	}
 }

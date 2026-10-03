@@ -335,12 +335,37 @@ public class Siege {
 	
 	public void adjustAttackerBattlePoints(int battleScore) {
 		attackerBattlePoints += battleScore;
-		attackerKills++;
 	}
 
 	public void adjustDefenderBattlePoints(int battleScore) {
 		defenderBattlePoints += battleScore;
-		defenderKills++;
+	}
+
+	public synchronized int getAttackerKills() {
+		return attackerKills;
+	}
+
+	public synchronized int getDefenderKills() {
+		return defenderKills;
+	}
+
+	public synchronized void setAttackerKills(int attackerKills) {
+		this.attackerKills = attackerKills;
+	}
+
+	public synchronized void setDefenderKills(int defenderKills) {
+		this.defenderKills = defenderKills;
+	}
+
+	public synchronized void recordKill(boolean victimIsAttacker) {
+		if (victimIsAttacker)
+			defenderKills++;
+		else
+			attackerKills++;
+	}
+
+	public synchronized String getKillSummary() {
+		return "Siege of " + town.getName() + " — Attacker kills: " + attackerKills + " | Defender kills: " + defenderKills;
 	}
 
 	public String getFormattedBattleTimeRemaining() {
@@ -465,11 +490,11 @@ public class Siege {
 	}
 
 	public String getEndMessage() {
-		return PlainTextComponentSerializer.plainText().serialize(LegacyComponentSerializer.legacySection().deserialize(endMessage));
+		String message = endMessage.isEmpty() ? "" : endMessage + "\n";
+		return PlainTextComponentSerializer.plainText().serialize(LegacyComponentSerializer.legacySection().deserialize(message + getKillSummary()));
 	}
 
 	public void setEndMessage(String message) {
 		this.endMessage = message;
-		endMessage += "Attacker kill count: " + attackerKills + " Defender kill count: " + defenderKills;
 	}
 }

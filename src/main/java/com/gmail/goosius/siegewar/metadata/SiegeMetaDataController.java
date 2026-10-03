@@ -39,6 +39,8 @@ public class SiegeMetaDataController {
 	private static IntegerDataField siegeBalance = new IntegerDataField("siegewar_points", 0);
 	private static IntegerDataField attackerBattlePoints = new IntegerDataField("siegewar_attackerBattlePoints", 0);
 	private static IntegerDataField defenderBattlePoints = new IntegerDataField("siegewar_defenderBattlePoints", 0);
+	private static IntegerDataField attackerKills = new IntegerDataField("siegewar_attackerKills", 0);
+	private static IntegerDataField defenderKills = new IntegerDataField("siegewar_defenderKills", 0);
 	
 	private static DecimalDataField siegeWarChestAmount = new DecimalDataField("siegewar_warChestAmount", 0.0);
 	private static BooleanDataField townPlundered = new BooleanDataField("siegewar_townPlundered", false);
@@ -215,6 +217,28 @@ public class SiegeMetaDataController {
 			town.addMetaData(new IntegerDataField("siegewar_points", num));
 	}
 
+	public static int getAttackerKills(Town town) {
+		return town.hasMeta(attackerKills.getKey()) ? MetaDataUtil.getInt(town, attackerKills) : 0;
+	}
+
+	public static int getDefenderKills(Town town) {
+		return town.hasMeta(defenderKills.getKey()) ? MetaDataUtil.getInt(town, defenderKills) : 0;
+	}
+
+	public static void setAttackerKills(Town town, int num) {
+		if (town.hasMeta(attackerKills.getKey()))
+			MetaDataUtil.setInt(town, attackerKills, num, true);
+		else
+			town.addMetaData(new IntegerDataField(attackerKills.getKey(), num));
+	}
+
+	public static void setDefenderKills(Town town, int num) {
+		if (town.hasMeta(defenderKills.getKey()))
+			MetaDataUtil.setInt(town, defenderKills, num, true);
+		else
+			town.addMetaData(new IntegerDataField(defenderKills.getKey(), num));
+	}
+
 	public static void setAttackerBattlePoints(Town town, int num) {
 		IntegerDataField idf = (IntegerDataField) attackerBattlePoints.clone();
 		if (town.hasMeta(idf.getKey()))
@@ -368,6 +392,10 @@ public class SiegeMetaDataController {
 		idf = (IntegerDataField) defenderBattlePoints.clone();
 		if (town.hasMeta(idf.getKey()))
 			town.removeMetaData(idf);
+		if (town.hasMeta(attackerKills.getKey()))
+			town.removeMetaData(attackerKills);
+		if (town.hasMeta(defenderKills.getKey()))
+			town.removeMetaData(defenderKills);
 
 		DecimalDataField ddf = (DecimalDataField) siegeWarChestAmount.clone();
 		if (town.hasMeta(ddf.getKey()))
