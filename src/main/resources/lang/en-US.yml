@@ -785,3 +785,20 @@ msg_err_must_stand_in_ruined_town: 'You must stand in a ruined town'
 msg_err_town_must_be_occupied_by_player_nation: 'The town you are standing in must be occupied by your nation.'
 
 sw_next_siege_week_penalty: "Next Siege Week Slot Penalty"
+# Replacing inactive mayors
+sw_take_full_control_help: 'Appoint a replacement for an inactive mayor in your nation.'
+sw_take_full_control_button: '&cTake full control'
+sw_take_full_control_hover: 'Click to choose a replacement mayor for this town.'
+sw_take_full_control_choose: 'Choose a new mayor for %s: type their username in chat, or type cancel to cancel.'
+sw_take_full_control_confirm: 'Replace %s with %s as mayor of %s?'
+sw_take_full_control_unavailable: 'Only the nation leader can replace a mayor in their own nation who has been offline for at least %s days. This feature must be enabled.'
+sw_take_full_control_invalid_candidate: 'The new mayor must be a non-NPC resident of this town, other than its current mayor.'
+sw_take_full_control_success: '%s appointed %s as mayor of %s, replacing its inactive mayor.'
+sw_take_full_control_login: 'You can appoint new mayors in %s town(s) in your nation because their mayors are inactive. Click a town to choose a replacement:'
+sw_take_full_control_login_town: '<green>[Take full control of %s]</green>'
+sw_take_full_control_not_town_resident: 'That player is not part of %s. Take full control cancelled.'
+sw_take_full_control_already_prompted: 'You already have a chat prompt open. Answer it or type cancel first.'
+
+sw_login_town_under_siege: "&cYour town %s is being sieged!"
+sw_login_siege_finances: "&eYour town bank can cover approximately %s days of plunder payments + upkeep/taxes at %s/day, after reserving %s for possible upfront plunder. Based on current costs, without future income. Use /t deposit <amount> to help your town afford more days."
+sw_login_siege_finances_no_daily_cost: "&eYour town currently has no daily plunder payments or upkeep/taxes. Possible upfront plunder: %s. Use /t deposit <amount> to help fund your town."

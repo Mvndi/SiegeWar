@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import com.gmail.goosius.siegewar.Messaging;
 import com.gmail.goosius.siegewar.SiegeController;
+import com.gmail.goosius.siegewar.TownOccupationController;
 import com.gmail.goosius.siegewar.enums.SiegeType;
 import com.gmail.goosius.siegewar.events.PreSiegeWarStartEvent;
 import com.gmail.goosius.siegewar.settings.SiegeWarSettings;
@@ -127,7 +128,9 @@ public class SiegeCamp {
 	public void startSiege() {
 		//Test that the siege starter can pay the siege start cost
 		if (TownyEconomyHandler.isActive()) {
-			double siegeStartCost = SiegeWarMoneyUtil.calculateTotalSiegeStartCost(targetTown);
+			double siegeStartCost = siegeType.equals(SiegeType.REVOLT)
+					? SiegeWarMoneyUtil.calculateUpfrontSiegeStartCost(targetTown)
+					: SiegeWarMoneyUtil.calculateTotalSiegeStartCost(targetTown);
 			if (siegeType.equals(SiegeType.CONQUEST) && !attacker.getAccount().canPayFromHoldings(siegeStartCost)) {
 				TownyMessaging.sendPrefixedNationMessage((Nation)attacker, Translatable.of("msg_err_your_nation_cannot_afford_to_siege_for_x", TownyEconomyHandler.getFormattedBalance(siegeStartCost)));
 				return;
@@ -152,6 +155,8 @@ public class SiegeCamp {
 					townOfSiegeStarter, 
                     player,
 					!siegeType.equals(SiegeType.REVOLT));
+			if (siegeType.equals(SiegeType.REVOLT))
+				TownOccupationController.removeTownOccupation(targetTown);
 		} else {
 			Messaging.sendErrorMsg(player, preSiegeWarStartEvent.getCancellationMsg());
 		}

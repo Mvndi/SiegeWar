@@ -1,6 +1,7 @@
 package com.gmail.goosius.siegewar.command;
 
 import com.gmail.goosius.siegewar.Messaging;
+import com.gmail.goosius.siegewar.playeractions.TakeFullControl;
 import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.SiegeWar;
 import com.gmail.goosius.siegewar.TownOccupationController;
@@ -56,6 +57,10 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 
 		switch (args[0].toLowerCase()) {
+			case "takefullcontrol":
+				if (args.length > 1)
+					return TakeFullControl.tabComplete(sender, args);
+				break;
 			case "nation":
 				if (args.length == 2)
 					return NameUtil.filterByStart(siegewarNationTabCompletes, args[1]);
@@ -106,7 +111,7 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw town", "revoltassist [nation/none]", Translatable.of("town_help_revolt_assist").forLocale(sender)));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw nextsession", "", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw siegeinfo", "[nation]", ""));
-		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw takefullcontrol", "", ""));
+		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw takefullcontrol", "[town] [new-mayor]", Translatable.of("sw_take_full_control_help").forLocale(sender)));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw version", "", ""));
 		TownyMessaging.sendMessage(sender, ChatTools.formatCommand("Eg", "/sw preference", "beacons [on/off]", ""));
 	}
@@ -179,7 +184,10 @@ public class SiegeWarCommand implements CommandExecutor, TabCompleter {
 			parseSiegeWarSiegeInfoCommand(player, StringMgmt.remFirstArg(args));
 			break;
 		case "takefullcontrol":
-			parseSiegeWarTakeFullControlCommand(player);
+			if (args.length == 1)
+				parseSiegeWarTakeFullControlCommand(player);
+			else
+				TakeFullControl.request(player, StringMgmt.remFirstArg(args));
 			break;
 		case "preference":
 			parseSiegewarPreferenceCommand(player, StringMgmt.remFirstArg(args));

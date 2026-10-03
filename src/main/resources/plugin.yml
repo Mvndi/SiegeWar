@@ -50,6 +50,10 @@ permissions:
             siegewar.command.siegewar.collect: true
             siegewar.command.siegewar.listpeacefultowns: true
 
+    siegewar.command.siegewar.takefullcontrol:
+        description: Nation leaders can replace inactive mayors in their nation.
+        default: true
+
     siegewar.command.siegewar.preference:
         description: User is able to use /sw preference.
         default: true

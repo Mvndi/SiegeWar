@@ -317,8 +317,6 @@ public class PlaceBlock {
 			// Replace unstable block below banner.
 			if(SiegeWarBlockUtil.isSupportBlockUnstable(bannerBlock))
 				bannerBlock.getRelative(BlockFace.DOWN).setType(Material.STONE);
-			//Immediately remove occupation
-			TownOccupationController.removeTownOccupation(nearbyTown);
 		} else {
 			if (residentsNation == null)
 				throw new TownyException(translator.of("msg_err_siege_war_action_not_a_nation_member"));
