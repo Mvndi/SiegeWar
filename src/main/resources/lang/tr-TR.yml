@@ -140,10 +140,10 @@ status_town_siege_status_warchest: '&8-&7 Ganimet Sandığı: &a%s'
 status_town_siege_battle: '&2Battle:'
 status_town_siege_battle_time_remaining: '&8-&7 Kalan Süre: &a%s'
 msg_war_siege_battle_session_started: "&bA new Battle Session has started. All PVP protections inside Siege-Zones are suspended for the duration of the Battle Session."
-msg_war_siege_battle_session_ended_with_battles: "&bMevcut savaş oturumu sona erdi. Normal PVP korumaları geri yüklendi. Sancak ele geçirilmediyse savunmacılar kuşatmayı kazanır. Oturum puanları:"
-msg_war_siege_battle_session_ended_without_battles: "&bMevcut savaş oturumu sona erdi. Normal PVP korumaları geri yüklendi. Sancak ele geçirilmediyse savunmacılar kuşatmayı kazanır. Savaş olmadı."
-msg_war_siege_battle_session_ended_attacker_result: "&7 * Kuşatmacı puanı @ %s (%s)"
-msg_war_siege_battle_session_ended_defender_result: "&7 * Savunucu puanı @ %s (%s)"
+msg_war_siege_battle_session_ended_with_battles: "&bThe current Battle Session has ended. Normal PVP protections have been restored. The following teams won their battles:"
+msg_war_siege_battle_session_ended_without_battles: "&bThe current Battle Session has ended. Normal PVP protections have been restored. There were no battles."
+msg_war_siege_battle_session_ended_attacker_result: "&7 * Kuşatmacılar @ %s (%s)"
+msg_war_siege_battle_session_ended_defender_result: "&7 * Savunucular @ %s (%s)"
 msg_war_siege_battle_session_ended_draw_result: "&7 * Berabere @ %s (0)"
 msg_war_siege_battle_session_break_cannot_get_banner_control: "&cBanner control cannot be gained until the next Battle Session starts. The next Battle Session will start in %s."
 #Hud

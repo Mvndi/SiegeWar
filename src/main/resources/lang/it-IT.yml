@@ -140,10 +140,10 @@ status_town_siege_status_warchest: '&2 > Cassa di Guerra: &a%s'
 status_town_siege_battle: '&2Battle:'
 status_town_siege_battle_time_remaining: '&2 > Tempo Rimanente: &a%s'
 msg_war_siege_battle_session_started: "&bUna nuova sessione di battaglia è iniziata. Tutte le protezioni PVP all'interno delle Zone d'Assedio sono sospese per la durata della Sessione di Battaglia."
-msg_war_siege_battle_session_ended_with_battles: "&bL'attuale sessione di battaglia è terminata. Le normali protezioni in PVP sono state ripristinate. I difensori vincono l'assedio se lo stendardo non è stato catturato. Punti della sessione:"
-msg_war_siege_battle_session_ended_without_battles: "&bLa sessione di battaglia corrente è terminata. Le normali protezioni in PVP sono state ripristinate. I difensori vincono l'assedio se lo stendardo non è stato catturato. Non ci sono state battaglie."
-msg_war_siege_battle_session_ended_attacker_result: "&b * Punti attaccanti @ %s (%s)"
-msg_war_siege_battle_session_ended_defender_result: "&b * Punti difensori @ %s (%s)"
+msg_war_siege_battle_session_ended_with_battles: "&bL'attuale sessione di battaglia è terminata. Le normali protezioni in PVP sono state ripristinate. Le seguenti squadre hanno vinto le loro battaglie:"
+msg_war_siege_battle_session_ended_without_battles: "&bLa sessione di battaglia corrente è terminata. Le normali protezioni in PVP sono state ripristinate. Non ci sono state battaglie."
+msg_war_siege_battle_session_ended_attacker_result: "&b * Attaccanti @ %s (%s)"
+msg_war_siege_battle_session_ended_defender_result: "&b * Difensori @ %s (%s)"
 msg_war_siege_battle_session_ended_draw_result: "&b * Pareggio @ %s (0)"
 msg_war_siege_battle_session_break_cannot_get_banner_control: "&cIl controllo dei banner non può essere ottenuto fino all'inizio della prossima sessione di battaglia. La prossima sessione di battaglia inizierà in %s."
 #Hud

@@ -140,10 +140,10 @@ status_town_siege_status_warchest: '&2 > 军费开支: &a%s'
 status_town_siege_battle: '&2战况:'
 status_town_siege_battle_time_remaining: '&2 > 剩余时间: &a%s'
 msg_war_siege_battle_session_started: "&b一个新的战斗回合已开始。围攻区内所有PVP保护将在此期间暂时失效。"
-msg_war_siege_battle_session_ended_with_battles: "&b当前战斗回合已结束，PVP保护已恢复。若旗帜未被夺取，守方赢得围城。本回合积分:"
-msg_war_siege_battle_session_ended_without_battles: "&b当前战斗回合已结束，PVP保护已恢复。若旗帜未被夺取，守方赢得围城。没有发生战斗。"
-msg_war_siege_battle_session_ended_attacker_result: "&b * 攻方积分 @ %s (%s)"
-msg_war_siege_battle_session_ended_defender_result: "&b * 守方积分 @ %s (%s)"
+msg_war_siege_battle_session_ended_with_battles: "&b当前战斗回合已结束，PVP保护已恢复。以下队伍赢得了战斗:"
+msg_war_siege_battle_session_ended_without_battles: "&b当前战斗回合已结束，PVP保护已恢复，战斗已停止。"
+msg_war_siege_battle_session_ended_attacker_result: "&b * 进攻方@ %s (%s)"
+msg_war_siege_battle_session_ended_defender_result: "&b * 防守方@ %s (%s)"
 msg_war_siege_battle_session_ended_draw_result: "&b * 平局@ %s (0)"
 msg_war_siege_battle_session_break_cannot_get_banner_control: "&c在下次战斗回合开始之前无法控制旗帜。下一个战斗回合将在%s内开始。"
 #Hud

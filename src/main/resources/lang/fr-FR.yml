@@ -140,10 +140,10 @@ status_town_siege_status_warchest: '&2 > Coffre de Guerre : &a%s'
 status_town_siege_battle: '&2Bataille :'
 status_town_siege_battle_time_remaining: '&2 > Temps Restant : &a%s'
 msg_war_siege_battle_session_started: "&bUne nouvelle session de combat a commencé. Toutes les protections PvP dans les zones de siège sont suspendues pour la durée de la session de combat."
-msg_war_siege_battle_session_ended_with_battles: "&bLa session de combat actuelle est terminée. Les protections PvP normales ont été restaurées. Les défenseurs gagnent le siège si la bannière n'a pas été capturée. Points de la session :"
-msg_war_siege_battle_session_ended_without_battles: "&bLa session de combat actuelle est terminée. Les protections PvP normales ont été restaurées. Les défenseurs gagnent le siège si la bannière n'a pas été capturée. Il n'y avait pas de bataille."
-msg_war_siege_battle_session_ended_attacker_result: "&b * Points attaquants @ %s (%s)"
-msg_war_siege_battle_session_ended_defender_result: "&b * Points défenseurs @ %s (%s)"
+msg_war_siege_battle_session_ended_with_battles: "&bLa session de combat actuelle est terminée. Les protections PvP normales ont été restaurées. Les équipes suivantes ont remporté leurs batailles :"
+msg_war_siege_battle_session_ended_without_battles: "&bLa session de combat actuelle est terminée. Les protections PvP normales ont été restaurées. Il n'y avait pas de bataille."
+msg_war_siege_battle_session_ended_attacker_result: "&b * Attaquants @ %s (%s)"
+msg_war_siege_battle_session_ended_defender_result: "&b * Défenseurs @ %s (%s)"
 msg_war_siege_battle_session_ended_draw_result: "&b * Ex aequo @ %s (0)"
 msg_war_siege_battle_session_break_cannot_get_banner_control: "&cBanner control cannot be gained until the next Battle Session starts. The next Battle Session will start in %s."
 #Hud
