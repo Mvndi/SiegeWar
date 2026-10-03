@@ -492,6 +492,10 @@ public class SiegeWarSettings {
 		return Settings.getString(ConfigNodes.SIEGE_START_DAY_LIMITER_ALLOWED_WEEKS);
 	}
 
+	public static long getPlayerSiegeStartCooldownMillis() {
+		return Settings.getInt(ConfigNodes.SIEGE_START_DAY_LIMITER_PLAYER_COOLDOWN_MINUTES) * 60_000L;
+	}
+
 	public static List<DayOfWeek> getDaysWithoutCamp() {
 		if (daysWithoutCampList != null)
 			return daysWithoutCampList;

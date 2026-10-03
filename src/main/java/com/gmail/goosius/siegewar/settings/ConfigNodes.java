@@ -900,6 +900,10 @@ public enum ConfigNodes {
 			"",
 			"# This setting allows siege starts to be limited by week.",
 			"# Permitted values: weekly, odd-weeks-only, even-weeks-only"),
+	SIEGE_START_DAY_LIMITER_PLAYER_COOLDOWN_MINUTES(
+			"siege_start_day_limiter.player_siege_start_cooldown_minutes",
+			"180",
+			""),
 	SIEGE_START_DAY_LIMITER_CAPITAL_SIEGE_WIN_REQUIREMENT(
 			"siege_start_day_limiter.capital_siege_requires_previous_week_wins",
 			"true",

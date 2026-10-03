@@ -24,6 +24,7 @@ import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownBlock;
 import com.palmergames.bukkit.towny.object.Translatable;
 import com.palmergames.bukkit.towny.object.Translator;
+import com.palmergames.util.TimeMgmt;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -34,8 +35,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -49,6 +53,8 @@ import java.util.stream.Collectors;
  * @author Goosius
  */
 public class PlaceBlock {
+
+	private static final Map<UUID, Long> siegeStartCooldowns = new ConcurrentHashMap<>();
 
 	/**
 	 * Evaluates a block placement request.
@@ -309,6 +315,11 @@ public class PlaceBlock {
 		if (!SiegeWarSettings.doesTodayAllowASiegeToStart())
 			throw new TownyException(translator.of("msg_err_cannot_start_sieges_today"));
 
+		long cooldownEnd = siegeStartCooldowns.getOrDefault(player.getUniqueId(), 0L);
+		if (cooldownEnd > System.currentTimeMillis())
+			throw new TownyException(translator.of("msg_err_siege_start_on_cooldown",
+					TimeMgmt.getFormattedTimeValue(cooldownEnd - System.currentTimeMillis())));
+
 		if (residentsTown == nearbyTown) {
 			// Throws exception if town cannot pay.
 			SiegeWarMoneyUtil.throwIfTownCannotAffordToStartSiege(nearbyTown);
@@ -337,6 +348,10 @@ public class PlaceBlock {
 			//Conquest siege
 			StartConquestSiege.processStartSiegeRequest(player, residentsTown, residentsNation, nearbyTownBlock, nearbyTown, bannerBlock);
 		}
+
+		long cooldown = SiegeWarSettings.getPlayerSiegeStartCooldownMillis();
+		if (cooldown > 0)
+			siegeStartCooldowns.put(player.getUniqueId(), System.currentTimeMillis() + cooldown);
 	}
 
 	/**
