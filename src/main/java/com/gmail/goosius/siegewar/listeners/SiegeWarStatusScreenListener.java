@@ -159,6 +159,10 @@ public class SiegeWarStatusScreenListener implements Listener {
 			}
 
 			event.getStatusScreen().addComponentOf("siegeWar_startedSiege", TownyFormatter.colourKeyValue(translator.of("sw_started_siege"), SiegeController.getNumActiveConquestAttackSieges(nation) + "/" +SiegeWarSettings.getWarSiegeMaxActiveSiegeAttacksPerNation(nation)));
+			int nextWeekPenalty = NationMetaDataController.getNextSiegeWeekAttackLossPenalty(nation, java.time.LocalDate.now());
+			if (nextWeekPenalty > 0)
+				event.getStatusScreen().addComponentOf("siegeWar_nextWeekPenalty",
+						TownyFormatter.colourKeyValue(translator.of("sw_next_siege_week_penalty"), "-" + nextWeekPenalty));
 		}
 	}
 	

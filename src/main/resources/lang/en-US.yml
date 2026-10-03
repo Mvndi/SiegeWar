@@ -783,3 +783,5 @@ msg_err_must_stand_in_town: 'You must stand in a town'
 msg_err_must_stand_in_unruined_town: 'You must stand in an unruined town'
 msg_err_must_stand_in_ruined_town: 'You must stand in a ruined town'
 msg_err_town_must_be_occupied_by_player_nation: 'The town you are standing in must be occupied by your nation.'
+
+sw_next_siege_week_penalty: "Next Siege Week Slot Penalty"

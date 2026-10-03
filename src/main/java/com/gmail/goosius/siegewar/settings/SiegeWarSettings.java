@@ -213,6 +213,11 @@ public class SiegeWarSettings {
 	}
 
 	public static int getWarSiegeMaxActiveSiegeAttacksPerNation(Nation nation) {
+		return Math.max(0, getBaseMaxActiveSiegeAttacksPerNation(nation)
+				- NationMetaDataController.getAttackLossPenalty(nation, LocalDate.now()));
+	}
+
+	private static int getBaseMaxActiveSiegeAttacksPerNation(Nation nation) {
 		int defaultSiegePerNation = getWarSiegeMaxActiveSiegeAttacksPerNation();
 		
 		if (getWarSiegeMaxActiveSiegeAttacksPerNationUseLevels()) {

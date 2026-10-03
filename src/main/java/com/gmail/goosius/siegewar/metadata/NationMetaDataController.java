@@ -42,6 +42,51 @@ public class NationMetaDataController {
     private static final IntegerDataField previousSiegeWeekWinsWeekIdentifier = new IntegerDataField("siegeWar_previousSiegeWeekWinsWeekIdentifier", -1);
     private static final StringDataField previousSiegeWeekWinsByDefender = new StringDataField("siegeWar_previousSiegeWeekWinsByDefender", "");
 
+    // At most the current and next scheduled siege weeks are retained.
+    private static final StringDataField attackLossPenalties = new StringDataField("siegeWar_attackLossPenalties", "");
+
+    public static int getAttackLossPenalty(Nation nation, LocalDate date) {
+        if (!SiegeWarSettings.isSiegeWeek(date))
+            return 0;
+        return readAttackLossPenalties(nation).getOrDefault(
+                SiegeWarSettings.getMostRecentSiegeWeekIdentifier(date), 0);
+    }
+
+    public static int getNextSiegeWeekAttackLossPenalty(Nation nation, LocalDate date) {
+        int nextWeek = SiegeWarSettings.getMostRecentSiegeWeekIdentifier(date) + SiegeWarSettings.getSiegeWeekSpacing();
+        return readAttackLossPenalties(nation).getOrDefault(nextWeek, 0);
+    }
+
+    public static synchronized void recordAttackLoss(Nation nation, LocalDate date) {
+        int currentWeek = SiegeWarSettings.getMostRecentSiegeWeekIdentifier(date);
+        int nextWeek = currentWeek + SiegeWarSettings.getSiegeWeekSpacing();
+        Map<Integer, Integer> penalties = readAttackLossPenalties(nation);
+        penalties.keySet().removeIf(week -> week < currentWeek || week > nextWeek);
+        penalties.compute(nextWeek, (week, count) -> count == null ? 1
+                : count == Integer.MAX_VALUE ? count : count + 1);
+        String serialized = penalties.entrySet().stream().sorted(Map.Entry.comparingByKey())
+                .map(entry -> entry.getKey() + ":" + entry.getValue())
+                .collect(java.util.stream.Collectors.joining(","));
+        MetaDataUtil.setString(nation, attackLossPenalties, serialized, true);
+    }
+
+    private static Map<Integer, Integer> readAttackLossPenalties(Nation nation) {
+        Map<Integer, Integer> penalties = new HashMap<>();
+        for (String entry : getSdf(nation, attackLossPenalties.getKey()).split(",")) {
+            String[] parts = entry.split(":");
+            if (parts.length != 2)
+                continue;
+            try {
+                int count = Integer.parseInt(parts[1]);
+                if (count > 0)
+                    penalties.put(Integer.parseInt(parts[0]), count);
+            } catch (NumberFormatException ignored) {
+                // Ignore malformed metadata without blocking nation status or siege starts.
+            }
+        }
+        return penalties;
+    }
+
     public NationMetaDataController(SiegeWar plugin) {
         this.plugin = plugin;
     }
