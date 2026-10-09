@@ -43,7 +43,9 @@ public class NationMetaDataController {
     private static final StringDataField previousSiegeWeekWinsByDefender = new StringDataField("siegeWar_previousSiegeWeekWinsByDefender", "");
 
     // At most the current and next scheduled siege weeks are retained.
-    private static final StringDataField attackLossPenalties = new StringDataField("siegeWar_attackLossPenalties", "");
+    private static final StringDataField attackLossPenalties = new StringDataField("siegeWar_baitLossPenalties", "");
+    // Penalties recorded before bait-siege detection, when every attack loss counted. Deleted on startup.
+    private static final StringDataField legacyFieldAttackLossPenalties = new StringDataField("siegeWar_attackLossPenalties", "");
 
     public static int getAttackLossPenalty(Nation nation, LocalDate date) {
         if (!SiegeWarSettings.isSiegeWeek(date))
@@ -175,6 +177,9 @@ public class NationMetaDataController {
         IntegerDataField idf = (IntegerDataField) legacyFieldNationPeacefulOccupationTax.clone();
         if (nation.hasMeta(idf.getKey())) {
             nation.removeMetaData(idf);
+        }
+        if (nation.hasMeta(legacyFieldAttackLossPenalties.getKey())) {
+            nation.removeMetaData(legacyFieldAttackLossPenalties.getKey(), true);
         }
     }
 
