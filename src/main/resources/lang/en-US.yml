@@ -803,3 +803,6 @@ sw_take_full_control_already_prompted: 'You already have a chat prompt open. Ans
 sw_login_town_under_siege: "&cYour town %s is being sieged!"
 sw_login_siege_finances: "&eYour town bank can cover approximately %s days of plunder payments + upkeep/taxes at %s/day, after reserving %s for possible upfront plunder. Based on current costs, without future income. Use /t deposit <amount> to help your town afford more days."
 sw_login_siege_finances_no_daily_cost: "&eYour town currently has no daily plunder payments or upkeep/taxes. Possible upfront plunder: %s. Use /t deposit <amount> to help fund your town."
+
+msg_war_siege_battle_session_ended_with_kills: "&bThe current Battle Session has ended. Normal PVP protections have been restored. Defenders win the siege if the banner was not captured. Session kills:"
+msg_war_siege_battle_session_ended_kills_result: "&b * Kills @ %s - Attackers: %s, Defenders: %s"
