@@ -69,6 +69,13 @@ public class SiegeWarScoringUtil {
 		Translatable message;
 		final BattleSessionPenaltyPointsEvent.Reason reason;
 		Player killer = getPlayerKiller(player);
+        if (killer != null && !killer.equals(player)) {
+            SiegeSide killerSide = SiegeSide.getPlayerSiegeSide(siege, killer);
+            SiegeSide victimSide = residentIsAttacker ? SiegeSide.ATTACKERS : SiegeSide.DEFENDERS;
+            if (killerSide != victimSide) {
+                SiegeWarBattleSessionUtil.recordBattleKill(siege, killerSide);
+            }
+        }
 		if(killer != null) {
 			reason = residentIsAttacker ? BattleSessionPenaltyPointsEvent.Reason.KILLED_BY_DEFENDER : BattleSessionPenaltyPointsEvent.Reason.KILLED_BY_ATTACKER;
 			langKey = residentIsAttacker ? 	"msg_siege_war_attacker_killed_by_player" : "msg_siege_war_defender_killed_by_player";

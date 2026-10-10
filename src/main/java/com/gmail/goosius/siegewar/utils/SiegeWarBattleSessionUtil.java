@@ -27,10 +27,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SiegeWarBattleSessionUtil {
 	
-	private static Map<Siege, Integer> battleResults = new HashMap<>();
+    private static final String SESSION_KILLS_HEADER = "msg_war_siege_battle_session_ended_with_kills";
+    private static final String SESSION_KILLS_RESULT = "msg_war_siege_battle_session_ended_kills_result";
+    private static final Map<Siege, BattleKills> sessionKills = new ConcurrentHashMap<>();
+    private static final Map<Siege, BattleKills> battleResults = new HashMap<>();
+
+    private record BattleKills(int attackers, int defenders) {
+    }
+
+    public static void recordBattleKill(Siege siege, SiegeSide killerSide) {
+        if (!BattleSession.getBattleSession().isActive() || killerSide == SiegeSide.NOBODY)
+            return;
+        sessionKills.compute(siege, (key, kills) -> {
+            BattleKills current = kills == null ? new BattleKills(0, 0) : kills;
+            return new BattleKills(current.attackers() + (killerSide == SiegeSide.ATTACKERS ? 1 : 0),
+                    current.defenders() + (killerSide == SiegeSide.DEFENDERS ? 1 : 0));
+        });
+    }
 
 	/**
 	 * Attempt to schedule the next battle session
@@ -46,6 +63,7 @@ public class SiegeWarBattleSessionUtil {
 
 	public static void startBattleSession() {
 		BattleSession battleSession = BattleSession.getBattleSession();
+        sessionKills.clear();
 		//Set active
 		battleSession.setActive(true);
 		//Set the start time
@@ -110,7 +128,11 @@ public class SiegeWarBattleSessionUtil {
 				//Adjust numBattleSessionsCompleted
 				siege.setNumBattleSessionsCompleted(siege.getNumBattleSessionsCompleted()+1);
 
-				//If any battle points were gained, calculate a result
+                if (siege.hasBattlePointsScored() || sessionKills.containsKey(siege)) {
+                    battleResults.put(siege, sessionKills.getOrDefault(siege, new BattleKills(0, 0)));
+                }
+
+                //If any battle points were gained, calculate a result
 				if(siege.hasBattlePointsScored()) {
 					tallyScoredPoints(siege);
 				}
@@ -161,9 +183,6 @@ public class SiegeWarBattleSessionUtil {
 
 		//Apply the battle points of the winner to the siege balance
 		siege.adjustSiegeBalance(siegeBalanceAdjustment);
-
-		//Prepare result for messaging
-		battleResults.put(siege, siegeBalanceAdjustment);
 
 		// Potentially unjail the siegedTowns' prisoners if they attackers lost the battlesession.
 		if (siege.getAttackerBattlePoints() > siege.getDefenderBattlePoints()
@@ -280,7 +299,7 @@ public class SiegeWarBattleSessionUtil {
 	 * Send message to tell the server the current battle session has ended,
 	 * with a brief summary of who won any battles which were fought
 	 */
-	private static void sendBattleSessionEndedMessage(Map<Siege, Integer> battleResults) {
+	private static void sendBattleSessionEndedMessage(Map<Siege, BattleKills> battleResults) {
 		Messaging.sendGlobalMessage(getBattleSessionEndedMessageHeader(battleResults),getBattleSessionEndedMessageLines(battleResults));
 	}
 
@@ -288,43 +307,25 @@ public class SiegeWarBattleSessionUtil {
 	 * Send message to tell the server the current battle session has ended,
 	 * with a brief summary of who won any battles which were fought
 	 */
-	private static Translatable getBattleSessionEndedMessageHeader(Map<Siege, Integer> battleResults) {
+	private static Translatable getBattleSessionEndedMessageHeader(Map<Siege, BattleKills> battleResults) {
 		//Compile message
 		if(battleResults.isEmpty()) {
 			return Translatable.of("msg_war_siege_battle_session_ended_without_battles");
 		} else {
-			return Translatable.of("msg_war_siege_battle_session_ended_with_battles");
+			return Translatable.of(SESSION_KILLS_HEADER);
 		}
 	}
 
-	private static List<Translatable> getBattleSessionEndedMessageLines(Map<Siege, Integer> battleResults) {
-		List<Translatable> lines = new ArrayList<>();
+    private static List<Translatable> getBattleSessionEndedMessageLines(Map<Siege, BattleKills> battleResults) {
+        List<Translatable> lines = new ArrayList<>();
+        for (Map.Entry<Siege, BattleKills> result : battleResults.entrySet()) {
+            BattleKills kills = result.getValue();
+            lines.add(Translatable.of(SESSION_KILLS_RESULT, result.getKey().getTown().getName(),
+                    kills.attackers(), kills.defenders()));
+        }
+        return lines;
+    }
 
-		//Compile message
-		if(battleResults.size() != 0) {
-			Translatable resultLine;
-			for (Map.Entry<Siege, Integer> battleResultEntry : battleResults.entrySet()) {
-				if (battleResultEntry.getValue() > 0) {
-					resultLine =
-							Translatable.of("msg_war_siege_battle_session_ended_attacker_result",
-									battleResultEntry.getKey().getTown().getName(),
-									"+" + battleResultEntry.getValue());
-				} else if (battleResultEntry.getValue() < 0) {
-					resultLine =
-							Translatable.of("msg_war_siege_battle_session_ended_defender_result",
-									battleResultEntry.getKey().getTown().getName(),
-									"-" + Math.abs(battleResultEntry.getValue()));
-				} else {
-					resultLine =
-							Translatable.of("msg_war_siege_battle_session_ended_draw_result",
-									battleResultEntry.getKey().getTown().getName());
-				}
-				lines.add(resultLine);
-			}
-		}
-		return lines;
-	}
-												
 	public static String getFormattedTimeUntilNextBattleSessionStarts() {
 		Long startTimeOfTodaysNextBattleSession = BattleSession.getBattleSession().getScheduledStartTime();
 		if(startTimeOfTodaysNextBattleSession == null) {
