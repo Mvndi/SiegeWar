@@ -316,7 +316,7 @@ public class PlaceBlock {
 			throw new TownyException(translator.of("msg_err_cannot_start_sieges_today"));
 
 		long cooldownEnd = siegeStartCooldowns.getOrDefault(player.getUniqueId(), 0L);
-		if (cooldownEnd > System.currentTimeMillis())
+		if (cooldownEnd > System.currentTimeMillis() || player.isOp())
 			throw new TownyException(translator.of("msg_err_siege_start_on_cooldown",
 					TimeMgmt.getFormattedTimeValue(cooldownEnd - System.currentTimeMillis())));
 
