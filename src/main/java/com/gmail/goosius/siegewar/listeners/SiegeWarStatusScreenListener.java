@@ -3,6 +3,9 @@ package com.gmail.goosius.siegewar.listeners;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import com.palmergames.bukkit.towny.object.statusscreens.StatusScreen;
 
 import com.gmail.goosius.siegewar.playeractions.TakeFullControl;
 import org.bukkit.entity.Player;
@@ -50,6 +53,24 @@ public class SiegeWarStatusScreenListener implements Listener {
 	 * via the resident status screen. Components are clickable to
 	 * claim monies owed.
 	 */
+    private static final String FOOTER_BREAK = "newline";
+    private static final String STARTED_SIEGES = "siegeWar_startedSiege";
+    private static final String STARTED_SIEGES_BREAK = "siegeWar_startedSiegeNewline";
+
+    private void addStartedSiegesLine(StatusScreen screen, Component counter) {
+        Map<String, Component> footer = new LinkedHashMap<>();
+        boolean inFooter = false;
+        for (String key : screen.getComponentKeys()) {
+            inFooter = inFooter || FOOTER_BREAK.equals(key);
+            if (inFooter)
+                footer.put(key, screen.getComponentOrNull(key));
+        }
+        footer.keySet().forEach(screen::removeStatusComponent);
+        screen.addComponentOf(STARTED_SIEGES_BREAK, Component.newline());
+        screen.addComponentOf(STARTED_SIEGES, counter);
+        footer.forEach(screen::addComponentOf);
+    }
+
 	@EventHandler(ignoreCancelled = true)
 	public void onResidentStatusScreen(ResidentStatusScreenEvent event) {
 		int salary = ResidentMetaDataController.getMilitarySalaryAmount(event.getResident());
@@ -160,7 +181,7 @@ public class SiegeWarStatusScreenListener implements Listener {
 							.hoverEvent(HoverEvent.showText(hoverText))));
 			}
 
-			event.getStatusScreen().addComponentOf("siegeWar_startedSiege", TownyFormatter.colourKeyValue(translator.of("sw_started_siege"), SiegeController.getNumActiveConquestAttackSieges(nation) + "/" +SiegeWarSettings.getWarSiegeMaxActiveSiegeAttacksPerNation(nation)));
+			addStartedSiegesLine(event.getStatusScreen(), TownyComponents.miniMessage(TownyFormatter.colourKeyValue(translator.of("sw_started_siege"), SiegeController.getNumActiveConquestAttackSieges(nation) + "/" + SiegeWarSettings.getWarSiegeMaxActiveSiegeAttacksPerNation(nation))));
 			int nextWeekPenalty = NationMetaDataController.getNextSiegeWeekAttackLossPenalty(nation, java.time.LocalDate.now());
 			if (nextWeekPenalty > 0)
 				event.getStatusScreen().addComponentOf("siegeWar_nextWeekPenalty",
