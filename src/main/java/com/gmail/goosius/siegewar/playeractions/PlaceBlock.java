@@ -1,5 +1,7 @@
 package com.gmail.goosius.siegewar.playeractions;
 
+import com.gmail.goosius.siegewar.utils.SiegeDeclarationLimits;
+
 import com.gmail.goosius.siegewar.Messaging;
 import com.gmail.goosius.siegewar.SiegeController;
 import com.gmail.goosius.siegewar.TownOccupationController;
@@ -338,7 +340,7 @@ public class PlaceBlock {
 			// Throws exception if nation cannot pay.
 			SiegeWarMoneyUtil.throwIfNationCannotAffordToStartSiege(residentsNation, nearbyTown);
 
-			if (SiegeWarSettings.doesThisNationHaveTooManyActiveSieges(residentsNation))
+			if (SiegeDeclarationLimits.isAtLimit(residentsNation, nearbyTown))
 				throw new TownyException(translator.of("msg_err_siege_war_nation_has_too_many_active_siege_attacks"));
 
 			// Replace unstable block below banner.

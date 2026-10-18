@@ -1,5 +1,7 @@
 package com.gmail.goosius.siegewar;
 
+import com.gmail.goosius.siegewar.utils.SiegeDeclarationLimits;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -498,6 +500,9 @@ public class SiegeController {
 		if (!adminStart && !SiegeWarSettings.canTownBeSiegedToday(targetTown, attacker)) {
 			throw new RuntimeException("Siege start not allowed this week due to capital alternation setting."); // Fallback; in practice this path is rarely used directly
 		}
+        if (!adminStart && siegeType == SiegeType.CONQUEST && attacker instanceof Nation nation) {
+            SiegeDeclarationLimits.consumeIfRequired(nation, targetTown);
+        }
 		//Create Siege
 		SiegeController.newSiege(targetTown);
 		Siege siege = SiegeController.getSiege(targetTown);

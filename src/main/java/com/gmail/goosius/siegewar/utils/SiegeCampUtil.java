@@ -98,7 +98,7 @@ public class SiegeCampUtil {
 
 			// Check to make sure the nation would not have too many active conquest sieges.
 			if (camp.getSiegeType().equals(SiegeType.CONQUEST)
-				&& attackingNation != null && SiegeWarSettings.doesThisNationHaveTooManyActiveSieges(attackingNation)) {
+                && attackingNation != null && SiegeDeclarationLimits.isAtLimit(attackingNation, camp.getTargetTown())) {
 				TownyMessaging.sendPrefixedNationMessage(attackingNation, Translatable.of("msg_err_siege_war_nation_has_too_many_active_siege_attacks"));
 				return;
 			}
