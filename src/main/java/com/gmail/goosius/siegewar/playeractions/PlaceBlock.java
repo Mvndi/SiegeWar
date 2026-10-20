@@ -318,9 +318,10 @@ public class PlaceBlock {
 			throw new TownyException(translator.of("msg_err_cannot_start_sieges_today"));
 
 		long cooldownEnd = siegeStartCooldowns.getOrDefault(player.getUniqueId(), 0L);
-		if (cooldownEnd > System.currentTimeMillis() || player.isOp())
+		long now = System.currentTimeMillis();
+		if (cooldownEnd > now && !player.isOp())
 			throw new TownyException(translator.of("msg_err_siege_start_on_cooldown",
-					TimeMgmt.getFormattedTimeValue(cooldownEnd - System.currentTimeMillis())));
+					TimeMgmt.getFormattedTimeValue(Math.max(TimeMgmt.ONE_SECOND_IN_MILLIS, cooldownEnd - now))));
 
 		if (residentsTown == nearbyTown) {
 			// Throws exception if town cannot pay.
