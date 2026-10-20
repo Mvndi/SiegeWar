@@ -4,6 +4,9 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Translatable;
 import com.palmergames.bukkit.towny.object.Translation;
 import com.palmergames.bukkit.util.Colors;
+import com.palmergames.bukkit.towny.utils.TownyComponents;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -17,9 +20,21 @@ public class Messaging {
 	
 	public static void sendErrorMsg(CommandSender sender, String message) {
 		//Ensure the sender is not null (i.e. is an online player who is not an npc)
-        if(sender != null)
+        if (sender != null && message != null && !message.isBlank())
 	        sender.sendMessage(prefix + Colors.Red + message);
 	}
+
+    public static Component withPrefix(Component message) {
+        return Component.empty().clickEvent(message.clickEvent())
+                .append(TownyComponents.miniMessage(prefix))
+                .append(message);
+    }
+
+    public static void sendErrorMsg(CommandSender sender, Component message) {
+        if (sender != null) {
+            sender.sendMessage(withPrefix(message.colorIfAbsent(NamedTextColor.RED)));
+        }
+    }
 
 	public static void sendMsg(CommandSender sender, String message) {
         //Ensure the sender is not null (i.e. is an online player who is not an npc)
