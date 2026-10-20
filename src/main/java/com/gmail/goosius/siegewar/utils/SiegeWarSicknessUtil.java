@@ -127,6 +127,10 @@ public class SiegeWarSicknessUtil {
      */
     private static void givePlayerFullWarSicknessNow(Player player) {
         int effectDurationTicks = (int)(TimeTools.convertToTicks(TownySettings.getShortInterval() + 5));
+        givePlayerFullWarSicknessNow(player, effectDurationTicks);
+    }
+
+    public static void givePlayerFullWarSicknessNow(Player player, int effectDurationTicks) {
         List<PotionEffect> potionEffects = new ArrayList<>();
         potionEffects.add(new PotionEffect(PotionEffectType.BLINDNESS, effectDurationTicks, 4));
         potionEffects.add(new PotionEffect(PotionEffectType.POISON, effectDurationTicks, 4));
