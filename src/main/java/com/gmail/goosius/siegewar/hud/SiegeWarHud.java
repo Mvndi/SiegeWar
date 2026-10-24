@@ -22,57 +22,59 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 
 public class SiegeWarHud implements HUDImplementer {
-	private static final String GRAY = Colors.GRAY;
-	final HUD hud;
+    private static final String GRAY = Colors.GRAY;
+    private static final String ATTACKER_KILLS_KEY = "hud_attacker_kills";
+    private static final String DEFENDER_KILLS_KEY = "hud_defender_kills";
+    final HUD hud;
 
-	public SiegeWarHud(HUD hud) {
-		this.hud = hud;
-	}
+    public SiegeWarHud(HUD hud) {
+        this.hud = hud;
+    }
 
-	@Override
-	public HUD getHUD() {
-		return hud;
-	}
+    @Override
+    public HUD getHUD() {
+        return hud;
+    }
 
-	public static void updateHUD(Player player) {
-		updateHUD(player, SiegeWarAPI.getSiegeOrNull(player));
-	}
+    public static void updateHUD(Player player) {
+        updateHUD(player, SiegeWarAPI.getSiegeOrNull(player));
+    }
 
-	public static void updateHUD(Player player, Siege siege) {
-		if (siege == null)
-			return;
+    public static void updateHUD(Player player, Siege siege) {
+        if (siege == null)
+            return;
 
-		ServerHUD hud = HUDManager.getHUD("siegeWarHUD");
-		if (hud == null) {
-			SiegeWar.getSiegeWar().getLogger().warning("SiegeHUD could not find siegeHUD from HUDManager for player: " + player.getName());
-			return;
-		}
-		final Translator translator = Translator.locale(player);
+        ServerHUD hud = HUDManager.getHUD("siegeWarHUD");
+        if (hud == null) {
+            SiegeWar.getSiegeWar().getLogger().warning("SiegeHUD could not find siegeHUD from HUDManager for player: " + player.getName());
+            return;
+        }
+        final Translator translator = Translator.locale(player);
 
-		UUID uuid = player.getUniqueId();
-		hud.setTitle(uuid, miniMessage(translator.of("hud_title", SiegeHUDManager.checkLength(siege.getTown().getName()))));
+        UUID uuid = player.getUniqueId();
+        hud.setTitle(uuid, miniMessage(translator.of("hud_title", SiegeHUDManager.checkLength(siege.getTown().getName()))));
 
-		LinkedList<Component> sbComponents = new LinkedList<>();
-		sbComponents.add(miniMessage(translator.of("hud_siege_type"), SiegeHUDManager.checkLength(siege.getSiegeType().getTranslatedName().forLocale(player))));
-		sbComponents.add(miniMessage(translator.of("hud_attackers"), SiegeHUDManager.checkLength(siege.getAttackerNameForDisplay())));
-		sbComponents.add(miniMessage(translator.of("hud_defenders"), SiegeHUDManager.checkLength(siege.getDefenderNameForDisplay())));
-		sbComponents.add(miniMessage(translator.of("hud_siege_balance"), siege.getSiegeBalance().toString()));
-		sbComponents.add(miniMessage(translator.of("hud_siege_progress"), siege.getNumBattleSessionsCompleted() + "/" + SiegeWarSettings.getSiegeDurationBattleSessions()));
-		sbComponents.add(miniMessage(translator.of("hud_siege_status"), siege.getStatus().getName()));
-		sbComponents.add(miniMessage(translator.of("hud_warchest"), (TownyEconomyHandler.isActive() ? TownyEconomyHandler.getFormattedBalance(siege.getWarChestAmount()) : "-")));
-		sbComponents.add(miniMessage(translator.of("hud_banner_control"), (siege.getBannerControllingSide().getFormattedName().forLocale(player)
-				+ (siege.getBannerControllingSide() == SiegeSide.NOBODY ? "" : " (" + siege.getBannerControllingResidents().size() + ")"))));
-		sbComponents.add(miniMessage(translator.of("hud_battle_attacker_points"), siege.getFormattedAttackerBattlePoints()));
-		sbComponents.add(miniMessage(translator.of("hud_battle_defender_points"), siege.getFormattedDefenderBattlePoints()));
-		sbComponents.add(miniMessage(translator.of("hud_battle_time_remaining"), siege.getFormattedBattleTimeRemaining(translator)));
-		hud.setLines(uuid, sbComponents);
-	}
+        LinkedList<Component> sbComponents = new LinkedList<>();
+        sbComponents.add(miniMessage(translator.of("hud_siege_type"), SiegeHUDManager.checkLength(siege.getSiegeType().getTranslatedName().forLocale(player))));
+        sbComponents.add(miniMessage(translator.of("hud_attackers"), SiegeHUDManager.checkLength(siege.getAttackerNameForDisplay())));
+        sbComponents.add(miniMessage(translator.of("hud_defenders"), SiegeHUDManager.checkLength(siege.getDefenderNameForDisplay())));
+        sbComponents.add(miniMessage(translator.of("hud_siege_balance"), siege.getSiegeBalance().toString()));
+        sbComponents.add(miniMessage(translator.of("hud_siege_progress"), siege.getNumBattleSessionsCompleted() + "/" + SiegeWarSettings.getSiegeDurationBattleSessions()));
+        sbComponents.add(miniMessage(translator.of("hud_siege_status"), siege.getStatus().getName()));
+        sbComponents.add(miniMessage(translator.of("hud_warchest"), (TownyEconomyHandler.isActive() ? TownyEconomyHandler.getFormattedBalance(siege.getWarChestAmount()) : "-")));
+        sbComponents.add(miniMessage(translator.of("hud_banner_control"), (siege.getBannerControllingSide().getFormattedName().forLocale(player)
+                + (siege.getBannerControllingSide() == SiegeSide.NOBODY ? "" : " (" + siege.getBannerControllingResidents().size() + ")"))));
+        sbComponents.add(miniMessage(translator.of(ATTACKER_KILLS_KEY), Integer.toString(siege.getAttackerKills())));
+        sbComponents.add(miniMessage(translator.of(DEFENDER_KILLS_KEY), Integer.toString(siege.getDefenderKills())));
+        sbComponents.add(miniMessage(translator.of("hud_battle_time_remaining"), siege.getFormattedBattleTimeRemaining(translator)));
+        hud.setLines(uuid, sbComponents);
+    }
 
-	private static Component miniMessage(String string) {
-		return TownyComponents.miniMessage(string);
-	}
+    private static Component miniMessage(String string) {
+        return TownyComponents.miniMessage(string);
+    }
 
-	private static Component miniMessage(String string1, String string2) {
-		return TownyComponents.miniMessage(GRAY + string1 + " " + string2);
-	}
+    private static Component miniMessage(String string1, String string2) {
+        return TownyComponents.miniMessage(GRAY + string1 + " " + string2);
+    }
 }

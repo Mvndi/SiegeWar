@@ -237,6 +237,8 @@ dynmap_siege_battle_points: 'Battle Points: %s / %s'
 hud_siege_type: 'Type: '
 hud_battle_attacker_points: 'ATK BAT Points: '
 hud_battle_defender_points: 'DEF BAT Points: '
+hud_attacker_kills: 'ATK Kills: '
+hud_defender_kills: 'DEF Kills: '
 
 # Starting sieges
 msg_err_cannot_start_siege_at_ruined_town: '&cYou cannot start a siege at a ruined town.'
